@@ -23,24 +23,27 @@ export const categoryApi = createApi({
         url: "/categories",
         method: "POST",
         body: newCategory
-      })
+      }),
+      invalidatesTags: ["Categories"]
     }),
 
     // UPDATE CATEGORY
     updateCategory: builder.mutation({
       query: (updatedCategory) => ({
-        url: `/category/${updatedCategory._id}`,
+        url: `/categories/${updatedCategory._id}`,
         method: "PATCH",
         body: updatedCategory
-      })
+      }),
+      invalidatesTags: ["Categories"]
     }),
 
     // DELETE CATEGORY
     deleteCategory: builder.mutation({
       query: (id) => ({
-        url: `/category/${id}`,
+        url: `/categories/${id}`,
         method: "DELETE"
-      })
+      }),
+      invalidatesTags: ["Categories"]
     })
   })
 })

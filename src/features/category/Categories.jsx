@@ -1,5 +1,9 @@
 import React from "react";
-import { useGetCategoriesQuery } from "./categoryApi";
+import {
+  useGetCategoriesQuery,
+  useDeleteCategoryMutation,
+} from "./categoryApi";
+import { Link } from "react-router-dom";
 
 const Categories = () => {
   const {
@@ -8,6 +12,17 @@ const Categories = () => {
     isError,
     error,
   } = useGetCategoriesQuery();
+
+  const [deleteCategory, { isLoading: isDeleting }] =
+    useDeleteCategoryMutation();
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteCategory(id)
+    } catch (error) {
+      console.log("Error deleting category")
+    }
+  }    
 
   if (isLoading) return <p>Loading....</p>;
   if (isError) return <p>{error}</p>;
@@ -32,13 +47,15 @@ const Categories = () => {
 
       <div className="flex justify-center items-center flex-col md:max-w-3xl mx-auto">
         {/* Add Category Container */}
-        <div className="flex justify-between items-center w-[90%] mb-3">
-          <span className="bg-slate-700 py-1 px-3 text-white rounded shadow-xl">
+        <div className="flex justify-between items-center w-[90%] mb-3 md:mb-0">
+          <span className="bg-slate-800 transition-colors delay-100 hover:bg-slate-700 py-1 px-3 text-white rounded shadow-xl">
             Total : {categoires.length}
           </span>
-          <button className="py-1 px-3 bg-blue-600 text-white rounded shadow-xl">
-            Add Category
-          </button>
+          <Link to={`/categories/new`}>
+            <button className="py-1 px-3 bg-blue-600 hover:bg-blue-700 transition-colors delay-100 text-white rounded shadow-xl">
+              Add Category
+            </button>
+          </Link>
         </div>
         <h1 className="text-2xl font-bold ">All Categories</h1>
         {/* MAIN TABLE */}
@@ -66,10 +83,10 @@ const Categories = () => {
                   <td className="px-6 py-4 font-bold">{index + 1}</td>
                   <td className="px-6 py-4 font-bold">{val.name}</td>
                   <td className="px-6 py-4 text-right flex justify-start items-center gap-2">
-                    <button className="bg-[#FFC436] py-1 px-3 rounded shadow-xl">
+                    <button className="bg-[#FFC436] hover:bg-[#FFA732] transition-colors delay-100 py-1 px-3 rounded shadow-xl">
                       Edit
                     </button>
-                    <button className="bg-[#EF4040] text-white py-1 px-3 rounded shadow-xl">
+                    <button onClick={() => handleDelete(val._id)} className="bg-[#FE0000] hover:bg-red-600 text-white py-1 px-3 rounded shadow-xl">
                       Delete
                     </button>
                   </td>

@@ -36,15 +36,16 @@ const Categories = () => {
   if (isLoading) return <p>Loading....</p>;
   if (isError) return <p>{error}</p>;
 
-    const filterCategories = categories.filter((category) => {
-      if (search.length === 0) {
-        return category
-      } else {
-        return (
-          category.name.toLowerCase().includes(search.toLowerCase())
-        )
-      }
-    })
+  const filterCategories = categories.filter((category) => {
+    if (search.length === 0) {
+      return category
+    } else {
+      return (
+        category.name.toLowerCase().includes(search.toLowerCase())
+      )
+    }
+  })
+
 
   return (
     <div>
@@ -60,27 +61,27 @@ const Categories = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <button className="bg-slate-800 text-white rounded py-1 px-3 shadow-xl hover:bg-slate-700">
+          <button className="bg-slate-800 text-white rounded py-1 px-3 shadow-xl hover:bg-slate-700 transition-colors duration-500">
             Search
           </button>
         </div>
       </div>
 
-      <div className="flex justify-center items-center flex-col md:max-w-4xl mx-auto">
+      <div className="flex justify-center items-center flex-col md:max-w-3xl mx-auto">
         {/* Add Category Container */}
-        <div className="flex justify-between items-center w-[90%] mb-3 md:mb-0">
-          <span className="bg-slate-800 transition-colors delay-100 hover:bg-slate-700 py-1 px-3 text-white rounded shadow-xl">
+        <div className="flex justify-between items-center w-[90%] md:w-full mb-3 md:mb-0">
+          <span className="bg-slate-800 transition-colors duration-500 hover:bg-slate-700 py-1 px-3 text-white rounded shadow-xl">
             Total : {filterCategories.length}
           </span>
           <Link to={`/categories/new`}>
-            <button className="py-1 px-3 bg-blue-600 hover:bg-blue-700 transition-colors delay-100 text-white rounded shadow-xl">
+            <button className="py-1 px-3 bg-blue-600 hover:bg-blue-700 transition-colors duration-500 text-white rounded shadow-xl">
               Add Category
             </button>
           </Link>
         </div>
         <h1 className="text-2xl font-bold ">All Categories</h1>
         {/* MAIN TABLE */}
-        <div className="relative overflow-x-auto max-w-[90%] md:w-full shadow-md sm:rounded my-5">
+        <div className="relative overflow-x-auto w-[90%] md:w-full shadow-md sm:rounded my-5">
           <table className="w-full text-sm text-left rtl:text-right">
             <thead className="text-xs text-gray-700 uppercase bg-slate-200">
               <tr>
@@ -104,12 +105,12 @@ const Categories = () => {
                   <td className="px-6 py-4 font-bold">{index + 1}</td>
                   <td className="px-6 py-4 font-bold">{val.name}</td>
                   <td className="px-6 py-4 text-right flex justify-start items-center gap-2">
-                    <button className="bg-[#FFC436] hover:bg-[#FFA732] transition-colors delay-100 py-1 px-3 rounded shadow-xl">
+                    <button className="bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 py-1 px-3 rounded shadow-xl">
                       Edit
                     </button>
                     <button
                       onClick={() => handleDelete(val._id)}
-                      className="bg-[#FE0000] hover:bg-red-600 text-white py-1 px-3 rounded shadow-xl"
+                      className="bg-[#FE0000] hover:bg-red-600 transition-colors duration-500 text-white py-1 px-3 rounded shadow-xl"
                     >
                       Delete
                     </button>

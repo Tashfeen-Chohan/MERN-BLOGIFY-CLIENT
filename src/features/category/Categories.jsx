@@ -1,40 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   useGetCategoriesQuery,
   useDeleteCategoryMutation,
 } from "./categoryApi";
 import { Link } from "react-router-dom";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Categories = () => {
   const {
-    data: categoires,
+    data: categories,
     isLoading,
     isError,
     error,
   } = useGetCategoriesQuery();
 
-  const [deleteCategory, { isLoading: isDeleting }] =
-    useDeleteCategoryMutation();
+  const [deleteCategory] = useDeleteCategoryMutation();
+  const [search, setSearch] = useState("")
 
   const handleDelete = async (id) => {
     try {
-      const response = await deleteCategory(id)
-      console.log(response)
-      if (response.error){
-        toast.error(response.error.data.message)
+      const response = await deleteCategory(id);
+      console.log(response);
+      if (response.error) {
+        toast.error(response.error.data.message);
       } else {
-        toast.success(response.data.message)
+        toast.success(response.data.message);
       }
     } catch (error) {
-      toast.error("An error occured while deleting Category")
-      console.log("Error deleting category")
+      toast.error("An error occured while deleting Category");
+      console.log("Error deleting category");
     }
-  }    
+  };
 
   if (isLoading) return <p>Loading....</p>;
   if (isError) return <p>{error}</p>;
+
+    const filterCategories = categories.filter((category) => {
+      if (search.length === 0) {
+        return category
+      } else {
+        return (
+          category.name.toLowerCase().includes(search.toLowerCase())
+        )
+      }
+    })
 
   return (
     <div>
@@ -47,6 +57,8 @@ const Categories = () => {
             className="shadow-lg border-b-2 px-2 w-[75%] py-[2px] md:w-[50%]  outline-none focus:border-b-2 focus:border-black"
             type="text"
             placeholder="Search any category..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
           <button className="bg-slate-800 text-white rounded py-1 px-3 shadow-xl hover:bg-slate-700">
             Search
@@ -58,7 +70,7 @@ const Categories = () => {
         {/* Add Category Container */}
         <div className="flex justify-between items-center w-[90%] mb-3 md:mb-0">
           <span className="bg-slate-800 transition-colors delay-100 hover:bg-slate-700 py-1 px-3 text-white rounded shadow-xl">
-            Total : {categoires.length}
+            Total : {filterCategories.length}
           </span>
           <Link to={`/categories/new`}>
             <button className="py-1 px-3 bg-blue-600 hover:bg-blue-700 transition-colors delay-100 text-white rounded shadow-xl">
@@ -84,7 +96,7 @@ const Categories = () => {
               </tr>
             </thead>
             <tbody>
-              {categoires.map((val, index) => (
+              {filterCategories.map((val, index) => (
                 <tr
                   key={val._id}
                   className="bg-white border-b hover:bg-gray-50"
@@ -95,7 +107,10 @@ const Categories = () => {
                     <button className="bg-[#FFC436] hover:bg-[#FFA732] transition-colors delay-100 py-1 px-3 rounded shadow-xl">
                       Edit
                     </button>
-                    <button onClick={() => handleDelete(val._id)} className="bg-[#FE0000] hover:bg-red-600 text-white py-1 px-3 rounded shadow-xl">
+                    <button
+                      onClick={() => handleDelete(val._id)}
+                      className="bg-[#FE0000] hover:bg-red-600 text-white py-1 px-3 rounded shadow-xl"
+                    >
                       Delete
                     </button>
                   </td>

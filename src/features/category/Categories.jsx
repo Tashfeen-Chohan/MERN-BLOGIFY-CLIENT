@@ -83,7 +83,7 @@ const Categories = () => {
         {/* MAIN TABLE */}
         <div className="relative overflow-x-auto w-[90%] md:w-full shadow-md sm:rounded my-5">
           <table className="w-full text-sm text-left rtl:text-right">
-            <thead className="text-xs text-gray-700 uppercase bg-slate-200">
+            <thead className="text-md text-gray-700 uppercase bg-slate-200">
               <tr>
                 <th scope="col" className="px-6 py-3">
                   #
@@ -105,9 +105,11 @@ const Categories = () => {
                   <td className="px-6 py-4 font-bold">{index + 1}</td>
                   <td className="px-6 py-4 font-bold">{val.name}</td>
                   <td className="px-6 py-4 text-right flex justify-start items-center gap-2">
+                    <Link to={`/categories/${val._id}`}>
                     <button className="bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 py-1 px-3 rounded shadow-xl">
                       Edit
                     </button>
+                    </Link>
                     <button
                       onClick={() => handleDelete(val._id)}
                       className="bg-[#FE0000] hover:bg-red-600 transition-colors duration-500 text-white py-1 px-3 rounded shadow-xl"

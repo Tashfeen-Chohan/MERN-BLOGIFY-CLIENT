@@ -4,6 +4,8 @@ import {
   useDeleteCategoryMutation,
 } from "./categoryApi";
 import { Link } from "react-router-dom";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Categories = () => {
   const {
@@ -18,8 +20,15 @@ const Categories = () => {
 
   const handleDelete = async (id) => {
     try {
-      await deleteCategory(id)
+      const response = await deleteCategory(id)
+      console.log(response)
+      if (response.error){
+        toast.error(response.error.data.message)
+      } else {
+        toast.success(response.data.message)
+      }
     } catch (error) {
+      toast.error("An error occured while deleting Category")
       console.log("Error deleting category")
     }
   }    
@@ -45,7 +54,7 @@ const Categories = () => {
         </div>
       </div>
 
-      <div className="flex justify-center items-center flex-col md:max-w-3xl mx-auto">
+      <div className="flex justify-center items-center flex-col md:max-w-4xl mx-auto">
         {/* Add Category Container */}
         <div className="flex justify-between items-center w-[90%] mb-3 md:mb-0">
           <span className="bg-slate-800 transition-colors delay-100 hover:bg-slate-700 py-1 px-3 text-white rounded shadow-xl">
@@ -60,7 +69,7 @@ const Categories = () => {
         <h1 className="text-2xl font-bold ">All Categories</h1>
         {/* MAIN TABLE */}
         <div className="relative overflow-x-auto max-w-[90%] md:w-full shadow-md sm:rounded my-5">
-          <table className="w-full text-sm text-left rtl:text-right md:max-w-4xl">
+          <table className="w-full text-sm text-left rtl:text-right">
             <thead className="text-xs text-gray-700 uppercase bg-slate-200">
               <tr>
                 <th scope="col" className="px-6 py-3">

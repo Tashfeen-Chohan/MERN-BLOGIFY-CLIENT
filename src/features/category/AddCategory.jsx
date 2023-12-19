@@ -1,17 +1,41 @@
 import React, { useState } from "react";
 import { BiSolidCategory } from "react-icons/bi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAddCategoryMutation } from "./categoryApi";
+import { toast } from "react-toastify";
 
 const AddCategory = () => {
   const [name, setName] = useState("");
-  const handleSubmit = () => {};
+  const [addCategory] = useAddCategoryMutation()
+  const navigate = useNavigate()
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (name){
+      try {
+        const res = await addCategory({name})
+        if (res.error){
+          toast.error(res.error.data.message)
+        } else {
+          toast.success(res.data.message)
+          navigate("/categories")
+        }
+      } catch (error) {
+        console.log(error)
+        toast.error("An unexpected error occurred on the server!")
+      }
+    } else {
+      toast.error("Please enter category name!")
+    }
+  };
   return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="shadow-xl rounded p-10 w-[90%] md:max-w-lg">
         <h1 className="font-bold text-3xl text-center pb-10">Add Category</h1>
         <form onSubmit={handleSubmit} className="w-full md:w-[70%] md:mx-auto">
           <div className="flex justify-center items-center gap-6 mb-4">
-            <label htmlFor="category" className="text-2xl font-bold">
+            <label htmlFor="name" className="text-2xl font-bold">
               <BiSolidCategory />
               {/* Name */}
             </label>
@@ -19,8 +43,8 @@ const AddCategory = () => {
               className="md:w-full border-b-2 text-lg px-1 border-gray-500 outline-none focus:border-black"
               type="text"
               placeholder="Category Name"
-              name="category"
-              id="category"
+              name="name"
+              id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />

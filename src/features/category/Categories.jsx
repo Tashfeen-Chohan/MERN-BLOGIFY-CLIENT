@@ -6,6 +6,7 @@ import {
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { AiOutlineSortAscending } from "react-icons/ai";
 
 const Categories = () => {
   const {
@@ -17,6 +18,7 @@ const Categories = () => {
 
   const [deleteCategory] = useDeleteCategoryMutation();
   const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState("");
 
   const handleDelete = async (id) => {
     try {
@@ -46,7 +48,7 @@ const Categories = () => {
 
   return (
     <div>
-      <div className="py-5 flex justify-center items-center flex-col max-w-[90%] mx-auto rounded shadow-lg my-10 bg-slate-100 md:max-w-lg">
+      <div className="py-5 flex justify-center items-center flex-col max-w-[90%] mx-auto rounded shadow-lg my-7 bg-slate-100 md:max-w-lg">
         <h1 className="text-3xl font-bold pb-4 text-center md:pb-7">
           BLOGIFY APP
         </h1>
@@ -64,7 +66,7 @@ const Categories = () => {
         </div>
       </div>
 
-      <div className="flex justify-center items-center flex-col md:max-w-3xl mx-auto">
+      <div className="flex justify-center items-center flex-col w-[90%] md:max-w-3xl mx-auto">
         {/* Add Category Container */}
         <div className="flex justify-between items-center w-[90%] md:w-full mb-3 md:mb-0">
           <span className="bg-slate-800 transition-colors duration-500 hover:bg-slate-700 py-1 px-3 text-white rounded shadow-xl">
@@ -77,8 +79,24 @@ const Categories = () => {
           </Link>
         </div>
         <h1 className="text-2xl font-bold ">All Categories</h1>
+
+        {/* CATEGORY SORTING */}
+        <div className="self-end mt-3">
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="bg-slate-200 shadow-md rounded text-black outline-none px-2 py-1"
+          >
+            <option value="">Sory By</option>
+            <option value="name">Name Asc</option>
+            <option value="name desc">Name Desc</option>
+            <option value="date desc">Newest</option>
+            <option value="date">Oldest</option>
+          </select>
+        </div>
+
         {/* MAIN TABLE */}
-        <div className="relative overflow-x-auto w-[90%] md:w-full shadow-md sm:rounded my-5">
+        <div className="relative overflow-x-auto md:w-full shadow-md sm:rounded mb-5 mt-3 ">
           <table className="w-full text-sm text-left rtl:text-right">
             <thead className="text-md text-gray-700 uppercase bg-slate-200">
               <tr>
@@ -171,7 +189,6 @@ const Categories = () => {
             </button>
           </div>
         </div>
-
       </div>
     </div>
   );

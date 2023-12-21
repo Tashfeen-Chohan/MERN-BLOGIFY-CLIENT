@@ -16,7 +16,7 @@ const Categories = () => {
   } = useGetCategoriesQuery();
 
   const [deleteCategory] = useDeleteCategoryMutation();
-  const [search, setSearch] = useState("")
+  const [search, setSearch] = useState("");
 
   const handleDelete = async (id) => {
     try {
@@ -38,14 +38,11 @@ const Categories = () => {
 
   const filterCategories = categories.filter((category) => {
     if (search.length === 0) {
-      return category
+      return category;
     } else {
-      return (
-        category.name.toLowerCase().includes(search.toLowerCase())
-      )
+      return category.name.toLowerCase().includes(search.toLowerCase());
     }
-  })
-
+  });
 
   return (
     <div>
@@ -55,7 +52,7 @@ const Categories = () => {
         </h1>
         <div className="flex justify-center items-center gap-4 w-full px-4 md:pb-2">
           <input
-            className="shadow-lg border-b-2 px-2 w-[75%] py-[2px] md:w-[50%]  outline-none focus:border-b-2 focus:border-black"
+            className="shadow-lg border-b-2 border-slate-400 px-2 w-[75%] py-[2px] md:w-[50%]  outline-none focus:border-b-2 focus:border-black"
             type="text"
             placeholder="Search any category..."
             value={search}
@@ -106,9 +103,9 @@ const Categories = () => {
                   <td className="px-6 py-4 font-bold">{val.name}</td>
                   <td className="px-6 py-4 text-right flex justify-start items-center gap-2">
                     <Link to={`/categories/${val._id}`}>
-                    <button className="bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 py-1 px-3 rounded shadow-xl">
-                      Edit
-                    </button>
+                      <button className="bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 py-1 px-3 rounded shadow-xl">
+                        Edit
+                      </button>
                     </Link>
                     <button
                       onClick={() => handleDelete(val._id)}
@@ -122,6 +119,59 @@ const Categories = () => {
             </tbody>
           </table>
         </div>
+
+        {/* PAGINATION */}
+
+        <div class="flex flex-col items-center mb-5">
+          <span class="text-sm text-gray-700 dark:text-gray-400">
+            Showing{" "}
+            <span class="font-semibold text-gray-900 dark:text-white">1</span>{" "}
+            to{" "}
+            <span class="font-semibold text-gray-900 dark:text-white">10</span>{" "}
+            of{" "}
+            <span class="font-semibold text-gray-900 dark:text-white">100</span>{" "}
+            Entries
+          </span>
+          <div class="inline-flex mt-2 xs:mt-0">
+            <button class="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 rounded-s hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+              <svg
+                class="w-3.5 h-3.5 me-2 rtl:rotate-180"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 10"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 5H1m0 0 4 4M1 5l4-4"
+                />
+              </svg>
+              Prev
+            </button>
+            <button class="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 border-0 border-s border-gray-700 rounded-e hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+              Next
+              <svg
+                class="w-3.5 h-3.5 ms-2 rtl:rotate-180"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 10"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M1 5h12m0 0L9 1m4 4L9 9"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
   );

@@ -9,16 +9,16 @@ import "react-toastify/dist/ReactToastify.css";
 import { AiOutlineSortAscending } from "react-icons/ai";
 
 const Categories = () => {
+  const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState("");
   const {
     data: categories,
     isLoading,
     isError,
     error,
-  } = useGetCategoriesQuery();
+  } = useGetCategoriesQuery(sortBy);
 
   const [deleteCategory] = useDeleteCategoryMutation();
-  const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState("");
 
   const handleDelete = async (id) => {
     try {
@@ -45,6 +45,7 @@ const Categories = () => {
       return category.name.toLowerCase().includes(search.toLowerCase());
     }
   });
+
 
   return (
     <div>
@@ -140,7 +141,7 @@ const Categories = () => {
 
         {/* PAGINATION */}
 
-        <div class="flex flex-col items-center mb-5">
+        {/* <div class="flex flex-col items-center mb-5">
           <span class="text-sm text-gray-700 dark:text-gray-400">
             Showing{" "}
             <span class="font-semibold text-gray-900 dark:text-white">1</span>{" "}
@@ -188,7 +189,7 @@ const Categories = () => {
               </svg>
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

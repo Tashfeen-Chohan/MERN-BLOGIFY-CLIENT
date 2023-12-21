@@ -1,19 +1,48 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BiSolidCategory } from "react-icons/bi";
-import { Link, useNavigate } from "react-router-dom";
-import { useAddCategoryMutation } from "./categoryApi";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useGetSingleCategoryQuery, useUpdateCategoryMutation } from "./categoryApi";
 import { toast } from "react-toastify";
 
 const UpdateCategory = () => {
-  const [name, setName] = useState("");
-  const [addCategory] = useAddCategoryMutation()
+
+  const {id} = useParams()
+  const [updateCategory] = useUpdateCategoryMutation()
+  const [name, setName] = useState("");  
+  const {data: category} = useGetSingleCategoryQuery(id)
   const navigate = useNavigate()
+  console.log(category)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      const res = await updateCategory({id, name})
+      console.log(res)
+      if (res.error){
+        toast.error(res.error.data.message)
+      } else {
+        toast.success(res.data.message)
+        navigate("/categories")
+        setName("")
+      }
+    } catch (error) {
+      toast.error("An unexpected error occured on the server!")
+      console.log(error.message)
+    }
+  }
+
+  useEffect(() => {
+    if (category){
+      setName(category.name)
+    }
+  }, [category])
+
 
   return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="shadow-xl rounded p-10 w-[90%] md:max-w-lg">
         <h1 className="font-bold text-3xl text-center pb-10">Update Category</h1>
-        <form  className="w-full md:w-[70%] md:mx-auto">
+        <form onSubmit={handleSubmit}  className="w-full md:w-[70%] md:mx-auto">
           <div className="flex justify-center items-center gap-6 mb-4">
             <label htmlFor="name" className="text-2xl font-bold">
               <BiSolidCategory />

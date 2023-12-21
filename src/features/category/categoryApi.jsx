@@ -14,7 +14,8 @@ export const categoryApi = createApi({
 
     // GET SINGLE CATEGORY
     getSingleCategory: builder.query({
-      query: (id) => `/categories/${id}`
+      query: (id) => `/categories/${id}`,
+      providesTags: ["Categories"]
     }),
 
     // ADD NEW CATEGORY
@@ -29,8 +30,8 @@ export const categoryApi = createApi({
 
     // UPDATE CATEGORY
     updateCategory: builder.mutation({
-      query: (updatedCategory) => ({
-        url: `/categories/${updatedCategory._id}`,
+      query: ({id, ...updatedCategory}) => ({
+        url: `/categories/${id}`,
         method: "PATCH",
         body: updatedCategory
       }),

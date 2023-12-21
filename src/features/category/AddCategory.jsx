@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BiSolidCategory } from "react-icons/bi";
 import { Link, useNavigate } from "react-router-dom";
 import { useAddCategoryMutation } from "./categoryApi";
@@ -8,7 +8,6 @@ const AddCategory = () => {
   const [name, setName] = useState("");
   const [addCategory] = useAddCategoryMutation()
   const navigate = useNavigate()
-
 
   const handleSubmit = async (e) => {
     e.preventDefault()

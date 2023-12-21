@@ -8,7 +8,7 @@ export const categoryApi = createApi({
   endpoints: (builder) => ({
     // GET ALL CATEGORIES
     getCategories: builder.query({
-      query: (sortBy) => `/categories?sortBy=${sortBy}`,
+      query: (url) => url,
       providesTags: ["Categories"]
     }),
 

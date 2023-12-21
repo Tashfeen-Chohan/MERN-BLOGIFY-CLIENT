@@ -3,20 +3,22 @@ import {
   useGetCategoriesQuery,
   useDeleteCategoryMutation,
 } from "./categoryApi";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AiOutlineSortAscending } from "react-icons/ai";
 
 const Categories = () => {
-  const [search, setSearch] = useState("");
+  const [searchBy, setSearchBy] = useState("");
   const [sortBy, setSortBy] = useState("");
+
+  let url = `categories?sortBy=${sortBy}&searchBy=${searchBy}`;
   const {
     data: categories,
     isLoading,
     isError,
     error,
-  } = useGetCategoriesQuery(sortBy);
+  } = useGetCategoriesQuery(url);
 
   const [deleteCategory] = useDeleteCategoryMutation();
 
@@ -38,14 +40,13 @@ const Categories = () => {
   if (isLoading) return <p>Loading....</p>;
   if (isError) return <p>{error}</p>;
 
-  const filterCategories = categories.filter((category) => {
-    if (search.length === 0) {
-      return category;
-    } else {
-      return category.name.toLowerCase().includes(search.toLowerCase());
-    }
-  });
-
+  // const filterCategories = categories.filter((category) => {
+  //   if (searchBy.length === 0By) {
+  //     return category;
+  //   } else {
+  //     return category.name.toLowerCase().includes(searchBy.toLowerCaseBy());
+  //   }
+  // });
 
   return (
     <div>
@@ -58,8 +59,8 @@ const Categories = () => {
             className="shadow-lg border-b-2 border-slate-400 px-2 w-[75%] py-[2px] md:w-[50%]  outline-none focus:border-b-2 focus:border-black"
             type="text"
             placeholder="Search any category..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={searchBy}
+            onChange={(e) => setSearchBy(e.target.value)}
           />
           <button className="bg-slate-800 text-white rounded py-1 px-3 shadow-xl hover:bg-slate-700 transition-colors duration-500">
             Search
@@ -71,7 +72,7 @@ const Categories = () => {
         {/* Add Category Container */}
         <div className="flex justify-between items-center w-[90%] md:w-full mb-3 md:mb-0">
           <span className="bg-slate-800 transition-colors duration-500 hover:bg-slate-700 py-1 px-3 text-white rounded shadow-xl">
-            Total : {filterCategories.length}
+            Total : {categories.length}
           </span>
           <Link to={`/categories/new`}>
             <button className="py-1 px-3 bg-blue-600 hover:bg-blue-700 transition-colors duration-500 text-white rounded shadow-xl">
@@ -86,9 +87,11 @@ const Categories = () => {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="bg-slate-200 shadow-md rounded text-black outline-none px-2 py-1"
+            className="bg-slate-200 shadow-md  rounded text-black outline-none px-2 py-1"
           >
-            <option value="">Sory By</option>
+            <option value="">
+              <b>Sort By</b>
+            </option>
             <option value="name">Name Asc</option>
             <option value="name desc">Name Desc</option>
             <option value="date desc">Newest</option>
@@ -113,28 +116,32 @@ const Categories = () => {
               </tr>
             </thead>
             <tbody>
-              {filterCategories.map((val, index) => (
-                <tr
-                  key={val._id}
-                  className="bg-white border-b hover:bg-gray-50"
-                >
-                  <td className="px-6 py-4 font-bold">{index + 1}</td>
-                  <td className="px-6 py-4 font-bold">{val.name}</td>
-                  <td className="px-6 py-4 text-right flex justify-start items-center gap-2">
-                    <Link to={`/categories/${val._id}`}>
-                      <button className="bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 py-1 px-3 rounded shadow-xl">
-                        Edit
+              {categories.length === 0 ? (
+                  <p className="font-bold text-red-500 my-3 ml-2">No category found!</p>
+              ) : (
+                categories.map((val, index) => (
+                  <tr
+                    key={val._id}
+                    className="bg-white border-b hover:bg-gray-50"
+                  >
+                    <td className="px-6 py-4 font-bold">{index + 1}</td>
+                    <td className="px-6 py-4 font-bold">{val.name}</td>
+                    <td className="px-6 py-4 text-right flex justify-start items-center gap-2">
+                      <Link to={`/categories/${val._id}`}>
+                        <button className="bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 py-1 px-3 rounded shadow-xl">
+                          Edit
+                        </button>
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(val._id)}
+                        className="bg-[#FE0000] hover:bg-red-600 transition-colors duration-500 text-white py-1 px-3 rounded shadow-xl"
+                      >
+                        Delete
                       </button>
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(val._id)}
-                      className="bg-[#FE0000] hover:bg-red-600 transition-colors duration-500 text-white py-1 px-3 rounded shadow-xl"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

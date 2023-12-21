@@ -114,7 +114,7 @@ const Categories = () => {
                     key={val._id}
                     className="bg-white border-b hover:bg-gray-50"
                   >
-                    <td className="px-6 py-4 font-bold">{index + 1}</td>
+                    <td className="px-6 py-4 font-bold">{(page - 1) * limit + index + 1}</td>
                     <td className="px-6 py-4 font-bold">{val.name}</td>
                     <td className="px-6 py-4 text-right flex justify-start items-center gap-2">
                       <Link to={`/categories/${val._id}`}>
@@ -142,7 +142,7 @@ const Categories = () => {
           <span className="text-sm text-gray-700 ">
             Showing
             <span className="font-semibold text-gray-900 px-1">
-              {page * limit - (limit - 1)}
+              {(page - 1) * limit + 1}
             </span>
             to
             <span className="font-semibold text-gray-900 px-1">

@@ -6,6 +6,7 @@ import {
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
 
 const Categories = () => {
   const [searchBy, setSearchBy] = useState("");
@@ -19,15 +20,34 @@ const Categories = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await deleteCategory(id);
-      console.log(response);
-      if (response.error) {
-        toast.error(response.error.data.message);
-      } else {
-        toast.success(response.data.message);
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3559E0",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      });
+
+      if (result.isConfirmed) {
+        const response = await deleteCategory(id);
+        if (response.error) {
+          Swal.fire({
+            title: "Error!",
+            text: response.error.data.message,
+            icon: "error"
+          })
+        } else {
+          toast.success(response.data.message);
+        }
       }
     } catch (error) {
-      toast.error("An error occured while deleting Category");
+      Swal.fire({
+        title: "Error!",
+        text: "An error occured while deleting Category!",
+        icon: "error"
+      })
       console.log("Error deleting category");
     }
   };
@@ -114,7 +134,9 @@ const Categories = () => {
                     key={val._id}
                     className="bg-white border-b hover:bg-gray-50"
                   >
-                    <td className="px-6 py-4 font-bold">{(page - 1) * limit + index + 1}</td>
+                    <td className="px-6 py-4 font-bold">
+                      {(page - 1) * limit + index + 1}
+                    </td>
                     <td className="px-6 py-4 font-bold">{val.name}</td>
                     <td className="px-6 py-4 text-right flex justify-start items-center gap-2">
                       <Link to={`/categories/${val._id}`}>
@@ -142,7 +164,7 @@ const Categories = () => {
           <span className="text-sm text-gray-700 ">
             Showing
             <span className="font-semibold text-gray-900 px-1">
-              {(page - 1) * limit + 1}
+              {totalCategories !== 0 ? (page - 1) * limit + 1 : totalCategories}
             </span>
             to
             <span className="font-semibold text-gray-900 px-1">
@@ -155,6 +177,16 @@ const Categories = () => {
             Entries
           </span>
           <div className="inline-flex mt-2 xs:mt-0">
+            <button
+              onClick={() => setPageNo(1)}
+              className={
+                page > 2
+                  ? "bg-slate-700 hover:bg-slate-900 transition-colors duration-300 text-white rounded-s px-3"
+                  : "hidden"
+              }
+            >
+              Page 1
+            </button>
             <button
               disabled={page === 1}
               onClick={() => setPageNo(page - 1)}

@@ -23,17 +23,15 @@ const Categories = () => {
       const result = await Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
-        icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#3559E0",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonText: "Delete",
         width: "27rem",
         customClass: {
+          title: "!font-bold",
           confirmButton:
-            "!py-2 !px-3 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+            "!py-1 !px-4 !bg-red-600 !hover:bg-red-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
           cancelButton:
-            "!py-2 !px-4 !bg-red-600 !hover:bg-red-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+            "!py-1 !px-4 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
         },
       });
 
@@ -43,11 +41,11 @@ const Categories = () => {
           Swal.fire({
             title: "Error!",
             text: response.error.data.message,
-            icon: "error",
             width: "27rem",
             customClass: {
+              title: "!text-red-500 !font-bold",
               confirmButton:
-                "!py-2 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+                "!py-1 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
             },
           });
         } else {
@@ -57,12 +55,12 @@ const Categories = () => {
     } catch (error) {
       Swal.fire({
         title: "Error!",
-        text: "An error occured while deleting Category!",
-        icon: "error",
+        text: "An unexpected error occured on the server!",
         width: "27rem",
         customClass: {
+          title: "!text-red-500 !font-bold",
           confirmButton:
-            "!py-2 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+            "!py-1 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
         },
       });
       console.log("Error deleting category");
@@ -116,7 +114,9 @@ const Categories = () => {
             onChange={(e) => setSortBy(e.target.value)}
             className="bg-slate-200 shadow-md  rounded text-black outline-none px-2 py-1"
           >
-            <option className="font-bold" value="">Sort by Default</option>
+            <option className="font-bold" value="">
+              Sort by Default
+            </option>
             <option value="name">Name Asc</option>
             <option value="name desc">Name Desc</option>
             <option value="date desc">Newest</option>

@@ -19,9 +19,9 @@ const AddCategory = () => {
           Swal.fire({
             title: "Error!",
             text: res.error.data.message,
-            icon: "error",
             width: "27rem",
             customClass: {
+              title: "!text-red-500 !font-bold",
               confirmButton:
                 "!py-2 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
             },
@@ -34,9 +34,9 @@ const AddCategory = () => {
         Swal.fire({
           title: "Error!",
           text: res.error.data.message,
-          icon: "error",
           width: "27rem",
           customClass: {
+            title: "!text-red-500 !font-bold",
             confirmButton:
               "!py-2 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
           },

@@ -7,11 +7,13 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
+import { BeatLoader } from "react-spinners";
 
 const Categories = () => {
   const [searchBy, setSearchBy] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [pageNo, setPageNo] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   let url = `categories?sortBy=${sortBy}&searchBy=${searchBy}&page=${pageNo}`;
   const { data, isLoading, isError, error } = useGetCategoriesQuery(url);
@@ -67,7 +69,12 @@ const Categories = () => {
     }
   };
 
-  if (isLoading) return <p className="">Loading....</p>;
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-slate-200">
+        <BeatLoader color="#000000" size={10} />;
+      </div>
+    );
   if (isError) return <p>{error}</p>;
 
   // OBJECT DESTRUCTURING
@@ -75,6 +82,7 @@ const Categories = () => {
 
   return (
     <div>
+      {/* SEARCH SECTION */}
       <div className="py-5 flex justify-center items-center flex-col max-w-[90%] mx-auto rounded shadow-lg my-7 bg-slate-100 md:max-w-lg">
         <h1 className="text-3xl font-bold pb-4 text-center md:pb-7">
           BLOGIFY APP

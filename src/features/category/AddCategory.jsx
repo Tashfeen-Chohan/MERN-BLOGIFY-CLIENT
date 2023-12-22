@@ -3,29 +3,48 @@ import { BiSolidCategory } from "react-icons/bi";
 import { Link, useNavigate } from "react-router-dom";
 import { useAddCategoryMutation } from "./categoryApi";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 const AddCategory = () => {
   const [name, setName] = useState("");
-  const [addCategory] = useAddCategoryMutation()
-  const navigate = useNavigate()
+  const [addCategory] = useAddCategoryMutation();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (name){
+    e.preventDefault();
+    if (name) {
       try {
-        const res = await addCategory({name})
-        if (res.error){
-          toast.error(res.error.data.message)
+        const res = await addCategory({ name });
+        if (res.error) {
+          Swal.fire({
+            title: "Error!",
+            text: res.error.data.message,
+            icon: "error",
+            width: "27rem",
+            customClass: {
+              confirmButton:
+                "!py-2 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+            },
+          });
         } else {
-          toast.success(res.data.message)
-          navigate("/categories")
+          toast.success(res.data.message);
+          navigate("/categories");
         }
       } catch (error) {
-        console.log(error)
-        toast.error("An unexpected error occurred on the server!")
+        Swal.fire({
+          title: "Error!",
+          text: res.error.data.message,
+          icon: "error",
+          width: "27rem",
+          customClass: {
+            confirmButton:
+              "!py-2 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+          },
+        });
+        console.log(error);
       }
     } else {
-      toast.error("Please enter category name!")
+      toast.error("Please enter category name!");
     }
   };
   return (
@@ -53,7 +72,7 @@ const AddCategory = () => {
           <div className="mt-7 flex justify-end items-center gap-3">
             <button
               type="submit"
-              className="py-1 px-3 bg-blue-600 hover:bg-blue-700 transition-colors duration-500 text-white rounded shadow-xl"
+              className="py-1 px-4 bg-blue-600 hover:bg-blue-700 transition-colors duration-500 text-white rounded shadow-xl"
             >
               Add
             </button>

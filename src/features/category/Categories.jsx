@@ -28,6 +28,13 @@ const Categories = () => {
         confirmButtonColor: "#3559E0",
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, delete it!",
+        width: "27rem",
+        customClass: {
+          confirmButton:
+            "!py-2 !px-3 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+          cancelButton:
+            "!py-2 !px-4 !bg-red-600 !hover:bg-red-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+        },
       });
 
       if (result.isConfirmed) {
@@ -36,8 +43,13 @@ const Categories = () => {
           Swal.fire({
             title: "Error!",
             text: response.error.data.message,
-            icon: "error"
-          })
+            icon: "error",
+            width: "27rem",
+            customClass: {
+              confirmButton:
+                "!py-2 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+            },
+          });
         } else {
           toast.success(response.data.message);
         }
@@ -46,13 +58,18 @@ const Categories = () => {
       Swal.fire({
         title: "Error!",
         text: "An error occured while deleting Category!",
-        icon: "error"
-      })
+        icon: "error",
+        width: "27rem",
+        customClass: {
+          confirmButton:
+            "!py-2 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+        },
+      });
       console.log("Error deleting category");
     }
   };
 
-  if (isLoading) return <p>Loading....</p>;
+  if (isLoading) return <p className="">Loading....</p>;
   if (isError) return <p>{error}</p>;
 
   // OBJECT DESTRUCTURING
@@ -99,7 +116,7 @@ const Categories = () => {
             onChange={(e) => setSortBy(e.target.value)}
             className="bg-slate-200 shadow-md  rounded text-black outline-none px-2 py-1"
           >
-            <option value="">Sort By</option>
+            <option className="font-bold" value="">Sort by Default</option>
             <option value="name">Name Asc</option>
             <option value="name desc">Name Desc</option>
             <option value="date desc">Newest</option>

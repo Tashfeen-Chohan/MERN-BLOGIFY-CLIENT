@@ -18,6 +18,7 @@ const UpdateCategory = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // const trimmedName = name.trim()
     try {
       const result = await Swal.fire({
         title: "Do you want to save the changes?",

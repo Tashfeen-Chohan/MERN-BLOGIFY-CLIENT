@@ -8,6 +8,7 @@ import Categories from "./features/category/Categories";
 import AddCategory from "./features/category/AddCategory";
 import { ToastContainer } from "react-toastify";
 import UpdateCategory from "./features/category/UpdateCategory";
+import Navbar from "./components/Navbar";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
         pauseOnHover
         theme="dark"
       />
+      <Navbar/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />

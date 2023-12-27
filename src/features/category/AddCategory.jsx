@@ -12,6 +12,7 @@ const AddCategory = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // const trimmedName = name.trim()
     if (name) {
       try {
         const res = await addCategory({ name });
@@ -33,7 +34,7 @@ const AddCategory = () => {
       } catch (error) {
         Swal.fire({
           title: "Error!",
-          text: res.error.data.message,
+          text: "An unexpected error occured on the server!",
           width: "27rem",
           customClass: {
             title: "!text-red-500 !font-bold",

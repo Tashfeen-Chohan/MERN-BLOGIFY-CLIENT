@@ -4,7 +4,7 @@ import { useGetCategoriesQuery } from '../features/category/categoryApi'
 const Home = () => {
   return (
     <div>
-      Home
+      {/* Home */}
     </div>
   )
 }

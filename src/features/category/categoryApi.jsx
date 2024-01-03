@@ -1,6 +1,4 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { apiSlice } from "../../app/apiSlice";
-
 
 export const categoryApi = apiSlice.injectEndpoints({
   

@@ -104,7 +104,7 @@ const Categories = () => {
 
       <div className="flex justify-center items-center flex-col w-[90%] md:max-w-3xl mx-auto">
         {/* Add Category Container */}
-        <div className="flex justify-between items-center w-[90%] md:w-full mb-3 md:mb-0">
+        <div className="flex justify-between items-center w-full md:w-full mb-3 md:mb-0">
           <span className="bg-slate-800 transition-colors duration-500 hover:bg-slate-700 py-1 px-3 md:px-4 text-white rounded shadow-xl">
             Total : {totalCategories}
           </span>
@@ -133,7 +133,7 @@ const Categories = () => {
           </select>
         </div>
 
-        {/* MAIN TABLE */}
+        {/* TABLE */}
         <div className="relative overflow-x-auto md:w-full shadow-md sm:rounded mb-5 mt-3 ">
           <table className="w-full text-sm text-left rtl:text-right">
             <thead className="text-md text-gray-700 uppercase bg-slate-200">

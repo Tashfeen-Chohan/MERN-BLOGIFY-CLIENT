@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 import { BeatLoader } from "react-spinners";
+import Sidebar from "../../components/Sidebar";
 
 const Categories = () => {
   const [searchBy, setSearchBy] = useState("");
@@ -81,7 +82,7 @@ const Categories = () => {
   const { capitalized, totalCategories, totalPages, page, limit } = data;
 
   return (
-    <div>
+    <div className="mt-20 md:mt-24">
       {/* SEARCH SECTION */}
       <div className="py-5 flex justify-center items-center flex-col max-w-[90%] mx-auto rounded shadow-lg my-7 bg-slate-100 md:max-w-lg">
         <h1 className="text-3xl font-bold pb-4 text-center md:pb-7">

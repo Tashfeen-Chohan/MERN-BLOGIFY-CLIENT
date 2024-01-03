@@ -1,21 +1,20 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
+import { apiSlice } from "../../app/apiSlice";
 
-export const categoryApi = createApi({
-  reducerPath: "categoryApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/" }),
-  tagTypes: ["Categories"],
 
+export const categoryApi = apiSlice.injectEndpoints({
+  
   endpoints: (builder) => ({
     // GET ALL CATEGORIES
     getCategories: builder.query({
       query: (url) => url,
-      providesTags: ["Categories"]
+      providesTags: ["Category"]
     }),
 
     // GET SINGLE CATEGORY
     getSingleCategory: builder.query({
       query: (id) => `/categories/${id}`,
-      providesTags: ["Categories"]
+      providesTags: ["Category"]
     }),
 
     // ADD NEW CATEGORY
@@ -25,7 +24,7 @@ export const categoryApi = createApi({
         method: "POST",
         body: newCategory
       }),
-      invalidatesTags: ["Categories"]
+      invalidatesTags: ["Category"]
     }),
 
     // UPDATE CATEGORY
@@ -35,7 +34,7 @@ export const categoryApi = createApi({
         method: "PATCH",
         body: updatedCategory
       }),
-      invalidatesTags: ["Categories"]
+      invalidatesTags: ["Category"]
     }),
 
     // DELETE CATEGORY
@@ -44,7 +43,7 @@ export const categoryApi = createApi({
         url: `/categories/${id}`,
         method: "DELETE"
       }),
-      invalidatesTags: ["Categories"]
+      invalidatesTags: ["Category"]
     })
   })
 })

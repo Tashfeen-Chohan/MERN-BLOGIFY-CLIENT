@@ -9,6 +9,8 @@ import AddCategory from "./features/category/AddCategory";
 import { ToastContainer } from "react-toastify";
 import UpdateCategory from "./features/category/UpdateCategory";
 import Navbar from "./components/Navbar";
+import CategoryPage from "./pages/CategoryPage";
+import Users from "./features/user/Users";
 
 const App = () => {
   return (
@@ -30,9 +32,14 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/categories" element={<Categories />} />
+
+        {/* CATEGORIES ROUTES */}
+        <Route path="/categories" element={<Categories/>} />
         <Route path="/categories/new" element={<AddCategory />} />
         <Route path="/categories/:id" element={<UpdateCategory />} />
+
+        {/* USERS ROUTES */}
+        <Route path="/users" element={<Users/>}/>
       </Routes>
     </div>
   );

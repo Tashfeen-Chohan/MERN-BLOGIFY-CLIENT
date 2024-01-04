@@ -14,7 +14,9 @@ export default function Navbar() {
           <div className="md:pl-28 w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
             {/* LOGO */}
             <Link to={"/"}>
-                <span className="text-xl font-bold italic md:text-2xl">Blogify</span>
+              <span className="text-xl font-bold italic md:text-2xl">
+                Blogify
+              </span>
             </Link>
 
             <button
@@ -48,6 +50,16 @@ export default function Navbar() {
                 <Link to={"/users"}>USERS</Link>
               </li>
             </ul>
+            <div className="ml-10">
+              <Link to={"/register"}>
+              <button onClick={() => setNavbarOpen(!navbarOpen)} className="bg-slate-200 text-black px-2 py-1 rounded font-bold">
+                Sign up
+              </button>
+              </Link>
+              <Link to={"/login"}>
+              <button onClick={() => setNavbarOpen(!navbarOpen)} className="ml-3 bg-transparent border text-white px-3 py-1 rounded">Login</button>
+              </Link>
+            </div>
           </div>
         </div>
       </nav>

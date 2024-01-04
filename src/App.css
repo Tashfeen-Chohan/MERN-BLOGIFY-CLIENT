@@ -2,3 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+.userTable:nth-child(odd){
+  background-color: #F4F6F8;
+}
+

@@ -1,16 +1,74 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useAddUserMutation } from "../features/user/userApi";
+import Swal from "sweetalert2";
 
 const Register = () => {
+  const [addUser] = useAddUserMutation();
+  const navigate = useNavigate()
+  const [user, setUser] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUser({
+      ...user,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { username, email, password } = user;
+    if (username && email && password) {
+      try {
+        const res = await addUser(user);
+        if (res.error) {
+          Swal.fire({
+            title: "Error!",
+            text: res.error.data.message,
+            width: "27rem",
+            customClass: {
+              title: "!text-red-500 !font-bold",
+              confirmButton:
+                "!py-2 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+            },
+          });
+        } else {
+          toast.success(res.data.message);
+          navigate("/users");
+        }
+      } catch (error) {
+        Swal.fire({
+          title: "Error!",
+          text: "An unexpected error occured on the server!",
+          width: "27rem",
+          customClass: {
+            title: "!text-red-500 !font-bold",
+            confirmButton:
+              "!py-2 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+          },
+        });
+        console.log(error);
+      }
+    } else {
+      toast.error("Please fill up all fields!");
+    }
+  };
+
   return (
-    <section className="bg-gray-50 dark:bg-gray-900 min-h-screen pt-24 sm:pt-0">
+    <section className="bg-gray-50 dark:bg-gray-900 min-h-screen pt-24 sm:pt-0 md:mt-10">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               New Registration
             </h1>
-            <form className="space-y-4 md:space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
               <div>
                 <label
                   htmlFor="username"
@@ -22,6 +80,8 @@ const Register = () => {
                   type="username"
                   name="username"
                   id="username"
+                  value={user.username}
+                  onChange={handleChange}
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="John Doe"
                 />
@@ -37,6 +97,8 @@ const Register = () => {
                   type="email"
                   name="email"
                   id="email"
+                  value={user.email}
+                  onChange={handleChange}
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="name@company.com"
                 />
@@ -53,8 +115,9 @@ const Register = () => {
                   name="password"
                   id="password"
                   placeholder="••••••••"
+                  value={user.password}
+                  onChange={handleChange}
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  required=""
                 />
               </div>
               <button

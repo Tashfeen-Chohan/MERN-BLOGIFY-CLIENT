@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 const Users = () => {
   const url = "users";
   const { data, isloading, isError, error } = useGetUsersQuery(url);
-  console.log(data);
 
   return (
     <div className="mt-20 md:mt-24">
@@ -60,8 +59,8 @@ const Users = () => {
         </div>
 
         {/* MAIN TABLE */}
-        <table className={"min-w-full border-collapse block md:table mt-3 shadow-xl"}>
-          <thead className="block md:table-header-group bg-slate-200 text-slate-700">
+        <table className={"min-w-full border-collapse block md:table mt-3 mb-8 shadow-xl"}>
+          <thead className="block md:table-header-group bg-slate-300 text-black">
             <tr className="border border-grey-500 md:border-none block md:table-row absolute -top-full md:top-auto -left-full md:left-auto  md:relative ">
               <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
                 #
@@ -84,7 +83,7 @@ const Users = () => {
             {data?.map((val, index) => (
               <tr
                 key={val._id}
-                className="my-3 rounded shadow-md md:shadow-none border border-grey-500 md:border-none block md:table-row"
+                className="userTable my-3 rounded shadow-md md:shadow-none border border-grey-500 md:border-none block md:table-row hover:bg-gray-200"
               >
                 <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
                   <span className="inline-block w-1/3 md:hidden font-bold">

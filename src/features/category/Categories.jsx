@@ -185,7 +185,6 @@ const Categories = () => {
         </div>
 
         {/* PAGINATION */}
-
         <div className="flex flex-col items-center mb-8">
           <span className="text-sm text-gray-700 ">
             Showing

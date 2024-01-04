@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDeleteUserMutation, useGetUsersQuery } from "./userApi";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import { BeatLoader } from "react-spinners";
 
 const Users = () => {
-  const url = "users";
-  const { data, isloading, isError, error } = useGetUsersQuery(url);
+  const [searchBy, setSearchBy] = useState("");
+  const [sortBy, setSortBy] = useState("");
+  const [pageNo, setPageNo] = useState(1);
+  const [loading, setLoading] = useState(true);
+
+  let url = `users?sortBy=${sortBy}&searchBy=${searchBy}&page=${pageNo}`;
+  const { data, isLoading, isError, error } = useGetUsersQuery(url);
   const [deleteUser] = useDeleteUserMutation()
 
   const handleDelete = async (id) => {
@@ -57,6 +63,17 @@ const Users = () => {
     }
   };
 
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-slate-200">
+        <BeatLoader color="#000000" size={15} />;
+      </div>
+    );
+  if (isError) return <p>{error}</p>;
+
+  // OBJECT DESTRUCTURING
+  const { capitalized, totalUsers, totalPages, page, limit } = data;
+
   return (
     <div className="mt-20 md:mt-24">
       {/* SEARCH SECTION */}
@@ -69,8 +86,8 @@ const Users = () => {
             className="shadow-lg border-b-2 border-slate-400 px-2 w-[75%] py-[2px] md:w-[50%]  outline-none focus:border-b-2 focus:border-black"
             type="text"
             placeholder="Search any user..."
-            // value={searchBy}
-            // onChange={(e) => setSearchBy(e.target.value)}
+            value={searchBy}
+            onChange={(e) => setSearchBy(e.target.value)}
           />
           <button className="bg-slate-800 text-white rounded py-1 px-3 shadow-xl hover:bg-slate-700 transition-colors duration-500">
             Search
@@ -79,10 +96,10 @@ const Users = () => {
       </div>
 
       <div className="flex justify-center items-center flex-col w-[90%] md:max-w-3xl mx-auto">
-        {/* Add Category Container */}
+        {/* TOTAL USERS */}
         <div className="flex justify-between items-center w-full mb-3 md:mb-0">
           <span className="bg-slate-800 transition-colors duration-500 hover:bg-slate-700 py-1 px-3 md:px-4 text-white rounded shadow-xl">
-            Total :
+            Total : {totalUsers}
           </span>
           <Link to={`/categories/new`}>
             <button className="py-1 px-3 bg-blue-600 hover:bg-blue-700 transition-colors duration-500 text-white rounded shadow-xl">
@@ -92,11 +109,11 @@ const Users = () => {
         </div>
         <h1 className="text-2xl font-bold ">All Users</h1>
 
-        {/* CATEGORY SORTING */}
+        {/* USER SORTING */}
         <div className="self-end mt-3">
           <select
-            // value={sortBy}
-            // onChange={(e) => setSortBy(e.target.value)}
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
             className="bg-slate-200 shadow-md  rounded text-black outline-none px-2 py-1"
           >
             <option className="font-bold" value="">
@@ -112,7 +129,7 @@ const Users = () => {
         {/* MAIN TABLE */}
         <table
           className={
-            "min-w-full border-collapse block md:table mt-3 mb-8 shadow-xl"
+            "min-w-full border-collapse block md:table mt-3 mb-5 shadow-xl"
           }
         >
           <thead className="block md:table-header-group bg-slate-300 text-black">
@@ -135,7 +152,7 @@ const Users = () => {
             </tr>
           </thead>
           <tbody className="block md:table-row-group font-semibold text-sm">
-            {data?.map((val, index) => (
+            {capitalized?.map((val, index) => (
               <tr
                 key={val._id}
                 className="userTable my-3 rounded shadow-md md:shadow-none border border-grey-500 md:border-none block md:table-row hover:bg-gray-200"
@@ -191,20 +208,19 @@ const Users = () => {
         </table>
 
         {/* PAGINATION */}
-
-        {/* <div className="flex flex-col items-center mb-8">
+        <div className="flex flex-col items-center mb-8">
           <span className="text-sm text-gray-700 ">
             Showing
             <span className="font-semibold text-gray-900 px-1">
-              {totalCategories !== 0 ? (page - 1) * limit + 1 : totalCategories}
+              {totalUsers !== 0 ? (page - 1) * limit + 1 : totalUsers}
             </span>
             to
             <span className="font-semibold text-gray-900 px-1">
-              {page * limit > totalCategories ? totalCategories : page * limit}
+              {page * limit > totalUsers ? totalUsers : page * limit}
             </span>
             of
             <span className="font-semibold text-gray-900 px-1">
-              {totalCategories}
+              {totalUsers}
             </span>
             Entries
           </span>
@@ -264,7 +280,7 @@ const Users = () => {
               </svg>
             </button>
           </div>
-        </div> */}
+        </div>
       </div>
     </div>
   );

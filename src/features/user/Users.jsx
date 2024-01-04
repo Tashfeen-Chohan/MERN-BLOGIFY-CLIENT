@@ -1,10 +1,61 @@
 import React from "react";
-import { useGetUsersQuery } from "./userApi";
+import { useDeleteUserMutation, useGetUsersQuery } from "./userApi";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 const Users = () => {
   const url = "users";
   const { data, isloading, isError, error } = useGetUsersQuery(url);
+  const [deleteUser] = useDeleteUserMutation()
+
+  const handleDelete = async (id) => {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        showCancelButton: true,
+        confirmButtonText: "Delete",
+        width: "27rem",
+        customClass: {
+          title: "!font-bold",
+          confirmButton:
+            "!py-1 !px-4 !bg-red-600 !hover:bg-red-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+          cancelButton:
+            "!py-1 !px-4 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+        },
+      });
+
+      if (result.isConfirmed) {
+        const response = await deleteUser(id);
+        if (response.error) {
+          Swal.fire({
+            title: "Error!",
+            text: response.error.data.message,
+            width: "27rem",
+            customClass: {
+              title: "!text-red-500 !font-bold",
+              confirmButton:
+                "!py-1 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+            },
+          });
+        } else {
+          toast.success(response.data.message);
+        }
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "Error!",
+        text: "An unexpected error occured on the server!",
+        width: "27rem",
+        customClass: {
+          title: "!text-red-500 !font-bold",
+          confirmButton:
+            "!py-1 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+        },
+      });
+    }
+  };
 
   return (
     <div className="mt-20 md:mt-24">
@@ -59,7 +110,11 @@ const Users = () => {
         </div>
 
         {/* MAIN TABLE */}
-        <table className={"min-w-full border-collapse block md:table mt-3 mb-8 shadow-xl"}>
+        <table
+          className={
+            "min-w-full border-collapse block md:table mt-3 mb-8 shadow-xl"
+          }
+        >
           <thead className="block md:table-header-group bg-slate-300 text-black">
             <tr className="border border-grey-500 md:border-none block md:table-row absolute -top-full md:top-auto -left-full md:left-auto  md:relative ">
               <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
@@ -110,7 +165,7 @@ const Users = () => {
                   {val.roles?.map((role, index) => (
                     <span key={index}>
                       {role}
-                      {index < val.roles?.length - 1 && ', '}
+                      {index < val.roles?.length - 1 && ", "}
                     </span>
                   ))}
                 </td>
@@ -124,7 +179,7 @@ const Users = () => {
                     </button>
                   </Link>
                   <button
-                    // onClick={() => deleteBook(val._id)}
+                    onClick={() => handleDelete(val._id)}
                     className="bg-[#FE0000] hover:bg-red-600 transition-colors duration-500 text-white py-1 px-3 rounded shadow-xl"
                   >
                     Delete

@@ -8,11 +8,10 @@ import Categories from "./features/category/Categories";
 import AddCategory from "./features/category/AddCategory";
 import { ToastContainer } from "react-toastify";
 import UpdateCategory from "./features/category/UpdateCategory";
-import Navbar from "./components/Navbar";
-import CategoryPage from "./pages/CategoryPage";
 import Users from "./features/user/Users";
 import UpdateUser from "./features/user/UpdateUser";
 import MultiSelectDropdown from "./features/user/MultiSelectDropdown";
+import Nav from "./components/Nav";
 
 const App = () => {
   return (
@@ -29,7 +28,9 @@ const App = () => {
         pauseOnHover
         theme="dark"
       />
-      <Navbar/>
+      {/* <Navbar/> */}
+      {/* <MobileNavbar/> */}
+      <Nav/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />

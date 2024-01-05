@@ -75,7 +75,7 @@ const Users = () => {
   const { capitalized, totalUsers, totalPages, page, limit } = data;
 
   return (
-    <div className="mt-20 md:mt-24">
+    <div>
       {/* SEARCH SECTION */}
       <div className="py-5 flex justify-center items-center flex-col max-w-[90%] mx-auto rounded shadow-lg my-7 bg-slate-100 md:max-w-lg">
         <h1 className="text-3xl font-bold pb-4 text-center md:pb-7">
@@ -104,9 +104,9 @@ const Users = () => {
           <span className="bg-slate-800 transition-colors duration-500 hover:bg-slate-700 py-1 px-3 md:px-4 text-white rounded shadow-xl">
             Total : {totalUsers}
           </span>
-          <Link to={`/categories/new`}>
+          <Link to={`/register`}>
             <button className="py-1 px-3 bg-blue-600 hover:bg-blue-700 transition-colors duration-500 text-white rounded shadow-xl">
-              Add Category
+              Add User
             </button>
           </Link>
         </div>

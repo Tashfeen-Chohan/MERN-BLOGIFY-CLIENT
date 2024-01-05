@@ -94,7 +94,10 @@ const Categories = () => {
             type="text"
             placeholder="Search any category..."
             value={searchBy}
-            onChange={(e) => setSearchBy(e.target.value)}
+            onChange={(e) => {
+              setSearchBy(e.target.value)
+              setPageNo(1)
+            }}
           />
           <button className="bg-slate-800 text-white rounded py-1 px-3 shadow-xl hover:bg-slate-700 transition-colors duration-500">
             Search
@@ -149,39 +152,44 @@ const Categories = () => {
                 </th>
               </tr>
             </thead>
-            <tbody>
-              {totalCategories === 0 ? (
-                <p className="font-bold text-red-500 my-3 ml-2">
-                  No category found!
-                </p>
-              ) : (
-                capitalized.map((val, index) => (
-                  <tr
-                    key={val._id}
-                    className="userTable bg-white border-b hover:bg-gray-200"
-                  >
-                    <td className="px-6 py-3 font-bold">
-                      {(page - 1) * limit + index + 1}
-                    </td>
-                    <td className="px-6 py-3 font-bold">{val.name}</td>
-                    <td className="px-6 py-3 text-right flex justify-start items-center gap-2">
-                      <Link to={`/categories/${val._id}`}>
-                        <button className="bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 py-1 px-3 rounded shadow-xl">
-                          Edit
-                        </button>
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(val._id)}
-                        className="bg-[#FE0000] hover:bg-red-600 transition-colors duration-500 text-white py-1 px-3 rounded shadow-xl"
-                      >
-                        Delete
+            <tbody className="font-semibold text-sm">
+              {capitalized.map((val, index) => (
+                <tr
+                  key={val._id}
+                  className="userTable bg-white border-b hover:bg-gray-200"
+                >
+                  <td className="px-6 py-2">
+                    {(page - 1) * limit + index + 1}
+                  </td>
+                  <td className="px-6 py-2">{val.name}</td>
+                  <td className="px-6 py-2 text-right flex justify-start items-center gap-2">
+                    <Link to={`/categories/${val._id}`}>
+                      <button className="bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 py-1 px-3 rounded shadow-xl">
+                        Edit
                       </button>
-                    </td>
-                  </tr>
-                ))
-              )}
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(val._id)}
+                      className="bg-[#FE0000] hover:bg-red-600 transition-colors duration-500 text-white py-1 px-3 rounded shadow-xl"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
+        </div>
+
+        {/* NO CATEGORY FOUND */}
+        <div
+          className={
+            totalCategories === 0
+              ? "block text-red-500 font-bold mb-4 text-lg"
+              : "hidden"
+          }
+        >
+          <p>No category found!</p>
         </div>
 
         {/* PAGINATION */}

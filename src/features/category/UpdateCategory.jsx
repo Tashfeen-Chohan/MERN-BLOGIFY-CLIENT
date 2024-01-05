@@ -14,11 +14,9 @@ const UpdateCategory = () => {
   const [name, setName] = useState("");
   const { data: category } = useGetSingleCategoryQuery(id);
   const navigate = useNavigate();
-  console.log(category);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const trimmedName = name.trim()
     try {
       const result = await Swal.fire({
         title: "Do you want to save the changes?",

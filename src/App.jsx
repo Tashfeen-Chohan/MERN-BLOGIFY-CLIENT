@@ -11,6 +11,8 @@ import UpdateCategory from "./features/category/UpdateCategory";
 import Navbar from "./components/Navbar";
 import CategoryPage from "./pages/CategoryPage";
 import Users from "./features/user/Users";
+import UpdateUser from "./features/user/UpdateUser";
+import MultiSelectDropdown from "./features/user/MultiSelectDropdown";
 
 const App = () => {
   return (
@@ -40,6 +42,8 @@ const App = () => {
 
         {/* USERS ROUTES */}
         <Route path="/users" element={<Users/>}/>
+        <Route path="/users/:id" element={<UpdateUser/>}/>
+        <Route path="/users/ex" element={<MultiSelectDropdown/>}/>
       </Routes>
     </div>
   );

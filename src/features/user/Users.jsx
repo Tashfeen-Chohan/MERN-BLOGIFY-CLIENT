@@ -87,7 +87,10 @@ const Users = () => {
             type="text"
             placeholder="Search any user..."
             value={searchBy}
-            onChange={(e) => setSearchBy(e.target.value)}
+            onChange={(e) => {
+              setSearchBy(e.target.value)
+              setPageNo(1)
+            }}
           />
           <button className="bg-slate-800 text-white rounded py-1 px-3 shadow-xl hover:bg-slate-700 transition-colors duration-500">
             Search
@@ -161,7 +164,7 @@ const Users = () => {
                   <span className="inline-block w-1/3 md:hidden font-bold">
                     #
                   </span>
-                  {index + 1}
+                  {(page - 1) * limit + index + 1}
                 </td>
                 <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
                   <span className="inline-block w-1/3 md:hidden font-bold">
@@ -190,7 +193,7 @@ const Users = () => {
                   <span className="inline-block w-1/3 md:hidden font-bold">
                     Actions
                   </span>
-                  <Link to={`/update/${val._id}`}>
+                  <Link to={`/users/${val._id}`}>
                     <button className="mr-2 bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 text-black py-1 px-3 shadow-xl rounded">
                       Edit
                     </button>
@@ -206,6 +209,11 @@ const Users = () => {
             ))}
           </tbody>
         </table>
+
+        {/* NO USER FOUND */}
+        <div className={totalUsers === 0 ? "block text-red-500 font-bold mb-4 text-lg" : "hidden"}>
+          <p>No user found!</p>
+        </div>
 
         {/* PAGINATION */}
         <div className="flex flex-col items-center mb-8">

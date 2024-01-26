@@ -1,10 +1,19 @@
 import React from 'react'
-import { useGetCategoriesQuery } from '../features/category/categoryApi'
+import { useSelector } from 'react-redux'
+import { selectToken } from '../features/auth/authSlice'
+import useAuth from '../hooks/useAuth'
 
 const Home = () => {
+
+  const {status, isPublisher, isAdmin} = useAuth()
+  console.log(status)
+  
+
   return (
     <div>
-      Home
+      <ul>
+        <li>Status : {status}</li>
+      </ul>
     </div>
   )
 }

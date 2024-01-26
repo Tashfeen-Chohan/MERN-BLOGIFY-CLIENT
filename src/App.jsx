@@ -2,7 +2,6 @@ import React from "react";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import Home from "./components/Home";
-import Login from "./components/Login";
 import Register from "./components/Register";
 import Categories from "./features/category/Categories";
 import AddCategory from "./features/category/AddCategory";
@@ -11,7 +10,8 @@ import UpdateCategory from "./features/category/UpdateCategory";
 import Users from "./features/user/Users";
 import UpdateUser from "./features/user/UpdateUser";
 import MultiSelectDropdown from "./features/user/MultiSelectDropdown";
-import Nav from "./components/Nav";
+import Nav from "./components/Navbar";
+import Login from "./features/auth/Login";
 
 const App = () => {
   return (

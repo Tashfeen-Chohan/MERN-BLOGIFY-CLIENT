@@ -154,7 +154,7 @@ const Users = () => {
               </th>
             </tr>
           </thead>
-          <tbody className="block md:table-row-group font-semibold text-sm">
+          <tbody className="block md:table-row-group font-semibold! text-sm">
             {capitalized?.map((val, index) => (
               <tr
                 key={val._id}

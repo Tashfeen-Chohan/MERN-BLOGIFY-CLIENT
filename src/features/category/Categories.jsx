@@ -152,7 +152,7 @@ const Categories = () => {
                 </th>
               </tr>
             </thead>
-            <tbody className="font-semibold text-sm">
+            <tbody className="font-semibold! text-sm">
               {capitalized.map((val, index) => (
                 <tr
                   key={val._id}

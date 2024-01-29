@@ -12,7 +12,6 @@ const AddCategory = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const trimmedName = name.trim()
     if (name) {
       try {
         const res = await addCategory({ name });

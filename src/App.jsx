@@ -2,16 +2,16 @@ import React from "react";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import Home from "./components/Home";
-import Register from "./components/Register";
+import Register from "./features/auth/Register";
 import Categories from "./features/category/Categories";
 import AddCategory from "./features/category/AddCategory";
 import { ToastContainer } from "react-toastify";
 import UpdateCategory from "./features/category/UpdateCategory";
 import Users from "./features/user/Users";
 import UpdateUser from "./features/user/UpdateUser";
-import MultiSelectDropdown from "./features/user/MultiSelectDropdown";
 import Nav from "./components/Navbar";
 import Login from "./features/auth/Login";
+import SingleCategory from "./features/category/SingleCategory";
 
 const App = () => {
   return (
@@ -28,8 +28,6 @@ const App = () => {
         pauseOnHover
         theme="dark"
       />
-      {/* <Navbar/> */}
-      {/* <MobileNavbar/> */}
       <Nav/>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -39,12 +37,12 @@ const App = () => {
         {/* CATEGORIES ROUTES */}
         <Route path="/categories" element={<Categories/>} />
         <Route path="/categories/new" element={<AddCategory />} />
-        <Route path="/categories/:id" element={<UpdateCategory />} />
+        <Route path="/categories/single/:id" element={<SingleCategory />} />
+        <Route path="/categories/update/:id" element={<UpdateCategory />} />
 
         {/* USERS ROUTES */}
         <Route path="/users" element={<Users/>}/>
         <Route path="/users/:id" element={<UpdateUser/>}/>
-        <Route path="/users/ex" element={<MultiSelectDropdown/>}/>
       </Routes>
     </div>
   );

@@ -9,12 +9,14 @@ import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 import { BeatLoader } from "react-spinners";
 import Sidebar from "../../components/Sidebar";
+import useAuth from "../../hooks/useAuth";
 
 const Categories = () => {
   const [searchBy, setSearchBy] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [pageNo, setPageNo] = useState(1);
   const [loading, setLoading] = useState(true);
+  const { status } = useAuth();
 
   let url = `categories?sortBy=${sortBy}&searchBy=${searchBy}&page=${pageNo}`;
   const { data, isLoading, isError, error } = useGetCategoriesQuery(url);
@@ -95,8 +97,8 @@ const Categories = () => {
             placeholder="Search any category..."
             value={searchBy}
             onChange={(e) => {
-              setSearchBy(e.target.value)
-              setPageNo(1)
+              setSearchBy(e.target.value);
+              setPageNo(1);
             }}
           />
           <button className="bg-slate-800 text-white rounded py-1 px-3 shadow-xl hover:bg-slate-700 transition-colors duration-500">
@@ -111,11 +113,13 @@ const Categories = () => {
           <span className="bg-slate-800 transition-colors duration-500 hover:bg-slate-700 py-1 px-3 md:px-4 text-white rounded shadow-xl">
             Total : {totalCategories}
           </span>
-          <Link to={`/categories/new`}>
-            <button className="py-1 px-3 bg-blue-600 hover:bg-blue-700 transition-colors duration-500 text-white rounded shadow-xl">
-              Add Category
-            </button>
-          </Link>
+          {status === "Admin" || status === "Publisher" ? (
+            <Link to={`/categories/new`}>
+              <button className="py-1 px-3 bg-blue-600 hover:bg-blue-700 transition-colors duration-500 text-white rounded shadow-xl">
+                Add Category
+              </button>
+            </Link>
+          ) : null}
         </div>
         <h1 className="text-2xl font-bold ">All Categories</h1>
 
@@ -137,7 +141,7 @@ const Categories = () => {
         </div>
 
         {/* TABLE */}
-        <div className="relative overflow-x-auto md:w-full shadow-md sm:rounded mb-5 mt-3 ">
+        <div className="relative overflow-x-auto md:w-full shadow-md sm:rounded mb-5 mt-3 w-[100%]">
           <table className="w-full text-sm text-left rtl:text-right">
             <thead className="text-md text-black uppercase bg-slate-300">
               <tr>
@@ -161,19 +165,30 @@ const Categories = () => {
                   <td className="px-6 py-2">
                     {(page - 1) * limit + index + 1}
                   </td>
-                  <td className="px-6 py-2">{val.name}</td>
+                  <td className="px-6 py-2">
+                    <Link to={`/categories/single/${val._id}`}>{val.name}</Link>
+                  </td>
                   <td className="px-6 py-2 text-right flex justify-start items-center gap-2">
-                    <Link to={`/categories/${val._id}`}>
-                      <button className="bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 py-1 px-3 rounded shadow-xl">
-                        Edit
+                    <Link to={`/categories/single/${val._id}`}>
+                      <button className="bg-indigo-500 hover:bg-indigo-600 text-white transition-colors duration-500 py-1 px-3 rounded shadow-xl">
+                        View
                       </button>
                     </Link>
-                    <button
-                      onClick={() => handleDelete(val._id)}
-                      className="bg-[#FE0000] hover:bg-red-600 transition-colors duration-500 text-white py-1 px-3 rounded shadow-xl"
-                    >
-                      Delete
-                    </button>
+                    {status === "Admin" && (
+                      <Link to={`/categories/update/${val._id}`}>
+                        <button className="bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 py-1 px-3 rounded shadow-xl">
+                          Edit
+                        </button>
+                      </Link>
+                    )}
+                    {status === "Admin" && (
+                      <button
+                        onClick={() => handleDelete(val._id)}
+                        className="bg-[#FE0000] hover:bg-red-600 transition-colors duration-500 text-white py-1 px-3 rounded shadow-xl"
+                      >
+                        Delete
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

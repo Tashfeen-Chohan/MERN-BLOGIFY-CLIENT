@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "./authSlice";
+import axios from "axios";
 
 const Login = () => {
 
@@ -18,30 +19,23 @@ const Login = () => {
     e.preventDefault()
     if (email && password){
       try {
-        const res = await login({email, password})
-        console.log(res)
-        if (res.error) {
-          Swal.fire({
-            title: "Error!",
-            text: res.error.data.message,
-            width: "27rem",
-            customClass: {
-              title: "!text-red-500 !font-bold",
-              confirmButton:
-                "!py-2 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
-            },
-          });
-        } else {
-          toast.success(res.data.message);
-          dispatch(setCredentials(res.data.accessToken))
-          setEmail("")
-          setPassword("")
-          navigate("/");
+        // const res = await login({email, password})
+        const data = {
+          email,
+          password
         }
+        const res = await axios.post("http://localhost:3000/auth/login", data, {withCredentials: true})
+        // console.log(res)
+        toast.success(res.data.message);
+        dispatch(setCredentials(res.data.accessToken))
+        setEmail("")
+        setPassword("")
+        navigate("/");
+
       } catch (error) {
         Swal.fire({
           title: "Error!",
-          text: "An unexpected error occured on the server!",
+          text: error.response.data.message,
           width: "27rem",
           customClass: {
             title: "!text-red-500 !font-bold",

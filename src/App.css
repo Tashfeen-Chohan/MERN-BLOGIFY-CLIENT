@@ -116,6 +116,7 @@ body {
     display: flex;
     flex-direction: column;
     padding-left: 30px;
+    padding-right: 15px;
   }
 
   .nav-elements ul li {

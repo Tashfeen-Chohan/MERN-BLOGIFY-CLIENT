@@ -12,7 +12,7 @@ const UpdateCategory = () => {
   const { id } = useParams();
   const [updateCategory] = useUpdateCategoryMutation();
   const [name, setName] = useState("");
-  const { data: category } = useGetSingleCategoryQuery(id);
+  const { data } = useGetSingleCategoryQuery(id);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -81,10 +81,10 @@ const UpdateCategory = () => {
   };
 
   useEffect(() => {
-    if (category) {
-      setName(category.name);
+    if (data) {
+      setName(data.capitalized.name);
     }
-  }, [category]);
+  }, [data]);
 
   return (
     <div className="flex justify-center items-center min-h-screen">

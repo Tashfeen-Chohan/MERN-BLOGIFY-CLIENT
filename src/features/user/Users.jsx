@@ -4,16 +4,18 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { BeatLoader } from "react-spinners";
+import useAuth from "../../hooks/useAuth";
 
 const Users = () => {
   const [searchBy, setSearchBy] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [pageNo, setPageNo] = useState(1);
   const [loading, setLoading] = useState(true);
+  const { status } = useAuth();
 
   let url = `users?sortBy=${sortBy}&searchBy=${searchBy}&page=${pageNo}`;
   const { data, isLoading, isError, error } = useGetUsersQuery(url);
-  const [deleteUser] = useDeleteUserMutation()
+  const [deleteUser] = useDeleteUserMutation();
 
   const handleDelete = async (id) => {
     try {
@@ -88,8 +90,8 @@ const Users = () => {
             placeholder="Search any user..."
             value={searchBy}
             onChange={(e) => {
-              setSearchBy(e.target.value)
-              setPageNo(1)
+              setSearchBy(e.target.value);
+              setPageNo(1);
             }}
           />
           <button className="bg-slate-800 text-white rounded py-1 px-3 shadow-xl hover:bg-slate-700 transition-colors duration-500">
@@ -104,11 +106,13 @@ const Users = () => {
           <span className="bg-slate-800 transition-colors duration-500 hover:bg-slate-700 py-1 px-3 md:px-4 text-white rounded shadow-xl">
             Total : {totalUsers}
           </span>
-          <Link to={`/register`}>
-            <button className="py-1 px-3 bg-blue-600 hover:bg-blue-700 transition-colors duration-500 text-white rounded shadow-xl">
-              Add User
-            </button>
-          </Link>
+          {status === "Admin" && (
+            <Link to={`/register`}>
+              <button className="py-1 px-3 bg-blue-600 hover:bg-blue-700 transition-colors duration-500 text-white rounded shadow-xl">
+                Add User
+              </button>
+            </Link>
+          )}
         </div>
         <h1 className="text-2xl font-bold ">All Users</h1>
 
@@ -149,9 +153,11 @@ const Users = () => {
               <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
                 Roles
               </th>
-              <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                Actions
-              </th>
+              {status === "Admin" && (
+                <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                  Actions
+                </th>
+              )}
             </tr>
           </thead>
           <tbody className="block md:table-row-group font-semibold! text-sm">
@@ -189,29 +195,37 @@ const Users = () => {
                     </span>
                   ))}
                 </td>
-                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">
-                    Actions
-                  </span>
-                  <Link to={`/users/${val._id}`}>
-                    <button className="mr-2 bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 text-black py-1 px-3 shadow-xl rounded">
-                      Edit
+                {status === "Admin" && (
+                  <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                    <span className="inline-block w-1/3 md:hidden font-bold">
+                      Actions
+                    </span>
+                    <Link to={`/users/${val._id}`}>
+                      <button className="mr-2 bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 text-black py-1 px-3 shadow-xl rounded">
+                        Edit
+                      </button>
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(val._id)}
+                      className="bg-[#FE0000] hover:bg-red-600 transition-colors duration-500 text-white py-1 px-3 rounded shadow-xl"
+                    >
+                      Delete
                     </button>
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(val._id)}
-                    className="bg-[#FE0000] hover:bg-red-600 transition-colors duration-500 text-white py-1 px-3 rounded shadow-xl"
-                  >
-                    Delete
-                  </button>
-                </td>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
         </table>
 
         {/* NO USER FOUND */}
-        <div className={totalUsers === 0 ? "block text-red-500 font-bold mb-4 text-lg" : "hidden"}>
+        <div
+          className={
+            totalUsers === 0
+              ? "block text-red-500 font-bold mb-4 text-lg"
+              : "hidden"
+          }
+        >
           <p>No user found!</p>
         </div>
 

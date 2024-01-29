@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useAddUserMutation } from "../features/user/userApi";
+import { useAddUserMutation } from "../user/userApi";
 import Swal from "sweetalert2";
 
 const Register = () => {
@@ -40,7 +40,7 @@ const Register = () => {
           });
         } else {
           toast.success(res.data.message);
-          navigate("/users");
+          navigate("/login");
         }
       } catch (error) {
         Swal.fire({

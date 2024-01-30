@@ -12,13 +12,14 @@ import UpdateUser from "./features/user/UpdateUser";
 import Nav from "./components/Navbar";
 import Login from "./features/auth/Login";
 import SingleCategory from "./features/category/SingleCategory";
+import SingleUser from "./features/user/SingleUser";
 
 const App = () => {
   return (
     <div>
       <ToastContainer
         position="top-right"
-        autoClose={3000}
+        autoClose={2500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -31,6 +32,8 @@ const App = () => {
       <Nav/>
       <Routes>
         <Route path="/" element={<Home />} />
+
+        {/* AUTH ROURES */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
@@ -43,6 +46,7 @@ const App = () => {
         {/* USERS ROUTES */}
         <Route path="/users" element={<Users/>}/>
         <Route path="/users/:id" element={<UpdateUser/>}/>
+        <Route path="users/single/:id" element={<SingleUser/>}/>
       </Routes>
     </div>
   );

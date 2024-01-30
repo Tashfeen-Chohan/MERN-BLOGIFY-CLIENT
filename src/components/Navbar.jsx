@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { logout } from "../features/auth/authSlice";
 import { FaRegCircleUser, FaRegUser } from "react-icons/fa6";
+import axios from "axios";
 
 const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(false);
@@ -23,22 +24,11 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       setShowNavbar(!showNavbar);
-      const res = await sendLogout();
-      if (res.error) {
-        Swal.fire({
-          title: "Error!",
-          text: res.error.data.message,
-          width: "27rem",
-          customClass: {
-            title: "!text-red-500 !font-bold",
-            confirmButton:
-              "!py-2 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
-          },
-        });
-      } else {
-        toast.success(res.data.message);
-        dispatch(logout());
-      }
+      const res = await axios.post("http://localhost:3000/auth/logout") 
+      toast.success(res.data.message)
+      dispatch(logout())
+      // Clear the "jwt" cookie on the client side
+      document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     } catch (error) {
       console.log(error.message);
       Swal.fire({

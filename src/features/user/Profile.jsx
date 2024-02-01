@@ -5,7 +5,6 @@ import Profile2 from "../../assets/p2.png";
 import { TiArrowBack } from "react-icons/ti";
 import { Link } from "react-router-dom";
 
-
 const Profile = () => {
   const { id } = useAuth();
   const { data } = useGetSingleUserQuery(id);
@@ -26,12 +25,14 @@ const Profile = () => {
             {data?.capitalized.email}
           </span>
         </div>
-        <span className="bg-white mt-3 py-1 w-[70%] text-center rounded shadow-md">
+        {data?.capitalized.roles.includes("Publisher") &&  <span className="bg-white mt-3 py-1 w-[70%] text-center rounded shadow-md">
           Total Posts : {data?.totalPosts}
-        </span>
-        <button className="bg-cyan-600 hover:bg-cyan-700 transition-colors duration-300 text-white mt-7 py-1 w-[70%] text-center rounded shadow-md">
-          <Link to={"/profile/edit"}>Update</Link>
-        </button>
+        </span>}
+        <Link to={"/profile/edit"} className=" flex self-center w-full">
+          <button className="bg-cyan-600 hover:bg-cyan-700 transition-colors duration-300 text-white mt-7 py-1 w-[70%] mx-auto text-center rounded shadow-md">
+            Update
+          </button>
+        </Link>
       </div>
     </div>
   );

@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useAddUserMutation } from "../user/userApi";
+import { useGetSingleUserQuery, useUpdateUserMutation } from "../user/userApi";
 import Swal from "sweetalert2";
+import useAuth from "../../hooks/useAuth";
 
 const UpdateProfile = () => {
-  const [addUser] = useAddUserMutation();
-  const navigate = useNavigate()
+  const { id } = useAuth();  
+  const { data } = useGetSingleUserQuery(id);
+  const [updateUser] = useUpdateUserMutation()
+  const navigate = useNavigate();
   const [user, setUser] = useState({
-    username: "",
-    email: "",
-    password: "",
+    username: data?.capitalized.username,
+    email: data?.capitalized.email,
   });
 
   const handleChange = (e) => {
@@ -23,10 +25,27 @@ const UpdateProfile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { username, email, password } = user;
-    if (username && email && password) {
-      try {
-        const res = await addUser(user);
+    try {
+      const result = await Swal.fire({
+        title: "Do you want to save the changes?",
+        showCancelButton: true,
+        showDenyButton: true,
+        confirmButtonText: "Save",
+        denyButtonText: "Don't Save",
+        width: "27rem",
+        customClass: {
+          confirmButton:
+            "!py-1 !px-4 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+          cancelButton:
+            "!py-1 !px-4 !bg-gray-600 !hover:bg-red-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+          denyButton:
+            "!py-1 !px-3 !bg-red-600 !hover:bg-red-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+        },
+      });
+
+      if (result.isConfirmed) {
+        const {username, email} = user;
+        const res = await updateUser({ id, username, email});
         if (res.error) {
           Swal.fire({
             title: "Error!",
@@ -35,30 +54,43 @@ const UpdateProfile = () => {
             customClass: {
               title: "!text-red-500 !font-bold",
               confirmButton:
-                "!py-2 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+                "!py-1 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
             },
           });
         } else {
           toast.success(res.data.message);
-          navigate("/login");
+          navigate("/profile");
+          setUser({
+            username: "",
+            email: "",
+          })
         }
-      } catch (error) {
+      } else if (result.isDenied) {
         Swal.fire({
-          title: "Error!",
-          text: "An unexpected error occured on the server!",
+          title: "Changes are not saved!",
           width: "27rem",
           customClass: {
-            title: "!text-red-500 !font-bold",
+            title: "!font-bold mt-5",
             confirmButton:
-              "!py-2 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+              "!py-1 !px-8 !mb-5 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
           },
         });
-        console.log(error);
       }
-    } else {
-      toast.error("Please fill up all fields!");
+    } catch (error) {
+      Swal.fire({
+        title: "Error!",
+        text: "An unexpected error occured on the server!",
+        icon: "error",
+        width: "27rem",
+        customClass: {
+          title: "!text-red-500 !font-bold",
+          confirmButton:
+            "!py-1 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+        },
+      });
     }
   };
+
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900 flex justify-center items-center min-h-screen mt-[-60px]">
@@ -105,14 +137,19 @@ const UpdateProfile = () => {
                   placeholder="name@company.com"
                 />
               </div>
-              
+
               <button
                 type="submit"
-                className=" w-full text-white bg-blue-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                className="transition-colors duration-300 w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
                 Update your profile
               </button>
-              
+
+              <Link to={"/profile"}>
+                <button className="mt-3 w-full transition-colors duration-300 text-white bg-rose-600 hover:bg-rose-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                  Cancel
+                </button>
+              </Link>
             </form>
           </div>
         </div>

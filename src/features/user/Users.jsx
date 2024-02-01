@@ -9,11 +9,12 @@ import useAuth from "../../hooks/useAuth";
 const Users = () => {
   const [searchBy, setSearchBy] = useState("");
   const [sortBy, setSortBy] = useState("");
+  const [filterBy, setFilterBy] = useState("");
   const [pageNo, setPageNo] = useState(1);
   const [loading, setLoading] = useState(true);
   const { status } = useAuth();
 
-  let url = `users?sortBy=${sortBy}&searchBy=${searchBy}&page=${pageNo}`;
+  let url = `users?sortBy=${sortBy}&searchBy=${searchBy}&filterBy=${filterBy}&page=${pageNo}`;
   const { data, isLoading, isError, error } = useGetUsersQuery(url);
   const [deleteUser] = useDeleteUserMutation();
 
@@ -116,8 +117,17 @@ const Users = () => {
         </div>
         <h1 className="text-2xl font-bold ">All Users</h1>
 
-        {/* USER SORTING */}
-        <div className="self-end mt-3">
+        {/* USER SORTING & FILTERATION */}
+        <div className="flex justify-between items-center w-full mt-3">
+          <select
+            value={filterBy}
+            onChange={(e) => setFilterBy(e.target.value)}
+            className="bg-slate-200 shadow-md   rounded text-black outline-none px-2 py-1"
+          >
+            <option value="">All Users</option>
+            <option value="Publisher">Publisers</option>
+            <option value="Admin">Admins</option>
+          </select>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}

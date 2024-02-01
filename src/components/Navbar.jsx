@@ -17,23 +17,23 @@ const Navbar = () => {
   const [sendLogout] = useSendLogoutMutation();
   const dispatch = useDispatch();
   const { status, firstName } = useAuth();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleShowNavbar = () => {
     setShowNavbar(!showNavbar);
   };
 
   const viewProfile = () => {
-    navigate("/profile")
-    setShowNavbar(!showNavbar)
-  }
+    navigate("/profile");
+    setShowNavbar(!showNavbar);
+  };
 
   const handleLogout = async () => {
     try {
       setShowNavbar(!showNavbar);
-      const res = await axios.post("http://localhost:3000/auth/logout") 
-      toast.success(res.data.message)
-      dispatch(logout())
+      const res = await axios.post("http://localhost:3000/auth/logout");
+      toast.success(res.data.message);
+      dispatch(logout());
       // Clear the "jwt" cookie on the client side
       document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     } catch (error) {
@@ -71,11 +71,18 @@ const Navbar = () => {
               <NavLink to="/categories">Categories</NavLink>
             </li>
             <li onClick={handleShowNavbar}>
-              <NavLink to="/users">Users</NavLink>
+              {status === "Admin" ? (
+                <NavLink to="/users">Users</NavLink>
+              ) : (
+                <NavLink to="/users">Publishers</NavLink>
+              )}
             </li>
             {status ? (
               <div className="flex items-center mt-5 md:mt-0 gap-3 md:ml-5 ">
-                <div onClick={viewProfile} className="flex justify-center items-center gap-3">
+                <div
+                  onClick={viewProfile}
+                  className="flex justify-center items-center gap-3"
+                >
                   <FaRegCircleUser size={25} />
                   {/* <FaRegUser size={25} /> */}
                   <p className="font-semibold">

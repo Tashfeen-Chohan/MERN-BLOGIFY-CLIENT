@@ -2,13 +2,13 @@ import React from "react";
 import { useGetSingleUserQuery } from "./userApi";
 import { Link, useParams } from "react-router-dom";
 import Profile2 from "../../assets/p2.png";
-import { AiOutlineRollback } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
-import { CiLogout } from "react-icons/ci";
+import useAuth from "../../hooks/useAuth";
 
 const SingleUser = () => {
   const { id } = useParams();
   const { data } = useGetSingleUserQuery(id);
+  const {status} = useAuth()
 
   return (
     <div className="flex justify-center items-center min-h-screen mt-[-60px]">
@@ -35,7 +35,7 @@ const SingleUser = () => {
             </span>
           )}
         </div>
-        <div className="mt-3 w-[75%] bg-white px-3 py-1 rounded shadow-xl text-center">
+        {status==="Admin" && <div className="mt-3 w-[75%] bg-white px-3 py-1 rounded shadow-xl text-center">
           <span>
             Roles : 
             {data?.capitalized.roles.map((role, index) => (
@@ -45,7 +45,7 @@ const SingleUser = () => {
               </span>
             ))}
           </span>
-        </div>
+        </div>}
         {data?.totalPosts > 0 && (
           <div className="flex justify-center items-center mt-4 w-full">
             <button className="w-[70%] bg-cyan-600 hover:bg-cyan-700 transition-colors duration-300 text-white py-1 px-3 rounded  mt-3">

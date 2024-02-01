@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDeleteUserMutation, useGetUsersQuery } from "./userApi";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -12,11 +12,25 @@ const Users = () => {
   const [filterBy, setFilterBy] = useState("");
   const [pageNo, setPageNo] = useState(1);
   const [loading, setLoading] = useState(true);
+  // const [errorDisplayed, setErrorDisplayed] = useState(false)
   const { status } = useAuth();
 
-  let url = `users?sortBy=${sortBy}&searchBy=${searchBy}&filterBy=${filterBy}&page=${pageNo}`;
+  if (status === "Admin") {
+    var url = `users?sortBy=${sortBy}&searchBy=${searchBy}&filterBy=${filterBy}&page=${pageNo}`;
+  } else {
+    url = `users?sortBy=${sortBy}&searchBy=${searchBy}&filterBy=Publisher&page=${pageNo}`;
+  }
+
   const { data, isLoading, isError, error } = useGetUsersQuery(url);
   const [deleteUser] = useDeleteUserMutation();
+
+  // useEffect(() => {
+  //   if (filterBy !== "" && searchBy.length > 1 && !errorDisplayed){
+  //     toast.error("First disabled filter functionality then search")
+  //     setErrorDisplayed(true)
+  //   }
+  //   if (searchBy.length === 0) setErrorDisplayed(false)
+  // }, [filterBy, searchBy, errorDisplayed])
 
   const handleDelete = async (id) => {
     try {
@@ -74,6 +88,8 @@ const Users = () => {
     );
   if (isError) return <p>{error}</p>;
 
+  
+
   // OBJECT DESTRUCTURING
   const { capitalized, totalUsers, totalPages, page, limit } = data;
 
@@ -88,7 +104,7 @@ const Users = () => {
           <input
             className="shadow-lg border-b-2 border-slate-400 px-2 w-[75%] py-[2px] md:w-[50%]  outline-none focus:border-b-2 focus:border-black"
             type="text"
-            placeholder="Search any user..."
+            placeholder="Search any Publisher..."
             value={searchBy}
             onChange={(e) => {
               setSearchBy(e.target.value);
@@ -115,23 +131,30 @@ const Users = () => {
             </Link>
           )}
         </div>
-        <h1 className="text-2xl font-bold ">All Users</h1>
+        {status === "Admin" ? (
+          <h1 className="text-2xl font-bold ">All Users</h1>
+        ) : (
+          <h1 className="text-2xl font-bold ">All Publishers</h1>
+        )}
 
         {/* USER SORTING & FILTERATION */}
         <div className="flex justify-between items-center w-full mt-3">
-          <select
-            value={filterBy}
-            onChange={(e) => setFilterBy(e.target.value)}
-            className="bg-slate-200 shadow-md   rounded text-black outline-none px-2 py-1"
-          >
-            <option value="">All Users</option>
-            <option value="Publisher">Publisers</option>
-            <option value="Admin">Admins</option>
-          </select>
+          {status === "Admin" && (
+            <select
+              value={filterBy}
+              onChange={(e) => setFilterBy(e.target.value)}
+              className="bg-slate-200 shadow-md  rounded text-black outline-none px-2 py-1"
+            >
+              <option value="">All Users</option>
+              <option value="Publisher">Publisers</option>
+              <option value="Admin">Admins</option>
+            </select>
+          )}
+
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="bg-slate-200 shadow-md  rounded text-black outline-none px-2 py-1"
+            className="bg-slate-200 shadow-md  rounded text-black outline-none px-2 py-1 flex"
           >
             <option className="font-bold" value="">
               Sort by Default
@@ -160,9 +183,11 @@ const Users = () => {
               <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
                 Email
               </th>
-              <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                Roles
-              </th>
+              {status === "Admin" && (
+                <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                  Roles
+                </th>
+              )}
               <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
                 Actions
               </th>
@@ -192,17 +217,19 @@ const Users = () => {
                   </span>
                   {val.email}
                 </td>
-                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">
-                    Roles
-                  </span>
-                  {val.roles?.map((role, index) => (
-                    <span key={index}>
-                      {role}
-                      {index < val.roles?.length - 1 && ", "}
+                {status === "Admin" && (
+                  <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                    <span className="inline-block w-1/3 md:hidden font-bold">
+                      Roles
                     </span>
-                  ))}
-                </td>
+                    {val.roles?.map((role, index) => (
+                      <span key={index}>
+                        {role}
+                        {index < val.roles?.length - 1 && ", "}
+                      </span>
+                    ))}
+                  </td>
+                )}
                 <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
                   <span className="inline-block w-1/3 md:hidden font-bold">
                     Actions
@@ -212,17 +239,21 @@ const Users = () => {
                       View
                     </button>
                   </Link>
-                  <Link to={`/users/update/${val._id}`}>
-                    <button className="mr-2 bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 text-black py-1 px-3 shadow-xl rounded">
-                      Edit
-                    </button>
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(val._id)}
-                    className="bg-[#FE0000] hover:bg-red-600 transition-colors duration-500 text-white py-1 px-3 rounded shadow-xl"
-                  >
-                    Delete
-                  </button>
+                  {status === "Admin" && (
+                    <>
+                      <Link to={`/users/update/${val._id}`}>
+                        <button className="mr-2 bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 text-black py-1 px-3 shadow-xl rounded">
+                          Edit
+                        </button>
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(val._id)}
+                        className="bg-[#FE0000] hover:bg-red-600 transition-colors duration-500 text-white py-1 px-3 rounded shadow-xl"
+                      >
+                        Delete
+                      </button>
+                    </>
+                  )}
                 </td>
               </tr>
             ))}

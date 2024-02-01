@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { GiCrossMark } from "react-icons/gi";
 import useAuth from "../hooks/useAuth";
@@ -10,16 +10,22 @@ import { toast } from "react-toastify";
 import { logout } from "../features/auth/authSlice";
 import { FaRegCircleUser, FaRegUser } from "react-icons/fa6";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(false);
   const [sendLogout] = useSendLogoutMutation();
   const dispatch = useDispatch();
   const { status, firstName } = useAuth();
+  const navigate = useNavigate()
 
   const handleShowNavbar = () => {
     setShowNavbar(!showNavbar);
   };
+
+  const viewProfile = () => {
+    navigate("/profile")
+  }
 
   const handleLogout = async () => {
     try {
@@ -68,7 +74,7 @@ const Navbar = () => {
             </li>
             {status ? (
               <div className="flex items-center mt-5 md:mt-0 gap-3 md:ml-5 ">
-                <div className="flex justify-center items-center gap-3">
+                <div onClick={viewProfile} className="flex justify-center items-center gap-3">
                   <FaRegCircleUser size={25} />
                   {/* <FaRegUser size={25} /> */}
                   <p className="font-semibold">

@@ -13,6 +13,7 @@ import Nav from "./components/Navbar";
 import Login from "./features/auth/Login";
 import SingleCategory from "./features/category/SingleCategory";
 import SingleUser from "./features/user/SingleUser";
+import Profile from "./features/user/Profile";
 
 const App = () => {
   return (
@@ -46,7 +47,8 @@ const App = () => {
         {/* USERS ROUTES */}
         <Route path="/users" element={<Users/>}/>
         <Route path="/users/:id" element={<UpdateUser/>}/>
-        <Route path="users/single/:id" element={<SingleUser/>}/>
+        <Route path="/users/single/:id" element={<SingleUser/>}/>
+        <Route path="/profile" element={<Profile/>}/>
       </Routes>
     </div>
   );

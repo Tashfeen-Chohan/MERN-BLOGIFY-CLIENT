@@ -31,7 +31,6 @@ const Login = () => {
         setEmail("")
         setPassword("")
         navigate("/");
-
       } catch (error) {
         Swal.fire({
           title: "Error!",

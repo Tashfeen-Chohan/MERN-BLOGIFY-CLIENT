@@ -10,10 +10,10 @@ const useAuth = () => {
 
   if (token) {
     const decoded = jwtDecode(token);
-    const { username, email, roles } = decoded.UserInfo;
+    const { id, username, roles } = decoded.UserInfo;
 
-    let firstName = username.split(" ")
-    firstName = firstName[0].toUpperCase()
+    let firstName = username.split(" ");
+    firstName = firstName[0].toUpperCase();
 
     isPublisher = roles.includes("Publisher");
     isAdmin = roles.includes("Admin");
@@ -26,9 +26,17 @@ const useAuth = () => {
       status = "User";
     }
 
-    return { firstName, username, email, roles, status, isPublisher, isAdmin };
+    return { id, firstName, username, roles, status, isPublisher, isAdmin };
   }
 
-  return { username: "", email: "", roles: [], isPublisher, isAdmin, status };
+  return {
+    id: null,
+    firstName: "",
+    username: "",
+    roles: [],
+    isPublisher,
+    isAdmin,
+    status,
+  };
 };
 export default useAuth;

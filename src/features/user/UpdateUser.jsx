@@ -20,12 +20,13 @@ const UpdateUser = () => {
   useEffect(() => {
     if (data) {
       setUser({
-        username: data.username,
-        email: data.email,
-        roles: data.roles
+        username: data.capitalized.username,
+        email: data.capitalized.email,
+        roles: data.capitalized.roles
       })
     }
   }, [data]);
+
 
   const options = Object.values(ROLES).map((role) => {
     return (
@@ -124,18 +125,19 @@ const UpdateUser = () => {
   };
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900 min-h-screen pt-24 sm:pt-0 md:mt-10">
+    <section className="bg-gray-50 dark:bg-gray-900 h-screen mt-0 md:mt-[-30px]">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Account Update
             </h1>
-            <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* USERNAME */}
               <div>
                 <label
                   htmlFor="username"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Username
                 </label>
@@ -152,7 +154,7 @@ const UpdateUser = () => {
               <div>
                 <label
                   htmlFor="email"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Email
                 </label>
@@ -169,7 +171,7 @@ const UpdateUser = () => {
               <div>
                 <label
                   htmlFor="roles"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Assigned Roles
                 </label>

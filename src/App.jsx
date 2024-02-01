@@ -47,7 +47,7 @@ const App = () => {
 
         {/* USERS ROUTES */}
         <Route path="/users" element={<Users/>}/>
-        <Route path="/users/:id" element={<UpdateUser/>}/>
+        <Route path="/users/update/:id" element={<UpdateUser/>}/>
         <Route path="/users/single/:id" element={<SingleUser/>}/>
         <Route path="/profile" element={<Profile/>}/>
         <Route path="/profile/edit" element={<UpdateProfile/>}/>

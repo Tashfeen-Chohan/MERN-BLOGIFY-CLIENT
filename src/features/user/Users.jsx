@@ -202,7 +202,7 @@ const Users = () => {
                       View
                     </button>
                   </Link>
-                  <Link to={`/users/${val._id}`}>
+                  <Link to={`/users/update/${val._id}`}>
                     <button className="mr-2 bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 text-black py-1 px-3 shadow-xl rounded">
                       Edit
                     </button>

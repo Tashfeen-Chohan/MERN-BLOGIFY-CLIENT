@@ -1,7 +1,7 @@
 import React from "react";
 import { useGetSingleUserQuery } from "./userApi";
 import { Link, useParams } from "react-router-dom";
-import Profile2 from "../../assets/p2.png"
+import Profile2 from "../../assets/p2.png";
 import { AiOutlineRollback } from "react-icons/ai";
 import { TiArrowBack } from "react-icons/ti";
 import { CiLogout } from "react-icons/ci";
@@ -13,30 +13,42 @@ const SingleUser = () => {
   return (
     <div className="flex justify-center items-center min-h-screen mt-[-60px]">
       <div className="flex justify-center items-center flex-col w-[85%] md:max-w-sm bg-slate-100 pb-10 pt-5 px-3 rounded  shadow-lg">
-        <Link to={"/users"} className="flex self-end">
+        <Link
+          to={"/users"}
+          className="flex self-end hover:scale-125 transition-all duration-300"
+        >
           <TiArrowBack size={40} />
         </Link>
-        {/* <CiLogout size={35} className="flex self-end"/> */}
-        <h1 className="text-2xl font-bold mb-6 mt-3">User Profile</h1>
-        <img src={Profile2} width={70} alt="" />
-        <p className="text-xl font-bold mt-3">{data?.capitalized.username}</p>
-        <p className="text-sm">{data?.capitalized.email}</p>
-        <p className="text-sm font-bold">Total Posts : {data?.totalPosts}</p>
+        <h1 className="text-2xl font-bold">User Profile</h1>
+        <img className="my-5" src={Profile2} alt="Profile Icon" width={70} />
 
-        <div className="mt-3">
-          <span className="bg-white rounded py-1 px-3 shadow-md text-sm">Roles :</span>
-          {data?.capitalized.roles.map((role, index) => (
-            <span
-              className="bg-white font-semibold text-sm shadow-md py-1 px-3 rounded ml-3"
-              key={index}
-            >
-              {role}
+        <div className="flex w-full justify-center items-center flex-col gap-3">
+          <span className="bg-white w-[75%] text-center py-1 rounded shadow-md flex-auto">
+            {data?.capitalized.username}
+          </span>
+          <span className="bg-white py-1 w-[75%] text-center rounded shadow-md">
+            {data?.capitalized.email}
+          </span>
+          {data?.capitalized.roles.includes("Publisher") && (
+            <span className="bg-white py-1 w-[75%] text-center rounded shadow-md">
+              Total Posts : {data?.totalPosts}
             </span>
-          ))}
+          )}
         </div>
-        {data?.totalPosts > 0  && (
+        <div className="mt-3 w-[75%] bg-white px-3 py-1 rounded shadow-xl text-center">
+          <span>
+            Roles : 
+            {data?.capitalized.roles.map((role, index) => (
+              <span className="bg-white font-semibold p-1 " key={index}>
+                 {role}
+                {index < data?.capitalized.roles.length - 1 && ", "}
+              </span>
+            ))}
+          </span>
+        </div>
+        {data?.totalPosts > 0 && (
           <div className="flex justify-center items-center mt-4 w-full">
-            <button className="w-[90%] bg-cyan-600 hover:bg-cyan-700 transition-colors duration-300 text-white py-1 px-3 rounded  mt-3">
+            <button className="w-[70%] bg-cyan-600 hover:bg-cyan-700 transition-colors duration-300 text-white py-1 px-3 rounded  mt-3">
               View Posts
             </button>
           </div>

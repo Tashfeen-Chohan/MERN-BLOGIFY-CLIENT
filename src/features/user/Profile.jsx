@@ -11,7 +11,7 @@ const Profile = () => {
   return (
     <div className="mt-[-60px] flex justify-center items-center min-h-screen">
       <div className="bg-slate-100 shadow-xl pb-10 pt-5 w-[85%] md:max-w-md flex justify-center items-center flex-col">
-        <Link to={"/users"} className="flex self-end px-3">
+        <Link to={"/users"} className="flex self-end px-3 hover:scale-125 transition-all duration-300">
           <TiArrowBack size={40} />
         </Link>
         <h2 className="text-2xl font-bold">Profile</h2>
@@ -24,10 +24,10 @@ const Profile = () => {
           <span className="bg-white py-1 w-[70%] text-center rounded shadow-md">
             {data?.capitalized.email}
           </span>
-        </div>
-        {data?.capitalized.roles.includes("Publisher") &&  <span className="bg-white mt-3 py-1 w-[70%] text-center rounded shadow-md">
+        {data?.capitalized.roles.includes("Publisher") &&  <span className="bg-white py-1 w-[70%] text-center rounded shadow-md">
           Total Posts : {data?.totalPosts}
         </span>}
+        </div>
         <Link to={"/profile/edit"} className=" flex self-center w-full">
           <button className="bg-cyan-600 hover:bg-cyan-700 transition-colors duration-300 text-white mt-7 py-1 w-[70%] mx-auto text-center rounded shadow-md">
             Update

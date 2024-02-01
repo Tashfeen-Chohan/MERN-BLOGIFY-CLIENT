@@ -14,6 +14,7 @@ import Login from "./features/auth/Login";
 import SingleCategory from "./features/category/SingleCategory";
 import SingleUser from "./features/user/SingleUser";
 import Profile from "./features/user/Profile";
+import UpdateProfile from "./features/user/UpdateProfile";
 
 const App = () => {
   return (
@@ -49,6 +50,7 @@ const App = () => {
         <Route path="/users/:id" element={<UpdateUser/>}/>
         <Route path="/users/single/:id" element={<SingleUser/>}/>
         <Route path="/profile" element={<Profile/>}/>
+        <Route path="/profile/edit" element={<UpdateProfile/>}/>
       </Routes>
     </div>
   );

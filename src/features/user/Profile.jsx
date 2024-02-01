@@ -30,7 +30,7 @@ const Profile = () => {
           Total Posts : {data?.totalPosts}
         </span>
         <button className="bg-cyan-600 hover:bg-cyan-700 transition-colors duration-300 text-white mt-7 py-1 w-[70%] text-center rounded shadow-md">
-          Update
+          <Link to={"/profile/edit"}>Update</Link>
         </button>
       </div>
     </div>

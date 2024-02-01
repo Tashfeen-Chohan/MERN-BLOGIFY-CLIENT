@@ -25,6 +25,7 @@ const Navbar = () => {
 
   const viewProfile = () => {
     navigate("/profile")
+    setShowNavbar(!showNavbar)
   }
 
   const handleLogout = async () => {

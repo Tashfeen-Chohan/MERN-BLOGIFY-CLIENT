@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import { logout } from "../features/auth/authSlice";
 import { FaRegCircleUser, FaRegUser } from "react-icons/fa6";
 import axios from "axios";
-import Cookies from "js-cookie";
+import { HiDotsVertical } from "react-icons/hi";
 
 const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(false);
@@ -54,13 +54,16 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="container">
-        <div className="logo">Blogify</div>
         <div className="menu-icon" onClick={handleShowNavbar}>
           {showNavbar ? (
             <GiCrossMark size={20} />
           ) : (
             <GiHamburgerMenu size={20} />
           )}
+        </div>
+        <div className="logo">Blogify</div>
+        <div className="flex justify-end md:hidden ">
+          <HiDotsVertical  size={20} />
         </div>
         <div className={`nav-elements  ${showNavbar && "active"}`}>
           <ul>

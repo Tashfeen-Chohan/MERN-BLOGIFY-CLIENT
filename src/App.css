@@ -29,6 +29,7 @@ body {
   justify-content: space-between;
   align-items: center;
   height: 100%;
+  gap: 10px;
 }
 
 .navbar {
@@ -83,11 +84,17 @@ body {
   background-color: #22d3ee;
 }
 
+@media (min-width: 768px){
+  .container{
+    justify-content: space-between;
+  }
+}
 @media (max-width: 768px) {
   .nav-elements ul li:not(:last-child) {
     margin-right: 30px;
   }
 }
+
 
 @media (max-width: 600px) {
   .menu-icon {

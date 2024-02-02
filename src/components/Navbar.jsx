@@ -11,9 +11,11 @@ import { logout } from "../features/auth/authSlice";
 import { FaRegCircleUser, FaRegUser } from "react-icons/fa6";
 import axios from "axios";
 import { HiDotsVertical } from "react-icons/hi";
+import { FaCaretDown } from "react-icons/fa";
 
 const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(false);
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [sendLogout] = useSendLogoutMutation();
   const dispatch = useDispatch();
   const { status, firstName } = useAuth();
@@ -23,14 +25,25 @@ const Navbar = () => {
     setShowNavbar(!showNavbar);
   };
 
+  const toggleDropdown = () => {
+    setDropdownOpen(!isDropdownOpen);
+  };
+
   const viewProfile = () => {
     navigate("/profile");
-    setShowNavbar(!showNavbar);
+    setShowNavbar(false);
+    toggleDropdown();
+  };
+
+  const changePassword = () => {
+    setDropdownOpen(false);
+    navigate("/profile/change-password");
   };
 
   const handleLogout = async () => {
     try {
-      setShowNavbar(!showNavbar);
+      setShowNavbar(false);
+      setDropdownOpen(false);
       const res = await axios.post("http://localhost:3000/auth/logout");
       toast.success(res.data.message);
       dispatch(logout());
@@ -53,7 +66,11 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <div className="container">
+      <div
+        className={`container flex justify-start ${
+          status !== "" && "justify-between"
+        }`}
+      >
         <div className="menu-icon" onClick={handleShowNavbar}>
           {showNavbar ? (
             <GiCrossMark size={20} />
@@ -62,9 +79,38 @@ const Navbar = () => {
           )}
         </div>
         <div className="logo">Blogify</div>
-        <div className="flex justify-end md:hidden ">
-          <HiDotsVertical  size={20} />
-        </div>
+        {status !== "" && (
+          <div className="relative md:hidden ">
+            <HiDotsVertical onClick={toggleDropdown} size={20} />
+            <div
+              className={`absolute right-0 mt-3 w-48 p-2 bg-gray-800 border border-gray-600 rounded shadow-xl ${
+                isDropdownOpen ? "block" : "hidden"
+              }`}
+            >
+              <ul>
+                <li
+                  className="hover:bg-slate-700 w-full px-2 py-1 rounded transition-colors duration-300"
+                  onClick={viewProfile}
+                >
+                  Profile
+                </li>
+                <li
+                  className="hover:bg-slate-700 w-full px-2 py-1 rounded transition-colors duration-300"
+                  onClick={changePassword}
+                >
+                  Change Password
+                </li>
+                <hr className="my-1" />
+                <li
+                  className="hover:bg-slate-700 w-full px-2 py-1 rounded transition-colors duration-300"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </li>
+              </ul>
+            </div>
+          </div>
+        )}
         <div className={`nav-elements  ${showNavbar && "active"}`}>
           <ul>
             <li onClick={handleShowNavbar}>
@@ -81,16 +127,41 @@ const Navbar = () => {
               )}
             </li>
             {status ? (
-              <div className="flex items-center mt-5 md:mt-0 gap-3 md:ml-5 ">
+              <div className="flex relative items-center mt-5 md:mt-0 gap-3 md:ml-5 ">
                 <div
-                  onClick={viewProfile}
-                  className="flex justify-center items-center gap-3"
+                  onClick={toggleDropdown}
+                  className="flex justify-center items-center gap-2"
                 >
                   <FaRegCircleUser size={25} />
                   {/* <FaRegUser size={25} /> */}
                   <p className="font-semibold">
                     WELCOME <span>{firstName}!</span>
                   </p>
+                  <FaCaretDown />
+                </div>
+                <div
+                  className={`absolute right-20 top-10 w-56 p-2 bg-gray-800 border border-gray-600 rounded shadow-xl ${
+                    isDropdownOpen ? "block" : "hidden"
+                  }`}
+                >
+                  <ul className="flex justify- items-start flex-col">
+                    <li
+                      className="hover:bg-slate-600 w-full px-2 py-1 rounded transition-colors duration-300"
+                      onClick={viewProfile}
+                    >
+                      Profile
+                    </li>
+                    <li
+                      className="hover:bg-slate-600 w-full px-2 py-1 rounded transition-colors duration-300"
+                      onClick={changePassword}
+                    >
+                      Change Password
+                    </li>
+                    <hr className="w-full my-1" />
+                    <li className="hover:bg-slate-600 w-full px-2 py-1 rounded transition-colors duration-300">
+                      Logout
+                    </li>
+                  </ul>
                 </div>
                 <button
                   onClick={handleLogout}

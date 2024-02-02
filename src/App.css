@@ -26,10 +26,10 @@ body {
   margin: 0 auto;
   padding: 0 15px;
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-items: center;
   height: 100%;
-  gap: 10px;
+  gap: 20px;
 }
 
 .navbar {

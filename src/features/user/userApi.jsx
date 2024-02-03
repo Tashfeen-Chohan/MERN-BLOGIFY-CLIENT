@@ -38,6 +38,13 @@ export const userApi = apiSlice.injectEndpoints({
         method: "DELETE"
       }),
       invalidatesTags: ["User"]
+    }),
+    changePassword: builder.mutation({
+      query: (updatedPassword) => ({
+        url: "/users",
+        method: "PATCH",
+        body: updatedPassword
+      })
     })
 
   })
@@ -49,4 +56,5 @@ export const {
   useAddUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useChangePasswordMutation
 } = userApi

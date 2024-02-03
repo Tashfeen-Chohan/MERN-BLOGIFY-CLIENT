@@ -47,6 +47,7 @@ const Navbar = () => {
       const res = await axios.post("http://localhost:3000/auth/logout");
       toast.success(res.data.message);
       dispatch(logout());
+      navigate("/")
       // Clear the "jwt" cookie on the client side
       document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     } catch (error) {
@@ -158,7 +159,7 @@ const Navbar = () => {
                       Change Password
                     </li>
                     <hr className="w-full my-1" />
-                    <li className="hover:bg-slate-600 w-full px-2 py-1 rounded transition-colors duration-300">
+                    <li onClick={handleLogout} className="hover:bg-slate-600 w-full px-2 py-1 rounded transition-colors duration-300">
                       Logout
                     </li>
                   </ul>

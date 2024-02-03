@@ -1,20 +1,96 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoIosEye } from "react-icons/io";
 import { IoIosEyeOff } from "react-icons/io";
+import { useChangePasswordMutation } from "./userApi";
+import { toast } from "react-toastify";
+import useAuth from "../../hooks/useAuth";
+import Swal from "sweetalert2";
+import { useDispatch } from "react-redux";
+import { logout } from "../auth/authSlice";
+import axios from "axios";
 
 const ChangePassword = () => {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [changePassword] = useChangePasswordMutation();
+  const { id } = useAuth();
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
+
+
+  const toggleCurrentPassword = () => {
+    setShowCurrentPassword(!showCurrentPassword);
+  };
+
+  const toggleNewPassword = () => {
+    setShowNewPassword(!showNewPassword);
+  };
+  const toggleConfirmPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const res = await axios.post("http://localhost:3000/auth/logout");
+      dispatch(logout());
+      // Clear the "jwt" cookie on the client side
+      document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    } catch (error) {
+      console.log(error.message);
+      Swal.fire({
+        title: "Error!",
+        text: "An unexpected error occured on the server!",
+        width: "27rem",
+        customClass: {
+          title: "!text-red-500 !font-bold",
+          confirmButton:
+            "!py-2 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+        },
+      });
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  };
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+    if (currentPassword && newPassword && confirmPassword) {
+      try {
+        const res = await changePassword({
+          id,
+          currentPassword,
+          newPassword,
+          confirmPassword,
+        });
+        console.log(res);
+        if (res.error) {
+          Swal.fire({
+            title: "Error!",
+            text: res.error.data.message,
+            width: "27rem",
+            customClass: {
+              title: "!text-red-500 !font-bold",
+              confirmButton:
+                "!py-1 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+            },
+          });
+        } else {
+          toast.success(res.data.message, {
+            autoClose: 5000
+          });
+          handleLogout()
+          navigate("/login")
+        }
+      } catch (error) {
+        toast.error("An unexpected error occurred on the server side!");
+        console.log(error.message);
+      }
+    } else {
+      toast.error("Please fill up all fields!");
+    }
   };
 
   return (
@@ -35,23 +111,23 @@ const ChangePassword = () => {
                   Current Password
                 </label>
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type={showCurrentPassword ? "text" : "password"}
                   name="currentPassword"
                   id="currentPassword"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
-                <button className="absolute right-5 top-9">
-                  {!showPassword ? (
+                <button type="button" className="absolute right-5 top-9">
+                  {!showCurrentPassword ? (
                     <IoIosEyeOff
-                      onClick={togglePasswordVisibility}
+                      onClick={toggleCurrentPassword}
                       color="white"
                       size={18}
                     />
                   ) : (
                     <IoIosEye
-                      onClick={togglePasswordVisibility}
+                      onClick={toggleCurrentPassword}
                       color="white"
                       size={18}
                     />
@@ -67,23 +143,23 @@ const ChangePassword = () => {
                   New Password
                 </label>
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type={showNewPassword ? "text" : "password"}
                   name="newPassword"
                   id="newPassword"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
-                <button className="absolute right-5 top-9">
-                  {!showPassword ? (
+                <button type="button" className="absolute right-5 top-9">
+                  {!showNewPassword ? (
                     <IoIosEyeOff
-                      onClick={togglePasswordVisibility}
+                      onClick={toggleNewPassword}
                       color="white"
                       size={18}
                     />
                   ) : (
                     <IoIosEye
-                      onClick={togglePasswordVisibility}
+                      onClick={toggleNewPassword}
                       color="white"
                       size={18}
                     />
@@ -99,23 +175,23 @@ const ChangePassword = () => {
                   Confirm Password
                 </label>
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type={showConfirmPassword ? "text" : "password"}
                   name="confirmPassword"
                   id="confirmPassword"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className="mb-3 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-600"
                 />
-                <button className="absolute right-5 top-9">
-                  {!showPassword ? (
+                <button type="button" className="absolute right-5 top-9">
+                  {!showConfirmPassword ? (
                     <IoIosEyeOff
-                      onClick={togglePasswordVisibility}
+                      onClick={toggleConfirmPassword}
                       color="white"
                       size={18}
                     />
                   ) : (
                     <IoIosEye
-                      onClick={togglePasswordVisibility}
+                      onClick={toggleConfirmPassword}
                       color="white"
                       size={18}
                     />
@@ -124,18 +200,13 @@ const ChangePassword = () => {
               </div>
 
               <div className="flex justify-end items-center gap-3">
-                <button
-                  type="submit"
-                  className=" transition-colors duration-300 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded text-sm px-4 py-2 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                >
+                <button className=" transition-colors duration-300 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded text-sm px-4 py-2 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                   Save Password
                 </button>
 
-                <Link to={"/profile"}>
-                  <button className="transition-colors duration-300 text-white bg-rose-600 hover:bg-rose-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded text-sm px-3 py-2 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                  <button type="button"  onClick={() => navigate(-1)} className="transition-colors duration-300 text-white bg-rose-600 hover:bg-rose-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded text-sm px-3 py-2 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                     Cancel
                   </button>
-                </Link>
               </div>
             </form>
             <p className="text-slate-50 text-sm">

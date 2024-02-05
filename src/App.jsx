@@ -16,6 +16,7 @@ import SingleUser from "./features/user/SingleUser";
 import Profile from "./features/user/Profile";
 import UpdateProfile from "./features/user/UpdateProfile";
 import ChangePassword from "./features/user/ChangePassword";
+import CreatePost from "./features/post/CreatePost";
 
 const App = () => {
   return (
@@ -34,7 +35,8 @@ const App = () => {
       />
       <Nav/>
       <Routes>
-        <Route path="/" element={<Home />} />
+
+        <Route path="/" element={<Home/>}/>
 
         {/* AUTH ROURES */}
         <Route path="/login" element={<Login />} />
@@ -53,6 +55,9 @@ const App = () => {
         <Route path="/profile" element={<Profile/>}/>
         <Route path="/profile/edit" element={<UpdateProfile/>}/>
         <Route path="/profile/change-password" element={<ChangePassword/>}/>
+
+        {/* POST ROUTES */}
+        <Route path="/posts/new" element={<CreatePost/>}/>
       </Routes>
     </div>
   );

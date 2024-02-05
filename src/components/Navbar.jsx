@@ -47,7 +47,7 @@ const Navbar = () => {
       const res = await axios.post("http://localhost:3000/auth/logout");
       toast.success(res.data.message);
       dispatch(logout());
-      navigate("/")
+      navigate("/login")
       // Clear the "jwt" cookie on the client side
       document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     } catch (error) {
@@ -79,7 +79,7 @@ const Navbar = () => {
             <GiHamburgerMenu size={20} />
           )}
         </div>
-        <div className="logo">Blogify</div>
+        <div className="logo"><Link to={"/"}>Blogify</Link></div>
         {status !== "" && (
           <div className="relative md:hidden ">
             <HiDotsVertical onClick={toggleDropdown} size={20} />
@@ -117,6 +117,9 @@ const Navbar = () => {
             <li onClick={handleShowNavbar}>
               <NavLink to="/">Home</NavLink>
             </li>
+            {status === "Admin" && <li onClick={handleShowNavbar}>
+              <NavLink to="/posts/new">Write</NavLink>
+            </li>}
             <li onClick={handleShowNavbar}>
               <NavLink to="/categories">Categories</NavLink>
             </li>

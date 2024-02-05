@@ -2,38 +2,76 @@ import React, { useState } from "react";
 import { useGetCategoriesQuery } from "../category/categoryApi";
 import Select from "react-select";
 import { toast } from "react-toastify";
+import { useCreatePostMutation } from "./postApi";
+import useAuth from "../../hooks/useAuth";
+import Swal from "sweetalert2";
 
 const CreatePost = () => {
-  const url = `categories?sortBy=name&limit=1000`;
-  const { data } = useGetCategoriesQuery(url);
+  const catUrl = `categories?sortBy=name&limit=1000`;
+  const postUrl = `posts`;
+  const { data } = useGetCategoriesQuery(catUrl);
+  const [createPost] = useCreatePostMutation();
 
-  const [selectedCategories, setSelectedCategories] = useState([]);
   const [title, setTitle] = useState("");
-  const [desc, setDesc] = useState("");
+  const [content, setContent] = useState("");
+  const [categories, setCategories] = useState([]);
   const [cover, setCover] = useState("");
-
+  const { id } = useAuth();
+  const author = id;
 
   const options = data?.capitalized.map((val) => ({
-    value: val.name,
+    value: val._id,
     label: val.name,
   }));
 
   const handleCategoryChange = (selectedOptions) => {
-    setSelectedCategories(selectedOptions || []);
+    // Extracting only the 'value' (which is assumed to be 'id') and storing in the array
+    setCategories(
+      selectedOptions ? selectedOptions.map((option) => option.value) : []
+    );
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (title, desc, selectedCategories.length > 0){
+    e.preventDefault();
+    if ((title, content, categories.length > 0)) {
       try {
-        
+        const res = await createPost({
+          author,
+          title,
+          content,
+          categories,
+        });
+        if (res.error) {
+          Swal.fire({
+            title: "Error!",
+            text: res.error.data.message,
+            width: "27rem",
+            customClass: {
+              title: "!text-red-500 !font-bold",
+              confirmButton:
+                "!py-2 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+            },
+          });
+        } else {
+          toast.success(res.data.message);
+        }
       } catch (error) {
-        
+        Swal.fire({
+          title: "Error!",
+          text: "An unexpected error occured on the server!",
+          width: "27rem",
+          customClass: {
+            title: "!text-red-500 !font-bold",
+            confirmButton:
+              "!py-2 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+          },
+        });
+        console.log(error);
       }
     } else {
-      toast.error("Please provide neccessary details!")
+      toast.error("Please provide neccessary details!");
     }
-  }
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen mt-[-60px]">
@@ -52,20 +90,20 @@ const CreatePost = () => {
               onChange={(e) => setTitle(e.target.value)}
             />
           </div>
-          {/* DESCRIPTION */}
+          {/* CONTETN */}
           <div className="mb-3">
             <textarea
               className="h-52 w-full py-2 px-3 rounded text-lg outline-none"
               placeholder="Post description"
-              value={desc}
-              onChange={(e) => setDesc(e.target.value)}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
             ></textarea>
           </div>
           {/* CATEGORY */}
           <div className="flex gap-2 md:gap-5 justify-start  items-center flex-col md:flex-row">
             <Select
               className="w-full md:w-[50%]"
-              defaultValue={selectedCategories}
+              defaultValue={categories}
               onChange={handleCategoryChange}
               options={options}
               isMulti
@@ -77,7 +115,10 @@ const CreatePost = () => {
           </div>
           {/* SUBMIT */}
           <div className="md:mt-3 mt-4 flex justify-end items-center gap-3">
-            <button type="submit" className="bg-indigo-600 hover:bg-indigo-700 transition-colors duration-300 px-5 py-1 text-white rounded shadow-xl">
+            <button
+              type="submit"
+              className="bg-indigo-600 hover:bg-indigo-700 transition-colors duration-300 px-5 py-1 text-white rounded shadow-xl"
+            >
               Publish
             </button>
             <button className="bg-rose-500 hover:bg-rose-600 transition-colors duration-300 px-3 py-1 text-white rounded shadow-xl">

@@ -15,7 +15,7 @@ export const postApi = apiSlice.injectEndpoints({
       providesTags: ["Post"]
     }),
 
-    // CREATE NEW POST
+    // CREATE NEW POST  
     createPost: builder.mutation({
       query: (newPost) => ({
         url: "/posts",

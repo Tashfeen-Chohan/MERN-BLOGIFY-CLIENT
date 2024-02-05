@@ -1,6 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
+import { useGetCategoriesQuery } from "../category/categoryApi";
+import Select from "react-select";
 
 const CreatePost = () => {
+  const [selectedOption, setSelectedOption] = useState(null);
+  const url = `categories?sortBy=name&limit=1000`;
+  const { data } = useGetCategoriesQuery(url);
+
+  const options = data?.capitalized.map((val) => ({
+    value: val.name,
+    label: val.name
+  }));
+
   return (
     <div className="flex justify-center items-center min-h-screen mt-[-60px]">
       <div className="px-5 py-7 bg-slate-100 shadow-lg md:max-w-3xl w-[85%] rounded">
@@ -24,13 +35,22 @@ const CreatePost = () => {
             ></textarea>
           </div>
           {/* CATEGORY */}
-          <div>
-            <select className="bg-slate-200 px-3 py-2 rounded mb-3">
-              <option value="">Select a category</option>
-            </select>
-            <input className="md:ml-5" type="file" />
+          <div className="flex gap-2 md:gap-5 justify-start  items-center flex-col md:flex-row">
+           
+            <Select
+            className="w-full md:w-[50%]"
+              defaultValue={selectedOption}
+              onChange={setSelectedOption}
+              options={options}
+              isMulti
+              isSearchable
+              placeholder="Select categories"
+              noOptionsMessage={() => "No Category Found!"}
+            />
+            <input className="w-full md:w-[50%]" type="file" />
           </div>
-          <div className="mt-3 flex justify-end items-center gap-3">
+          {/* SUBMIT */}
+          <div className="md:mt-3 mt-4 flex justify-end items-center gap-3">
             <button className="bg-indigo-600 hover:bg-indigo-700 transition-colors duration-300 px-5 py-1 text-white rounded shadow-xl">
               Post
             </button>

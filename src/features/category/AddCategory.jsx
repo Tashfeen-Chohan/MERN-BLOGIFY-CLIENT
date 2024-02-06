@@ -48,7 +48,7 @@ const AddCategory = () => {
     }
   };
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <div className="flex justify-center items-center min-h-screen mt-[-60px]">
       <div className="shadow-xl rounded p-10 w-[90%] md:max-w-lg">
         <h1 className="font-bold text-3xl text-center pb-10">Add Category</h1>
         <form onSubmit={handleSubmit} className="w-full md:w-[70%] md:mx-auto">

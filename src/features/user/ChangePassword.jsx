@@ -122,13 +122,13 @@ const ChangePassword = () => {
                   {!showCurrentPassword ? (
                     <IoIosEyeOff
                       onClick={toggleCurrentPassword}
-                      color="white"
+                      color="gray"
                       size={18}
                     />
                   ) : (
                     <IoIosEye
                       onClick={toggleCurrentPassword}
-                      color="white"
+                      color="gray"
                       size={18}
                     />
                   )}
@@ -154,13 +154,13 @@ const ChangePassword = () => {
                   {!showNewPassword ? (
                     <IoIosEyeOff
                       onClick={toggleNewPassword}
-                      color="white"
+                      color="gray"
                       size={18}
                     />
                   ) : (
                     <IoIosEye
                       onClick={toggleNewPassword}
-                      color="white"
+                      color="gray"
                       size={18}
                     />
                   )}
@@ -186,13 +186,13 @@ const ChangePassword = () => {
                   {!showConfirmPassword ? (
                     <IoIosEyeOff
                       onClick={toggleConfirmPassword}
-                      color="white"
+                      color="gray"
                       size={18}
                     />
                   ) : (
                     <IoIosEye
                       onClick={toggleConfirmPassword}
-                      color="white"
+                      color="gray"
                       size={18}
                     />
                   )}

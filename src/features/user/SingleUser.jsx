@@ -1,7 +1,6 @@
 import React from "react";
 import { useGetSingleUserQuery } from "./userApi";
 import { Link, useParams } from "react-router-dom";
-import Profile2 from "../../assets/p2.png";
 import { TiArrowBack } from "react-icons/ti";
 import useAuth from "../../hooks/useAuth";
 
@@ -20,7 +19,14 @@ const SingleUser = () => {
           <TiArrowBack size={40} />
         </Link>
         <h1 className="text-2xl font-bold">User Profile</h1>
-        <img className="my-5" src={Profile2} alt="Profile Icon" width={70} />
+        <div className="my-5 w-20 h-20 md:w-28 md:h-28 rounded-full overflow-hidden mx-auto">
+          <img
+            src={data?.capitalized.profile}
+            alt="User Profile"
+            className="w-full h-full object-cover text-white text-center"
+          />
+        </div>
+        {/* <img className="my-5" src={Profile2} alt="Profile Icon" width={70} /> */}
 
         <div className="flex w-full justify-center items-center flex-col gap-3">
           <span className="bg-white w-[75%] text-center py-1 rounded shadow-md flex-auto">

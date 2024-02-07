@@ -75,9 +75,9 @@ const Categories = () => {
   if (isLoading)
     return (
       <div className="flex justify-center items-center min-h-screen bg-slate-200">
-        <BeatLoader color="#000000" size={15} />;
+        <BeatLoader color="#000000" size={15} />
       </div>
-    );
+    )
   if (isError) return <p>{error}</p>;
 
   // OBJECT DESTRUCTURING

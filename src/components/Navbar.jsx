@@ -18,7 +18,7 @@ const Navbar = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [sendLogout] = useSendLogoutMutation();
   const dispatch = useDispatch();
-  const { status, firstName, profile } = useAuth();
+  const { status, isPublisher, firstName, profile } = useAuth();
   const navigate = useNavigate();
 
   const handleShowNavbar = () => {
@@ -119,7 +119,7 @@ const Navbar = () => {
             <li onClick={handleShowNavbar}>
               <NavLink to="/">Home</NavLink>
             </li>
-            {status === "Admin" && (
+            {isPublisher && (
               <li onClick={handleShowNavbar}>
                 <NavLink to="/posts/new">Write</NavLink>
               </li>

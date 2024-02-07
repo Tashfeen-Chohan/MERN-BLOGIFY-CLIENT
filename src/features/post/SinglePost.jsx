@@ -5,12 +5,24 @@ import { useGetSingleUserQuery } from "../user/userApi";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import useAuth from "../../hooks/useAuth";
+import { BeatLoader } from "react-spinners";
 
 const SinglePost = () => {
   const { id } = useParams();
-  const { data } = useGetSinglePostQuery(id);
-  const { data: author } = useGetSingleUserQuery(data?.author._id);
+  const { data, isLoading } = useGetSinglePostQuery(id);
+  const { data: author, isLoading: authorLoading } = useGetSingleUserQuery(data?.author._id);
   const {id : authorId} = useAuth()
+
+  const date = new Date(data?.createdAt)
+  const options = { day: "numeric", month: "long", year: "numeric" };
+  const formattedDate = date.toLocaleDateString("en-US", options);
+
+  if (isLoading || authorLoading)
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-slate-200">
+        <BeatLoader color="#000000" size={15} />
+      </div>
+    )
 
   return (
     <div className="flex justify-center items-center">
@@ -20,12 +32,12 @@ const SinglePost = () => {
           src={data?.blogImg}
           alt="Blog cover imgage"
         />
-        <div className="flex justify-start items-start gap-2 flex-col md:flex-row md:justify-between md:items-start">
+        <div className="flex justify-start items-start gap-1 flex-col md:flex-row md:justify-between md:items-start">
           <div className="flex justify-center items-center gap-3">
             <img className="h-9 w-9 object-cover rounded-full" src={author?.capitalized.profile} alt="" />
-            <span>{author?.capitalized.username}</span>
+            <span className="italic">{author?.capitalized.username}</span>
           </div>
-          <span>{data?.createdAt}</span>
+          <span className="italic">{formattedDate}</span>
         </div>
         {authorId === data?.author._id && <div className="flex justify-end items-center gap-3">
           <FaEdit size={25} color="orange"/>

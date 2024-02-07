@@ -162,7 +162,7 @@ const CreatePost = () => {
           {/* TITLE */}
           <div className="mb-3">
             <input
-              className="w-full py-2 px-3 rounded text-xl outline-none"
+              className="w-full py-2 px-3 rounded text-2xl outline-none font-bold"
               type="text"
               placeholder="Title"
               value={title}

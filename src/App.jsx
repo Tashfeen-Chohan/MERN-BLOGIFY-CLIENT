@@ -18,6 +18,7 @@ import UpdateProfile from "./features/user/UpdateProfile";
 import ChangePassword from "./features/user/ChangePassword";
 import CreatePost from "./features/post/CreatePost";
 import SinglePost from "./features/post/SInglePost";
+import Posts from "./features/post/Posts";
 
 const App = () => {
   return (
@@ -37,7 +38,7 @@ const App = () => {
       <Nav/>
       <Routes>
 
-        <Route path="/" element={<Home/>}/>
+        <Route path="/" element={<Posts/>}/>
 
         {/* AUTH ROURES */}
         <Route path="/login" element={<Login />} />

@@ -1,17 +1,21 @@
 import React from "react";
-import { useGetSinglePostQuery } from "./postApi";
-import { useParams } from "react-router-dom";
+import { useDeletePostMutation, useGetSinglePostQuery } from "./postApi";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetSingleUserQuery } from "../user/userApi";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import useAuth from "../../hooks/useAuth";
 import { BeatLoader } from "react-spinners";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 const SinglePost = () => {
   const { id } = useParams();
   const { data, isLoading } = useGetSinglePostQuery(id);
   const { data: author, isLoading: authorLoading } = useGetSingleUserQuery(data?.author._id);
+  const [deletePost, {isLoading: deleteLoading}] = useDeletePostMutation()
   const {id : authorId} = useAuth()
+  const navigate = useNavigate()
 
   const date = new Date(data?.createdAt)
   const options = { day: "numeric", month: "long", year: "numeric" };
@@ -24,6 +28,56 @@ const SinglePost = () => {
       </div>
     )
 
+    const handleDelete = async (id) => {
+      try {
+        const result = await Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          showCancelButton: true,
+          confirmButtonText: "Delete",
+          width: "27rem",
+          customClass: {
+            title: "!font-bold",
+            confirmButton:
+              "!py-1 !px-4 !bg-red-600 !hover:bg-red-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+            cancelButton:
+              "!py-1 !px-4 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+          },
+        });
+  
+        if (result.isConfirmed) {
+          const response = await deletePost(id);
+          if (response.error) {
+            Swal.fire({
+              title: "Error!",
+              text: response.error.data.message,
+              width: "27rem",
+              customClass: {
+                title: "!text-red-500 !font-bold",
+                confirmButton:
+                  "!py-1 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+              },
+            });
+          } else {
+            toast.success(response.data.message);
+            navigate(-1)
+          }
+        }
+      } catch (error) {
+        Swal.fire({
+          title: "Error!",
+          text: "An unexpected error occured on the server!",
+          width: "27rem",
+          customClass: {
+            title: "!text-red-500 !font-bold",
+            confirmButton:
+              "!py-1 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+          },
+        });
+        console.log(error)
+      }
+    };
+
   return (
     <div className="flex justify-center items-center">
       <div className="w-[95%] my-5 rounded  max-w-3xl  shadow-md py-7 px-4 md:px-10">
@@ -32,7 +86,7 @@ const SinglePost = () => {
           src={data?.blogImg}
           alt="Blog cover imgage"
         />
-        <div className="flex justify-start items-start gap-1 flex-col md:flex-row md:justify-between md:items-start">
+        <div className="flex justify-between items-center">
           <div className="flex justify-center items-center gap-3">
             <img className="h-9 w-9 object-cover rounded-full" src={author?.capitalized.profile} alt="" />
             <span className="italic">{author?.capitalized.username}</span>
@@ -41,7 +95,7 @@ const SinglePost = () => {
         </div>
         {authorId === data?.author._id && <div className="flex justify-end items-center gap-3">
           <FaEdit size={25} color="orange"/>
-          <MdDelete size={30} color="red"/>
+          <MdDelete onClick={() => handleDelete(data?._id)} size={30} color="red"/>
         </div>}
         <h1 className="text-center text-2xl font-bold py-6 md:text-3xl">
           {data?.title}

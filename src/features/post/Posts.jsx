@@ -28,7 +28,7 @@ const Posts = () => {
             alt="Blog cover photo"
           />
         )}
-        <h2 className="font-bold text-2xl text-center my-3 line-clamp-2">{val.title}</h2>
+        <h2 className="font-bold text-2xl text-center my-3 line-clamp-2 px-2">{val.title}</h2>
         <p className="px-2 line-clamp-3">{val.content}</p>
         <div className="flex justify-start items-center gap-2 my-3 px-2">
           <div className="h-10 w-10 rounded-full overflow-hidden">

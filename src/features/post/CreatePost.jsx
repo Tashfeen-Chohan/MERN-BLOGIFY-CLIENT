@@ -170,7 +170,7 @@ const CreatePost = () => {
             />
           </div>
           {/* CONTETN */}
-          <div className="mb-3">
+          <div className="mt-8 mb-5">
             <textarea
               className="h-52 w-full py-2 px-3 rounded text-lg outline-none"
               placeholder="Post description"

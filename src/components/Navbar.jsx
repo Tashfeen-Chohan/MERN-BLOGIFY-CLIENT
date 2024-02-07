@@ -18,7 +18,7 @@ const Navbar = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [sendLogout] = useSendLogoutMutation();
   const dispatch = useDispatch();
-  const { status, firstName } = useAuth();
+  const { status, firstName, profile } = useAuth();
   const navigate = useNavigate();
 
   const handleShowNavbar = () => {
@@ -47,7 +47,7 @@ const Navbar = () => {
       const res = await axios.post("http://localhost:3000/auth/logout");
       toast.success(res.data.message);
       dispatch(logout());
-      navigate("/login")
+      navigate("/login");
       // Clear the "jwt" cookie on the client side
       document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     } catch (error) {
@@ -79,7 +79,9 @@ const Navbar = () => {
             <GiHamburgerMenu size={20} />
           )}
         </div>
-        <div className="logo"><Link to={"/"}>Blogify</Link></div>
+        <div className="logo">
+          <Link to={"/"}>Blogify</Link>
+        </div>
         {status !== "" && (
           <div className="relative md:hidden ">
             <HiDotsVertical onClick={toggleDropdown} size={20} />
@@ -117,9 +119,11 @@ const Navbar = () => {
             <li onClick={handleShowNavbar}>
               <NavLink to="/">Home</NavLink>
             </li>
-            {status === "Admin" && <li onClick={handleShowNavbar}>
-              <NavLink to="/posts/new">Write</NavLink>
-            </li>}
+            {status === "Admin" && (
+              <li onClick={handleShowNavbar}>
+                <NavLink to="/posts/new">Write</NavLink>
+              </li>
+            )}
             <li onClick={handleShowNavbar}>
               <NavLink to="/categories">Categories</NavLink>
             </li>
@@ -136,9 +140,14 @@ const Navbar = () => {
                   onClick={toggleDropdown}
                   className="flex justify-center items-center gap-2"
                 >
-                  <FaRegCircleUser size={25} />
-                  {/* <FaRegUser size={25} /> */}
-                  <p className="font-semibold">
+                  <div className="w-9 h-9 rounded-full overflow-hidden mx-auto">
+                    <img
+                      src={profile}
+                      alt="Profile"
+                      className="w-full h-full object-cover text-white text-center"
+                    />
+                  </div>
+                  <p className="ml-1 font-semibold">
                     WELCOME <span>{firstName}!</span>
                   </p>
                   <FaCaretDown />
@@ -162,7 +171,10 @@ const Navbar = () => {
                       Change Password
                     </li>
                     <hr className="w-full my-1" />
-                    <li onClick={handleLogout} className="hover:bg-slate-600 w-full px-2 py-1 rounded transition-colors duration-300">
+                    <li
+                      onClick={handleLogout}
+                      className="hover:bg-slate-600 w-full px-2 py-1 rounded transition-colors duration-300"
+                    >
                       Logout
                     </li>
                   </ul>

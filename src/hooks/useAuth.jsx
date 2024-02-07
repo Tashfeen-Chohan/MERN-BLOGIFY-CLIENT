@@ -10,7 +10,7 @@ const useAuth = () => {
 
   if (token) {
     const decoded = jwtDecode(token);
-    const { id, username, roles } = decoded.UserInfo;
+    const { id, username, email, profile, roles } = decoded.UserInfo;
 
     let firstName = username.split(" ");
     firstName = firstName[0].toUpperCase();
@@ -26,13 +26,15 @@ const useAuth = () => {
       status = "User";
     }
 
-    return { id, firstName, username, roles, status, isPublisher, isAdmin };
+    return { id, firstName, username, email, profile, roles, status, isPublisher, isAdmin };
   }
 
   return {
     id: null,
     firstName: "",
     username: "",
+    email: "",
+    profile: null,
     roles: [],
     isPublisher,
     isAdmin,

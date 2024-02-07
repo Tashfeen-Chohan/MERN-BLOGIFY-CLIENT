@@ -24,14 +24,6 @@ const Users = () => {
   const { data, isLoading, isError, error } = useGetUsersQuery(url);
   const [deleteUser] = useDeleteUserMutation();
 
-  // useEffect(() => {
-  //   if (filterBy !== "" && searchBy.length > 1 && !errorDisplayed){
-  //     toast.error("First disabled filter functionality then search")
-  //     setErrorDisplayed(true)
-  //   }
-  //   if (searchBy.length === 0) setErrorDisplayed(false)
-  // }, [filterBy, searchBy, errorDisplayed])
-
   const handleDelete = async (id) => {
     try {
       const result = await Swal.fire({
@@ -87,8 +79,6 @@ const Users = () => {
       </div>
     );
   if (isError) return <p>{error}</p>;
-
-  
 
   // OBJECT DESTRUCTURING
   const { capitalized, totalUsers, totalPages, page, limit } = data;
@@ -178,6 +168,9 @@ const Users = () => {
                 #
               </th>
               <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                Profile
+              </th>
+              <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
                 Username
               </th>
               <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
@@ -204,6 +197,20 @@ const Users = () => {
                     #
                   </span>
                   {(page - 1) * limit + index + 1}
+                </td>
+                <td className="p-2 md:border md:border-grey-500 text-left  flex items-center md:table-cell">
+                  <span className="inline-block w-1/3 md:hidden font-bold">
+                    Profile
+                  </span>
+                  <div className="w-9 h-9 overflow-hidden inline-block md:block rounded-full">
+                    {val.profile && (
+                      <img
+                        src={val.profile}
+                        alt="Profile"
+                        className="object-cover w-full h-full"
+                      />
+                    )}
+                  </div>
                 </td>
                 <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
                   <span className="inline-block w-1/3 md:hidden font-bold">

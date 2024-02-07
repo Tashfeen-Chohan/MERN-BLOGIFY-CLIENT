@@ -13,7 +13,7 @@ const SingleCategory = () => {
   return (
     <div className='flex justify-center items-center min-h-screen mt-[-60px]'>
       <div className='flex justify-start items-start flex-col bg-slate-100 px-5 pt-3 pb-7  rounded shadow-md w-[80%] md:pt-5 md:max-w-sm'>
-      <Link to={"/categories"} className="flex self-end">
+      <Link to={"/categories"} className="flex self-end hover:scale-125 transition-all duration-300">
         <TiArrowBack size={40}/>
         </Link>
         <h1 className='text-xl font-bold flex  pb-3 mt-3 md:text-2xl'>Category Information</h1>

@@ -17,6 +17,7 @@ import Profile from "./features/user/Profile";
 import UpdateProfile from "./features/user/UpdateProfile";
 import ChangePassword from "./features/user/ChangePassword";
 import CreatePost from "./features/post/CreatePost";
+import SinglePost from "./features/post/SInglePost";
 
 const App = () => {
   return (
@@ -58,6 +59,7 @@ const App = () => {
 
         {/* POST ROUTES */}
         <Route path="/posts/new" element={<CreatePost/>}/>
+        <Route path="/posts/:id" element={<SinglePost/>}/>
       </Routes>
     </div>
   );

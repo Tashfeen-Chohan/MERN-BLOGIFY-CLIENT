@@ -128,6 +128,7 @@ const CreatePost = () => {
           });
         } else {
           toast.success(res.data.message);
+          navigate(`/posts/${res.data.post._id}`)
         }
       } catch (error) {
         Swal.fire({
@@ -149,7 +150,7 @@ const CreatePost = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <div className="px-5 py-7 bg-slate-100 shadow-lg md:max-w-3xl w-[85%] rounded">
+      <div className="px-5 py-7 bg-slate-200 shadow-lg md:max-w-3xl w-[85%] rounded">
         <h1 className="text-center text-2xl md:text-3xl  font-bold pb-7">
           Create Post
         </h1>

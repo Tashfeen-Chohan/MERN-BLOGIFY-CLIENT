@@ -14,6 +14,23 @@ import {
 import { v4 } from "uuid";
 import app from "../../firebase";
 import { useNavigate } from "react-router-dom";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+
+const toolbarOptions = {
+  toolbar: [
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+    [{ font: [] }],
+    // [{size: []}],
+    ["bold", "italic", "underline", "blockquote"],
+    [{ align: [] }],
+    [{ list: "ordered" }, { list: "bullet" }],
+    [{ color: [] }, { background: [] }],
+    ["link", "image", "video"],
+
+    ["clean"],
+  ],
+};
 
 const CreatePost = () => {
   const catUrl = `categories?sortBy=name&limit=1000`;
@@ -27,7 +44,7 @@ const CreatePost = () => {
   const [imgPercentage, setImgPercentage] = useState(0);
   const [uploadedImg, setUploadedImg] = useState(null);
   const { id } = useAuth();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const options = data?.capitalized.map((val) => ({
     value: val._id,
@@ -103,7 +120,6 @@ const CreatePost = () => {
     }
   }, [uploadedImg]);
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if ((title, content, categories.length > 0)) {
@@ -128,7 +144,7 @@ const CreatePost = () => {
           });
         } else {
           toast.success(res.data.message);
-          navigate(`/posts/${res.data.post._id}`)
+          navigate(`/posts/${res.data.post._id}`);
         }
       } catch (error) {
         Swal.fire({
@@ -150,13 +166,19 @@ const CreatePost = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <div className="px-5 py-7 bg-slate-200 shadow-lg md:max-w-3xl w-[85%] rounded">
-        <h1 className="text-center text-2xl md:text-3xl  font-bold pb-7">
+      <div className="px-5 py-7 my-10 bg-slate-200 shadow-lg md:max-w-4xl w-[95%] rounded">
+        <h1 className="text-center text-2xl md:text-3xl  font-bold pb-3">
           Create Post
         </h1>
         {/* IMAGE CONTAINER */}
         <div className="w-full mb-5">
-          { img && <img className="rounded shadow-lg w-full h-auto" src={img} alt="Uploaded Image" />}
+          {img && (
+            <img
+              className="rounded shadow-lg w-full h-auto"
+              src={img}
+              alt="Uploaded Image"
+            />
+          )}
         </div>
         <form onSubmit={handleSubmit}>
           {/* TITLE */}
@@ -169,17 +191,17 @@ const CreatePost = () => {
               onChange={(e) => setTitle(e.target.value)}
             />
           </div>
-          {/* CONTETN */}
+          {/* CONTENT */}
           <div className="mt-8 mb-5">
-            <textarea
-              className="h-52 w-full py-2 px-3 rounded text-lg outline-none"
-              placeholder="Post description"
+            <ReactQuill
+              className="bg-white rounded shadow-md h-72"
+              modules={toolbarOptions}
               value={content}
-              onChange={(e) => setContent(e.target.value)}
-            ></textarea>
+              onChange={setContent}
+            />
           </div>
           {/* CATEGORY */}
-          <div className="flex gap-2 md:gap-5 justify-start  items-center flex-col md:flex-row">
+          <div className=" flex gap-2 md:gap-5 justify-start  items-center flex-col md:flex-row">
             <Select
               className="w-full md:w-[50%]"
               defaultValue={categories}
@@ -206,7 +228,7 @@ const CreatePost = () => {
               Publish
             </button>
             <button
-              onClick={() =>  navigate(-1) }
+              onClick={() => navigate(-1)}
               type="button"
               className="bg-rose-500 hover:bg-rose-600 transition-colors duration-300 px-3 py-1 text-white rounded shadow-xl"
             >

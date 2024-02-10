@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useGetCategoriesQuery } from "../category/categoryApi";
 import Select from "react-select";
 import { toast } from "react-toastify";
-import { useCreatePostMutation } from "./postApi";
+import { useCreatePostMutation, useGetSinglePostQuery, useUpdatePostMutation } from "./postApi";
 import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
 import {
@@ -13,7 +13,7 @@ import {
 } from "firebase/storage";
 import { v4 } from "uuid";
 import app from "../../firebase";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
@@ -32,28 +32,47 @@ const toolbarOptions = {
   ],
 };
 
-const CreatePost = () => {
+const UpdatePost = () => {
+  const {id: postId} = useParams()
   const catUrl = `categories?sortBy=name&limit=1000`;
   const { data } = useGetCategoriesQuery(catUrl);
-  const [createPost] = useCreatePostMutation();
+  const {data: singlePost} = useGetSinglePostQuery(postId)
+  const [updatePost] = useUpdatePostMutation()
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [categories, setCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([])
   const [img, setImg] = useState(undefined);
   const [imgPercentage, setImgPercentage] = useState(0);
   const [uploadedImg, setUploadedImg] = useState(null);
   const { id } = useAuth();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (singlePost){
+      setTitle(singlePost.title)
+      setContent(singlePost.content)
+      setImg(singlePost.blogImg)
+      // const selectedOptions = singlePost.categories.map((val) => ({
+      //   value: val._id,
+      //   // label: val.name
+      // }))
+      setSelectedCategories(singlePost.categories)
+    }
+  }, [singlePost])
+
+  console.log(singlePost)
+  console.log("sc: ", selectedCategories)
+  console.log("c: ", categories)
+
   const options = data?.capitalized.map((val) => ({
     value: val._id,
     label: val.name,
   }));
 
-  console.log(categories)
-
   const handleCategoryChange = (selectedOptions) => {
+    setSelectedCategories(selectedOptions);
     // Extracting only the 'value' (which is assumed to be 'id') and storing in the array
     setCategories(
       selectedOptions ? selectedOptions.map((option) => option.value) : []
@@ -110,18 +129,6 @@ const CreatePost = () => {
     );
   };
 
-  useEffect(() => {
-    if (img && !uploadedImg) {
-      uploadFile(img);
-    }
-  }, [img, uploadedImg]);
-
-  useEffect(() => {
-    if (uploadedImg) {
-      setImg(uploadedImg);
-    }
-  }, [uploadedImg]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if ((title, content, categories.length > 0)) {
@@ -146,7 +153,7 @@ const CreatePost = () => {
           });
         } else {
           toast.success(res.data.message);
-          navigate(`/posts/single/${res.data.post._id}`);
+          navigate(`/posts/${res.data.post._id}`);
         }
       } catch (error) {
         Swal.fire({
@@ -170,7 +177,7 @@ const CreatePost = () => {
     <div className="flex justify-center items-center min-h-screen">
       <div className="px-5 py-7 my-10 bg-slate-200 shadow-lg md:max-w-4xl w-[95%] rounded">
         <h1 className="text-center text-2xl md:text-3xl  font-bold pb-3">
-          Create Post
+          Update Post
         </h1>
         {/* IMAGE CONTAINER */}
         <div className="w-full mb-5">
@@ -178,13 +185,13 @@ const CreatePost = () => {
             <img
               className="rounded shadow-lg w-full h-auto"
               src={img}
-              alt="Uploaded Image"
+              alt="Blog cover photo"
             />
           )}
         </div>
         <form onSubmit={handleSubmit}>
           {/* TITLE */}
-          <div className="mb-3">
+          <div className="mb-3 shadow-md">
             <input
               className="w-full py-2 px-3 rounded text-2xl outline-none font-bold"
               type="text"
@@ -196,30 +203,30 @@ const CreatePost = () => {
           {/* CONTENT */}
           <div className="mt-8 mb-5">
             <ReactQuill
-              className="bg-white rounded shadow-md h-72"
+              className="bg-white rounded shadow-md"
               modules={toolbarOptions}
               value={content}
               onChange={setContent}
             />
           </div>
           {/* CATEGORY */}
-          <div className=" flex gap-2 md:gap-5 justify-start  items-center flex-col md:flex-row">
+          <div className="flex gap-2 md:gap-5 justify-start  items-center flex-col md:flex-row">
             <Select
-              className="w-full md:w-[50%]"
-              defaultValue={categories}
-              onChange={handleCategoryChange}
+              className="w-full md:w-[50%] shadow-md"
+              defaultValue={selectedCategories._id}
+              // onChange={handleCategoryChange}
               options={options}
               isMulti
               isSearchable
               placeholder="Select categories"
               noOptionsMessage={() => "No Category Found!"}
             />
-            <input
+            {/* <input
               className="w-full md:w-[50%]"
               type="file"
               accept="image/*"
               onChange={(e) => setImg(e.target.files[0])}
-            />
+            /> */}
           </div>
           {/* SUBMIT */}
           <div className="md:mt-3 mt-4 flex justify-end items-center gap-3">
@@ -243,4 +250,4 @@ const CreatePost = () => {
   );
 };
 
-export default CreatePost;
+export default UpdatePost;

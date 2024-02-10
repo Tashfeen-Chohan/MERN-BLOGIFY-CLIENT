@@ -12,7 +12,7 @@ const Profile = () => {
     <div className="mt-[-60px] flex justify-center items-center min-h-screen">
       <div className="bg-slate-100 shadow-xl pb-10 pt-5 w-[85%] md:max-w-md flex justify-center items-center flex-col">
         <Link
-          to={"/users"}
+          to={-1}
           className="flex self-end px-3 hover:scale-125 transition-all duration-300"
         >
           <TiArrowBack size={40} />
@@ -29,14 +29,14 @@ const Profile = () => {
 
         {/* <img className="my-4" src={Profile2} alt="Profile Icon" width={70} /> */}
         <div className="flex w-full justify-center items-center flex-col gap-3">
-          <span className="bg-white w-[70%] text-center py-1 rounded shadow-md flex-auto">
+          <span className="bg-white hover:bg-cyan-200 transition-colors duration-300 w-[70%] text-center py-1 rounded shadow-md flex-auto">
             {data?.capitalized.username}
           </span>
-          <span className="bg-white py-1 w-[70%] text-center rounded shadow-md">
+          <span className="bg-white hover:bg-cyan-200 transition-colors duration-300 py-1 w-[70%] text-center rounded shadow-md">
             {data?.capitalized.email}
           </span>
           {data?.capitalized.roles.includes("Publisher") && (
-            <span className="bg-white py-1 w-[70%] text-center rounded shadow-md">
+            <span className="bg-white hover:bg-cyan-200 transition-colors duration-300 py-1 w-[70%] text-center rounded shadow-md">
               Total Posts : {data?.totalPosts}
             </span>
           )}

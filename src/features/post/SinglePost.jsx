@@ -80,33 +80,41 @@ const SinglePost = () => {
 
   return (
     <div className="flex justify-center items-center">
-      <div className="w-[95%] my-5 rounded  max-w-3xl  shadow-md py-7 px-4 md:px-10">
+      <div className="w-[95%] my-5 rounded-t shadow-sm  max-w-3xl pb-7">
         <img
           className="w-full rounded h-auto shadow-xl my-3"
           src={data?.blogImg}
           alt="Blog cover imgage"
         />
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center px-2">
           <div className="flex justify-center items-center gap-3">
-            <img className="h-9 w-9 object-cover rounded-full" src={author?.capitalized.profile} alt="" />
+            <img className="h-9 w-9 object-cover rounded-full text-xs" src={author?.capitalized.profile} alt="Profile" />
             <span className="italic">{author?.capitalized.username}</span>
           </div>
           <span className="italic">{formattedDate}</span>
         </div>
         {authorId === data?.author._id && <div className="flex justify-end items-center gap-3">
-          <FaEdit size={25} color="orange"/>
+          <FaEdit onClick={() => navigate(`/posts/update/${data?._id}`)} size={25} color="orange"/>
           <MdDelete onClick={() => handleDelete(data?._id)} size={30} color="red"/>
         </div>}
-        <h1 className="text-center text-2xl font-bold py-6 md:text-3xl">
+        <div className="flex justify-center items-center gap-2 mt-3">
+          {data?.categories.map((cat) => (
+            <span className="px-2 py-1 rounded-full bg-slate-200 text-sm" key={cat._id}>{cat.name}</span>
+          ))}
+        </div>
+        <h1 className="px-2 text-center text-2xl font-bold py-4 md:text-3xl">
           {data?.title}
         </h1>
+        
 
-        <p className="">
+        <div className="px-2 md:px-7" dangerouslySetInnerHTML={{__html: data?.content}}/>
+
+        {/* <p className="">
           <span className="text-2xl md:text-3xl italic">
             {data?.content[0]}
           </span>
           {data?.content.slice(1)}
-        </p>
+        </p> */}
       </div>
     </div>
   );

@@ -152,6 +152,7 @@ const UpdateUser = () => {
                   // placeholder="John Doe"
                 />
               </div>
+              {/* ROLES */}
               <div>
                 <label
                   htmlFor="email"

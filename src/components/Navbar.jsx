@@ -144,7 +144,7 @@ const Navbar = () => {
                     <img
                       src={profile}
                       alt="Profile"
-                      className="w-full h-full object-cover text-white text-center"
+                      className="w-full h-full object-cover text-white text-center text-xs"
                     />
                   </div>
                   <p className="ml-1 font-semibold">

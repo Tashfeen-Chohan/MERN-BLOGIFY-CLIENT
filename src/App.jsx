@@ -17,8 +17,9 @@ import Profile from "./features/user/Profile";
 import UpdateProfile from "./features/user/UpdateProfile";
 import ChangePassword from "./features/user/ChangePassword";
 import CreatePost from "./features/post/CreatePost";
-import SinglePost from "./features/post/SInglePost";
+import SinglePost from "./features/post/SinglePost";
 import Posts from "./features/post/Posts";
+import UpdatePost from "./features/post/UpdatePost";
 
 const App = () => {
   return (
@@ -60,7 +61,8 @@ const App = () => {
 
         {/* POST ROUTES */}
         <Route path="/posts/new" element={<CreatePost/>}/>
-        <Route path="/posts/:id" element={<SinglePost/>}/>
+        <Route path="/posts/single/:id" element={<SinglePost/>}/>
+        <Route path="/posts/update/:id" element={<UpdatePost/>}/>
       </Routes>
     </div>
   );

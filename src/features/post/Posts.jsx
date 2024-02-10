@@ -20,22 +20,27 @@ const Posts = () => {
     const formattedDate = date.toLocaleDateString("en-US", option);
 
     return (
-      <div onClick={() => navigate(`posts/${val._id}`)} key={val._id} className="col-span-12 md:col-span-4 shadow-xl">
+      <div className="col-span-12 md:col-span-4 shadow-lg rounded hover:scale-105 transition-transform duration-300" onClick={() => navigate(`posts/single/${val._id}`)} key={val._id} >
         {val.blogImg && (
           <img
-            className="rounded-t-md rounded-b-sm"
+            className="rounded-t-md text-sm"
             src={val.blogImg}
             alt="Blog cover photo"
           />
         )}
+        <div className="mt-3 flex justify-center items-center gap-2 flex-wrap px-2">
+          {val.categories.map((cat) => (
+            <span className="px-2 py-1 rounded-full bg-slate-200 text-xs" key={cat._id}>{cat.name}</span>
+          ))}
+        </div>
         <h2 className="font-bold text-2xl text-center my-3 line-clamp-2 px-2">{val.title}</h2>
-        <p className="px-2 line-clamp-3">{val.content}</p>
+        <p className="px-2 line-clamp-3" dangerouslySetInnerHTML={{__html: val.content}}/>
         <div className="flex justify-start items-center gap-2 my-3 px-2">
           <div className="h-10 w-10 rounded-full overflow-hidden">
             <img
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover text-xs"
               src={val.author.profile}
-              alt="Author profile"
+              alt="Profile"
             />
           </div>
           <div className="flex justify-center items-start flex-col">

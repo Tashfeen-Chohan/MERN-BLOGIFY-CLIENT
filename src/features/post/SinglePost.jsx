@@ -2,12 +2,13 @@ import React from "react";
 import { useDeletePostMutation, useGetSinglePostQuery } from "./postApi";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetSingleUserQuery } from "../user/userApi";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaRegComment, FaRegEye } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import useAuth from "../../hooks/useAuth";
 import { BeatLoader } from "react-spinners";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import { PiHandsClappingLight } from "react-icons/pi";
 
 const SinglePost = () => {
   const { id } = useParams();
@@ -108,6 +109,20 @@ const SinglePost = () => {
         
 
         <div className="px-2 md:px-7" dangerouslySetInnerHTML={{__html: data?.content}}/>
+        <div className="my-4 flex justify-start items-center gap-4 px-2 md:px-7">
+          <span className="flex justify-center items-center gap-1 text-sm">
+          <PiHandsClappingLight size={21}/>
+          {data?.likes}
+          </span>
+          <span className="flex justify-center items-center gap-1 text-sm">
+          <FaRegComment size={20}/>
+          {0}
+          </span>
+          <span className="flex justify-center items-center gap-1 text-sm">
+          <FaRegEye size={20}/>
+          {data?.views}
+          </span>
+        </div>
 
         {/* <p className="">
           <span className="text-2xl md:text-3xl italic">

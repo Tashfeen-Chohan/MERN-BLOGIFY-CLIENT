@@ -12,7 +12,9 @@ export const postApi = apiSlice.injectEndpoints({
     // GET SINGLE POST
     getSinglePost: builder.query({
       query: (id) => `/posts/${id}`,
-      providesTags: ["Post"]
+      providesTags: ["Post"],
+      // invalidatesTags: ["Post"]
+      invalidatesTags: (result, error, arg) => [{ type: "Post", id: arg }] // Invalidate cache for the specific post ID
     }),
 
     // CREATE NEW POST  

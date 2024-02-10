@@ -12,9 +12,8 @@ export const postApi = apiSlice.injectEndpoints({
     // GET SINGLE POST
     getSinglePost: builder.query({
       query: (id) => `/posts/${id}`,
-      providesTags: ["Post"],
-      // invalidatesTags: ["Post"]
       invalidatesTags: (result, error, arg) => [{ type: "Post", id: arg }] // Invalidate cache for the specific post ID
+      // invalidatesTags: ["Post"]
     }),
 
     // CREATE NEW POST  
@@ -44,6 +43,15 @@ export const postApi = apiSlice.injectEndpoints({
         method: "DELETE"
       }),
       invalidatesTags: ["Post"]
+    }),
+
+    // LIKE POST
+    likePost: builder.mutation({
+      query: (id) => ({
+        url: `/posts/${id}/like`,
+        method: "POST"
+      }),
+      invalidatesTags: (result, error, id) => [{ type: "Post", id }]
     })
   })
 })
@@ -53,5 +61,6 @@ export const {
   useGetSinglePostQuery,
   useCreatePostMutation,
   useUpdatePostMutation,
-  useDeletePostMutation
+  useDeletePostMutation,
+  useLikePostMutation
 } = postApi;

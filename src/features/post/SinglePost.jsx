@@ -1,5 +1,5 @@
-import React from "react";
-import { useDeletePostMutation, useGetSinglePostQuery } from "./postApi";
+import React, { useEffect } from "react";
+import { postApi, useDeletePostMutation, useGetSinglePostQuery, useLikePostMutation } from "./postApi";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetSingleUserQuery } from "../user/userApi";
 import { FaEdit, FaRegComment, FaRegEye } from "react-icons/fa";
@@ -15,6 +15,7 @@ const SinglePost = () => {
   const { data, isLoading } = useGetSinglePostQuery(id);
   const { data: author, isLoading: authorLoading } = useGetSingleUserQuery(data?.author._id);
   const [deletePost, {isLoading: deleteLoading}] = useDeletePostMutation()
+  const [likePost] = useLikePostMutation()
   const {id : authorId} = useAuth()
   const navigate = useNavigate()
 
@@ -29,59 +30,71 @@ const SinglePost = () => {
       </div>
     )
 
-    const handleDelete = async (id) => {
-      try {
-        const result = await Swal.fire({
-          title: "Are you sure?",
-          text: "You won't be able to revert this!",
-          showCancelButton: true,
-          confirmButtonText: "Delete",
-          width: "27rem",
-          customClass: {
-            title: "!font-bold",
-            confirmButton:
-              "!py-1 !px-4 !bg-red-600 !hover:bg-red-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
-            cancelButton:
-              "!py-1 !px-4 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
-          },
-        });
   
-        if (result.isConfirmed) {
-          const response = await deletePost(id);
-          if (response.error) {
-            Swal.fire({
-              title: "Error!",
-              text: response.error.data.message,
-              width: "27rem",
-              customClass: {
-                title: "!text-red-500 !font-bold",
-                confirmButton:
-                  "!py-1 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
-              },
-            });
-          } else {
-            toast.success(response.data.message);
-            navigate(-1)
-          }
+
+  const handleDelete = async (id) => {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        showCancelButton: true,
+        confirmButtonText: "Delete",
+        width: "27rem",
+        customClass: {
+          title: "!font-bold",
+          confirmButton:
+            "!py-1 !px-4 !bg-red-600 !hover:bg-red-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+          cancelButton:
+            "!py-1 !px-4 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+        },
+      });
+
+      if (result.isConfirmed) {
+        const response = await deletePost(id);
+        if (response.error) {
+          Swal.fire({
+            title: "Error!",
+            text: response.error.data.message,
+            width: "27rem",
+            customClass: {
+              title: "!text-red-500 !font-bold",
+              confirmButton:
+                "!py-1 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+            },
+          });
+        } else {
+          toast.success(response.data.message);
+          navigate(-1)
         }
-      } catch (error) {
-        Swal.fire({
-          title: "Error!",
-          text: "An unexpected error occured on the server!",
-          width: "27rem",
-          customClass: {
-            title: "!text-red-500 !font-bold",
-            confirmButton:
-              "!py-1 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
-          },
-        });
-        console.log(error)
       }
-    };
+    } catch (error) {
+      Swal.fire({
+        title: "Error!",
+        text: "An unexpected error occured on the server!",
+        width: "27rem",
+        customClass: {
+          title: "!text-red-500 !font-bold",
+          confirmButton:
+            "!py-1 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+        },
+      });
+      console.log(error)
+    }
+  };
+
+  const handleLike = async (id) => {
+    try {
+      const res = await likePost(id)
+      toast.success(res.data.message)
+      window.location.reload()
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
 
   return (
     <div className="flex justify-center items-center">
-      <div className="w-[95%] my-5 rounded-t shadow-sm  max-w-3xl pb-7">
+      <div className="w-[95%] my-5 rounded-t shadow-md  max-w-3xl pb-7">
         <img
           className="w-full rounded h-auto shadow-xl my-3"
           src={data?.blogImg}
@@ -109,9 +122,15 @@ const SinglePost = () => {
         
 
         <div className="px-2 md:px-7" dangerouslySetInnerHTML={{__html: data?.content}}/>
+        {/* <p className="">
+          <span className="text-2xl md:text-3xl italic">
+            {data?.content[0]}
+          </span>
+          {data?.content.slice(1)}
+        </p> */}
         <div className="my-4 flex justify-start items-center gap-4 px-2 md:px-7">
           <span className="flex justify-center items-center gap-1 text-sm">
-          <PiHandsClappingLight size={21}/>
+          <PiHandsClappingLight size={21} onClick={() => handleLike(data?._id)}/>
           {data?.likes}
           </span>
           <span className="flex justify-center items-center gap-1 text-sm">
@@ -124,12 +143,7 @@ const SinglePost = () => {
           </span>
         </div>
 
-        {/* <p className="">
-          <span className="text-2xl md:text-3xl italic">
-            {data?.content[0]}
-          </span>
-          {data?.content.slice(1)}
-        </p> */}
+        
       </div>
     </div>
   );

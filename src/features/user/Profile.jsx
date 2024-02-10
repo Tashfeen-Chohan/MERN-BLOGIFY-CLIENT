@@ -23,7 +23,7 @@ const Profile = () => {
           <img
             src={profile}
             alt="User Profile"
-            className="w-full h-full object-cover text-white text-center"
+            className="w-full h-full object-cover text-black text-center"
           />
         </div>
 

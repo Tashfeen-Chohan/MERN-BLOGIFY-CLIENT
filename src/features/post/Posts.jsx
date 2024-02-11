@@ -1,18 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useGetPostsQuery } from "./postApi";
 import { BeatLoader } from "react-spinners";
 import { Link, useNavigate } from "react-router-dom";
 import { MdSearch } from "react-icons/md";
 import { PiHandsClappingLight } from "react-icons/pi";
 import { FaRegComment, FaRegEye } from "react-icons/fa";
-import {  IoEyeOutline } from "react-icons/io5";
+import { IoEyeOutline } from "react-icons/io5";
 
 const Posts = () => {
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(6);
   const [sort, setSort] = useState("");
   const postUrl = `/posts?searchBy=${search}&sortBy=${sort}&limit=${limit}`;
-  const { data, isLoading } = useGetPostsQuery(postUrl);
+  const { data, isLoading, refetch } = useGetPostsQuery(postUrl);
   const navigate = useNavigate();
 
   if (isLoading)
@@ -31,17 +31,22 @@ const Posts = () => {
 
     return (
       <div
-        className="col-span-12 md:col-span-4 shadow-lg rounded hover:scale-105 transition-transform duration-300"
+        className=" col-span-12 md:col-span-4 shadow-lg rounded hover:scale-105 transition-transform duration-300"
         onClick={() => navigate(`posts/single/${val._id}`)}
         key={val._id}
       >
-        {val.blogImg && (
-          <img
-            className="rounded-t-md text-sm"
-            src={val.blogImg}
-            alt="Blog cover photo"
-          />
-        )}
+        <div className="relative">
+          {val.popular && (
+            <div className="bg-rose-500 text-gray-100 absolute top-3 text-sm right-2 px-3 py-1 rounded">Popular</div>
+          )}
+          {val.blogImg && (
+            <img
+              className="rounded-t-md text-sm"
+              src={val.blogImg}
+              alt="Blog cover photo"
+            />
+          )}
+        </div>
         <div className="flex justify-between items-center mt-2 px-2">
           <div className="flex justify-center items-center gap-2">
             <div className="h-10 w-10 rounded-full overflow-hidden">
@@ -76,16 +81,16 @@ const Posts = () => {
         />
         <div className="my-4 flex justify-start items-center gap-4 px-2">
           <span className="flex justify-center items-center gap-1 text-sm">
-          <PiHandsClappingLight size={21}/>
-          {val.likes}
+            <PiHandsClappingLight size={21} />
+            {val.likes}
           </span>
           <span className="flex justify-center items-center gap-1 text-sm">
-          <FaRegComment size={20}/>
-          {0}
+            <FaRegComment size={20} />
+            {0}
           </span>
           <span className="flex justify-center items-center gap-1 text-sm">
-          <FaRegEye size={20}/>
-          {val.views}
+            <FaRegEye size={20} />
+            {val.views}
           </span>
         </div>
       </div>

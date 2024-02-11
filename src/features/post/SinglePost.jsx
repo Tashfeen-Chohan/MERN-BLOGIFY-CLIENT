@@ -13,6 +13,7 @@ import { PiHandsClappingLight } from "react-icons/pi";
 const SinglePost = () => {
   const { id } = useParams();
   const { data, isLoading } = useGetSinglePostQuery(id);
+  console.log(data)
   const { data: author, isLoading: authorLoading } = useGetSingleUserQuery(data?.author._id);
   const [deletePost, {isLoading: deleteLoading}] = useDeletePostMutation()
   const [likePost] = useLikePostMutation()
@@ -86,7 +87,7 @@ const SinglePost = () => {
     try {
       const res = await likePost(id)
       toast.success(res.data.message)
-      window.location.reload()
+      // window.location.reload()
     } catch (error) {
       toast.error(error.message)
     }

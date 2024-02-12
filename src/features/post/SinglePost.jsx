@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useDeletePostMutation,
   useGetSinglePostQuery,
   useLikePostMutation,
+  useUnlikePostMutation,
   useViewPostMutation,
 } from "./postApi";
 import { useNavigate, useParams } from "react-router-dom";
@@ -13,7 +14,7 @@ import useAuth from "../../hooks/useAuth";
 import { BeatLoader } from "react-spinners";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-import { PiHandsClappingLight } from "react-icons/pi";
+import { PiHandsClappingFill, PiHandsClappingLight } from "react-icons/pi";
 
 const SinglePost = () => {
   const { id } = useParams();
@@ -23,9 +24,11 @@ const SinglePost = () => {
   );
   const [deletePost, { isLoading: deleteLoading }] = useDeletePostMutation();
   const [likePost] = useLikePostMutation();
+  const [unlikePost] = useUnlikePostMutation()
   const [viewPost] = useViewPostMutation();
   const { id: authorId } = useAuth();
   const navigate = useNavigate();
+  const [isLiked, setIsLiked] = useState(false);
 
   // HANDLE VIEW POST
   useEffect(() => {
@@ -108,12 +111,21 @@ const SinglePost = () => {
     try {
       const res = await likePost(id);
       toast.success(res.data.message);
+      setIsLiked(true);
     } catch (error) {
       toast.error(error.message);
     }
   };
-
   
+  const handleUnlike = async (id) => {
+    try {
+      const res = await unlikePost(id);
+      toast.success(res.data.message);
+      setIsLiked(false);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <div className="flex justify-center items-center">
@@ -174,10 +186,17 @@ const SinglePost = () => {
         </p> */}
         <div className="my-4 flex justify-start items-center gap-4 px-2 md:px-7">
           <span className="flex justify-center items-center gap-1 text-sm">
-            <PiHandsClappingLight
-              size={21}
-              onClick={() => handleLike(data?._id)}
-            />
+            {isLiked ? (
+              <PiHandsClappingFill
+                size={21}
+                onClick={() => handleUnlike(data?._id)}
+              />
+            ) : (
+              <PiHandsClappingLight
+                size={21}
+                onClick={() => handleLike(data?._id)}
+              />
+            )}
             {data?.likes}
           </span>
           <span className="flex justify-center items-center gap-1 text-sm">

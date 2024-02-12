@@ -5,7 +5,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { MdSearch } from "react-icons/md";
 import { PiHandsClappingLight } from "react-icons/pi";
 import { FaRegComment, FaRegEye } from "react-icons/fa";
-import { IoEyeOutline } from "react-icons/io5";
 
 const Posts = () => {
   const [search, setSearch] = useState("");
@@ -65,6 +64,14 @@ const Posts = () => {
             <span className="text-sm italic">{formattedDate}</span>
           </div>
         </div>
+        
+        <h2 className="font-bold text-2xl text-center my-3 line-clamp-2 px-2">
+          {val.title}
+        </h2>
+        <p
+          className="px-2 line-clamp-3"
+          dangerouslySetInnerHTML={{ __html: val.content }}
+        />
         <div className="mt-3 flex justify-center items-center gap-2 flex-wrap px-2">
           {val.categories.map((cat) => (
             <span
@@ -75,13 +82,6 @@ const Posts = () => {
             </span>
           ))}
         </div>
-        <h2 className="font-bold text-2xl text-center my-3 line-clamp-2 px-2">
-          {val.title}
-        </h2>
-        <p
-          className="px-2 line-clamp-3"
-          dangerouslySetInnerHTML={{ __html: val.content }}
-        />
         <div className="my-4 flex justify-start items-center gap-4 px-2">
           <span className="flex justify-center items-center gap-1 text-sm">
             <PiHandsClappingLight size={21} />
@@ -144,14 +144,10 @@ const Posts = () => {
             >
               <option value="">Sort: Recent</option>
               <option value="oldest">Oldest</option>
+              <option value="views">Views</option>
+              <option value="likes">Likes</option>
               <option value="title">A to Z &#8595;</option>
-              <option
-                className="flex justify-center items-center h-full"
-                value="title desc"
-              >
-                {" "}
-                Z to A &#8593;
-              </option>
+              <option value="title desc">Z to A &#8593;</option>
             </select>
           </div>
         </div>

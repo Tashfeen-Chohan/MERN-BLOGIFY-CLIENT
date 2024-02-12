@@ -12,8 +12,10 @@ const Posts = () => {
   const [sort, setSort] = useState("");
   const [filter, setFilter] = useState("");
   const postUrl = `/posts?searchBy=${search}&sortBy=${sort}&filterBy=${filter}&limit=${limit}`;
-  const { data, isLoading, refetch } = useGetPostsQuery(postUrl);
+  const { data, isLoading } = useGetPostsQuery(postUrl);
   const navigate = useNavigate();
+
+  console.log(data)
 
   if (isLoading)
     return (
@@ -51,7 +53,7 @@ const Posts = () => {
         </div>
         <div className="flex justify-between items-center mt-2 px-2">
           <div className="flex justify-center items-center gap-2">
-            <div className="h-10 w-10 rounded-full overflow-hidden">
+            <div className="h-8 w-8 rounded-full overflow-hidden">
               <img
                 className="h-full w-full object-cover text-xs"
                 src={val.author.profile}

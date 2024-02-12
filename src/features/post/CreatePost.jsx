@@ -194,9 +194,9 @@ const CreatePost = () => {
             />
           </div>
           {/* CONTENT */}
-          <div className="mt-8 mb-5">
+          <div className="mt-8 mb-5 h-72">
             <ReactQuill
-              className="bg-white rounded shadow-md h-72"
+              className="bg-white rounded shadow-md h-full overflow-y-auto"
               modules={toolbarOptions}
               value={content}
               onChange={setContent}

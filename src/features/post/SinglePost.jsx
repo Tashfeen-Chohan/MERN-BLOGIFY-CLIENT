@@ -39,11 +39,16 @@ const SinglePost = () => {
   const [likePost] = useLikePostMutation();
   const [unlikePost] = useUnlikePostMutation();
   const [viewPost] = useViewPostMutation();
-  const {data: recentPosts} = useGetPostsQuery(`/posts?authorId=${data?.author._id}&limit=3`)
+  const [limit, setLimit] = useState(3);
+  const { data: recentPosts } = useGetPostsQuery(
+    `/posts?authorId=${data?.author._id}&limit=${limit}`
+  );
 
   const { id: userId } = useAuth();
   const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState(false);
+  const [showButton, setShowButton] = useState(true);
+
   const postURL = `http://localhost:3000/posts/${data?._id}`;
 
   // HANDLE VIEW POST
@@ -148,8 +153,8 @@ const SinglePost = () => {
     }
   };
 
-  const {posts} = recentPosts; 
-  const RecentPosts = posts?.map((val) => {
+  // const {posts} = recentPosts;
+  const RecentPosts = recentPosts?.posts?.map((val) => {
     const date = new Date(val.createdAt);
     const option = { day: "numeric", month: "short", year: "numeric" };
     const formattedDate = date.toLocaleDateString("en-US", option);
@@ -158,8 +163,8 @@ const SinglePost = () => {
       <div
         className=" col-span-12 md:col-span-4 shadow-lg rounded hover:scale-105 transition-transform duration-300"
         onClick={() => {
-          navigate(`/posts/single/${val._id}`)
-          window.scrollTo(0,0)
+          navigate(`/posts/single/${val._id}`);
+          window.scrollTo(0, 0);
         }}
         key={val._id}
       >
@@ -171,11 +176,11 @@ const SinglePost = () => {
           )}
           {val.blogImg && (
             <img
-            className="rounded-t-md text-sm"
-            src={val.blogImg}
-            alt="Blog cover photo"
+              className="rounded-t-md text-sm"
+              src={val.blogImg}
+              alt="Blog cover photo"
             />
-            )}
+          )}
         </div>
         <div className="flex justify-between items-center mt-2 px-2">
           <div className="flex justify-center items-center gap-2">
@@ -192,7 +197,7 @@ const SinglePost = () => {
             <span className="text-sm italic">{formattedDate}</span>
           </div>
         </div>
-        
+
         <h2 className="font-bold text-2xl text-center my-3 line-clamp-2 px-2">
           {val.title}
         </h2>
@@ -313,34 +318,51 @@ const SinglePost = () => {
         </div>
 
         {/* SOCIAL SHARE */}
-         <div className="flex justify-end items-center px-5 md:px-7 gap-2">
+        <div className="flex justify-end items-center px-5 md:px-7 gap-2">
           {/* Facebook Share Button */}
           <FacebookShareButton url={postURL} title={data?.title}>
-            <FacebookIcon size={30} round/>
+            <FacebookIcon size={30} round />
           </FacebookShareButton>
           <WhatsappShareButton url={postURL} title={data?.title}>
-            <WhatsappIcon size={30} round/>
+            <WhatsappIcon size={30} round />
           </WhatsappShareButton>
           <TwitterShareButton url={postURL} title={data?.title}>
-            <TwitterIcon size={30} round/>
+            <TwitterIcon size={30} round />
           </TwitterShareButton>
           <PinterestShareButton url={postURL} title={data?.title}>
-            <PinterestIcon size={30} round/>
+            <PinterestIcon size={30} round />
           </PinterestShareButton>
           <LinkedinShareButton url={postURL} title={data?.title}>
-            <LinkedinIcon size={30} round/>
+            <LinkedinIcon size={30} round />
           </LinkedinShareButton>
-        </div> 
+        </div>
       </div>
 
       {/* RECENT ARTICLES */}
       <div className="w-[95%] mx-auto md:max-w-5xl">
-          
-          <h2 className="md:text-lg my-5 text-center">More from <span className="font-bold italic">{author?.capitalized.username}</span> </h2>
-          <hr className="h-[2px] bg-gray-200"/>
-          <div className="grid mx-auto grid-cols-12 gap-7 md:gap-x-5 md:gap-y-7 my-7">
+        <h2 className="md:text-lg my-5 text-center">
+          More from 
+          <span className="font-bold italic ml-2">
+            {author?.capitalized.username}
+          </span>{" "}
+        </h2>
+        <hr className="h-[2px] bg-gray-200" />
+        <div className="grid mx-auto grid-cols-12 gap-7 md:gap-x-5 md:gap-y-7 my-7">
           {RecentPosts}
+        </div>
+        {(showButton && recentPosts?.totalPosts > 3) && (
+          <div className="flex justify-center items-center mb-10">
+            <button
+              onClick={() => {
+                setLimit(100);
+                setShowButton(false);
+              }}
+              className="bg-cyan-500  hover:bg-cyan-400 transition-colors duration-300 px-3 py-1 text-white rounded shadow-xl mx-auto"
+            >
+              View All
+            </button>
           </div>
+        )}
       </div>
     </div>
   );

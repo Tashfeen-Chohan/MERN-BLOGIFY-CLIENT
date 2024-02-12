@@ -1,30 +1,32 @@
-import React, { useEffect, useState } from "react";
-import { useGetPostsQuery } from "./postApi";
-import { BeatLoader } from "react-spinners";
-import { Link, useNavigate } from "react-router-dom";
-import { MdSearch } from "react-icons/md";
-import { PiHandsClappingLight } from "react-icons/pi";
-import { FaRegComment, FaRegEye } from "react-icons/fa";
+import React, { useState } from 'react'
+import { useGetPostsQuery } from './postApi'
+import useAuth from '../../hooks/useAuth'
+import { BeatLoader } from 'react-spinners'
+import { PiHandsClappingLight } from 'react-icons/pi'
+import { FaRegComment, FaRegEye } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
+import { MdSearch } from 'react-icons/md'
 
-const Posts = () => {
+const MyPosts = () => {
+
+  const {id: authorId} = useAuth()
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(6);
   const [sort, setSort] = useState("");
   const [filter, setFilter] = useState("");
-  const postUrl = `/posts?searchBy=${search}&sortBy=${sort}&filterBy=${filter}&limit=${limit}`;
-  const { data, isLoading } = useGetPostsQuery(postUrl);
-  const navigate = useNavigate();
 
-  console.log(data)
+  const postUrl = `/posts?authorId=${authorId}&searchBy=${search}&sortBy=${sort}&filterBy=${filter}&limit=${limit}`;
+  const {data, isLoading} = useGetPostsQuery(postUrl)
 
   if (isLoading)
     return (
-      <div className="flex justify-center items-center min-h-screen bg-slate-200">
+      <div className="flex justify-center items-center min-h-screen mt-[-60px] bg-slate-200">
         <BeatLoader color="#000000" size={15} />
       </div>
     );
 
-  const { posts, totalPosts } = data;
+  const { posts, totalPosts } = data ?? {};
+
 
   const Posts = posts?.map((val) => {
     const date = new Date(val.createdAt);
@@ -131,8 +133,6 @@ const Posts = () => {
         </div>
         {/* FILTER && SORT */}
         <div className="w-[95%] mx-auto">
-          {/* <h1 className="text-2xl font-bold text-center">All Blogs</h1> */}
-          {/* <hr /> */}
           <span className="bg-slate-700 text-white px-3 py-1 rounded shadow-xl text-sm">{totalPosts} Posts</span>
           <div className="flex justify-between items-center mt-3">
             <select
@@ -141,7 +141,6 @@ const Posts = () => {
             >
               <option value="">All Posts</option>
               <option value="popular">Popular</option>
-              <option value="">Favourite</option>
             </select>
             <select
               onChange={(e) => setSort(e.target.value)}
@@ -183,7 +182,7 @@ const Posts = () => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Posts;
+export default MyPosts

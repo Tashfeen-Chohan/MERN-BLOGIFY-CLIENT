@@ -8,7 +8,6 @@ import { useSendLogoutMutation } from "../features/auth/authApiSlice";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { logout } from "../features/auth/authSlice";
-import { FaRegCircleUser, FaRegUser } from "react-icons/fa6";
 import axios from "axios";
 import { HiDotsVertical } from "react-icons/hi";
 import { FaCaretDown } from "react-icons/fa";
@@ -18,7 +17,7 @@ const Navbar = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [sendLogout] = useSendLogoutMutation();
   const dispatch = useDispatch();
-  const { status, isPublisher, firstName, profile } = useAuth();
+  const { status, isPublisher, firstName, profile, username } = useAuth();
   const navigate = useNavigate();
 
   const handleShowNavbar = () => {
@@ -39,6 +38,7 @@ const Navbar = () => {
     setDropdownOpen(false);
     navigate("/profile/change-password");
   };
+
 
   const handleLogout = async () => {
     try {
@@ -122,6 +122,11 @@ const Navbar = () => {
             {isPublisher && (
               <li onClick={handleShowNavbar}>
                 <NavLink to="/posts/new">Write</NavLink>
+              </li>
+            )}
+            {isPublisher && (
+              <li onClick={handleShowNavbar}>
+                <NavLink to={`/posts/${username}`}>My Posts</NavLink>
               </li>
             )}
             <li onClick={handleShowNavbar}>

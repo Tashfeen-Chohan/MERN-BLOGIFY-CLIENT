@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import {
-  postApi,
   useDeletePostMutation,
   useGetSinglePostQuery,
   useLikePostMutation,
@@ -28,12 +27,12 @@ const SinglePost = () => {
   const { id: authorId } = useAuth();
   const navigate = useNavigate();
 
+  // HANDLE VIEW POST
   useEffect(() => {
     const handleView = async () => {
       try {
         if (!isLoading && data) {
           await viewPost(data._id);
-          toast.success("Post viewed")
         }
       } catch (error) {
         toast.error("Failed to view post");
@@ -41,7 +40,7 @@ const SinglePost = () => {
       }
     };
     handleView();
-  }, [id]);
+  }, [id, isLoading, viewPost]);
 
   // FORMATING DATE
   const date = new Date(data?.createdAt);
@@ -109,7 +108,6 @@ const SinglePost = () => {
     try {
       const res = await likePost(id);
       toast.success(res.data.message);
-      // window.location.reload()
     } catch (error) {
       toast.error(error.message);
     }

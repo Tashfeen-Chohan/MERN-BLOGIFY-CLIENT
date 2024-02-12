@@ -11,7 +11,8 @@ const Posts = () => {
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(6);
   const [sort, setSort] = useState("");
-  const postUrl = `/posts?searchBy=${search}&sortBy=${sort}&limit=${limit}`;
+  const [filter, setFilter] = useState("");
+  const postUrl = `/posts?searchBy=${search}&sortBy=${sort}&filterBy=${filter}&limit=${limit}`;
   const { data, isLoading, refetch } = useGetPostsQuery(postUrl);
   const navigate = useNavigate();
 
@@ -37,7 +38,9 @@ const Posts = () => {
       >
         <div className="relative">
           {val.popular && (
-            <div className="bg-rose-500 text-gray-100 absolute top-3 text-sm right-2 px-3 py-1 rounded">Popular</div>
+            <div className="bg-rose-500 text-gray-100 absolute top-3 text-sm right-2 px-3 py-1 rounded">
+              Popular
+            </div>
           )}
           {val.blogImg && (
             <img
@@ -125,11 +128,14 @@ const Posts = () => {
         <div className="w-[95%] mx-auto">
           {/* <h1 className="text-2xl font-bold text-center">All Blogs</h1> */}
           {/* <hr /> */}
-          {/* <span className="font-bold text-sm">{totalPosts} Posts</span> */}
+          <span className="bg-slate-700 text-white px-3 py-1 rounded shadow-xl text-sm">{totalPosts} Posts</span>
           <div className="flex justify-between items-center mt-3">
-            <select className="bg-slate-200 shadow-md font-semibold text-sm  rounded text-black outline-none px-2 py-1">
+            <select
+              onChange={(e) => setFilter(e.target.value)}
+              className="bg-slate-200 shadow-md font-semibold text-sm  rounded text-black outline-none px-2 py-1"
+            >
               <option value="">All Posts</option>
-              <option value="">Popular</option>
+              <option value="popular">Popular</option>
               <option value="">Favourite</option>
             </select>
             <select

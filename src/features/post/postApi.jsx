@@ -5,24 +5,13 @@ export const postApi = apiSlice.injectEndpoints({
     // GET ALL POSTS
     getPosts: builder.query({
       query: (url) => url,
-      providesTags: (result, error, id) => [{type: "Post", id}]
-
-      // providesTags: (result, error, arg) => {
-      //   if (result?.ids) {
-      //     return [
-      //       { type: "Post", id: "LIST" },
-      //       ...result.ids.map((id) => ({ type: "Post", id })),
-      //     ];
-      //   } else return [{ type: "Post", id: "LIST" }];
-      // },
+      providesTags: (result, error, arg) => [{type: "Post", id: arg.id}]
     }),
 
     // GET SINGLE POST
     getSinglePost: builder.query({
       query: (id) => `/posts/${id}`,
-      providesTags: (result, error, id) => [{type: "Post", id}],
-      invalidatesTags: (result, error, id) => [{ type: "Post", id }], // Invalidate cache for the specific post ID
-      // invalidatesTags: ["Post"]
+      providesTags: (result, error, arg) => [{type: "Post", id: arg.id}]
     }),
 
     // CREATE NEW POST
@@ -32,7 +21,7 @@ export const postApi = apiSlice.injectEndpoints({
         method: "POST",
         body: newPost,
       }),
-      invalidatesTags: (result, error, id) => [{ type: "Post", id }],
+      invalidatesTags: ["Post"]
     }),
 
     // UPDATE POST
@@ -42,7 +31,7 @@ export const postApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: updatedPost,
       }),
-      invalidatesTags: (result, error, id) => [{ type: "Post", id }],
+      invalidatesTags: (result, error, arg) => [{ type: "Post", id: arg.id }],
     }),
 
     // DELETE POST
@@ -51,7 +40,7 @@ export const postApi = apiSlice.injectEndpoints({
         url: `/posts/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result, error, id) => [{ type: "Post", id }],
+      invalidatesTags: (result, error, arg) => [{ type: "Post", id: arg.id }],
     }),
 
     // LIKE POST
@@ -60,8 +49,17 @@ export const postApi = apiSlice.injectEndpoints({
         url: `/posts/${id}/like`,
         method: "POST",
       }),
-      invalidatesTags: (result, error, id) => [{ type: "Post", id }],
+      invalidatesTags: (result, error, arg) => [{ type: "Post", id: arg.id }],
     }),
+
+    // VIEW POST
+    viewPost: builder.mutation({
+      query: (id) => ({
+        url: `/posts/${id}/view`,
+        method: "Post"
+      }),
+      invalidatesTags: (result, error, arg) => [{type: "Post", id: arg.id}]
+    })
   }),
 });
 
@@ -72,4 +70,5 @@ export const {
   useUpdatePostMutation,
   useDeletePostMutation,
   useLikePostMutation,
+  useViewPostMutation
 } = postApi;

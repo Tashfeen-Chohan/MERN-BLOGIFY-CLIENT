@@ -1,5 +1,11 @@
 import React, { useEffect } from "react";
-import { postApi, useDeletePostMutation, useGetSinglePostQuery, useLikePostMutation } from "./postApi";
+import {
+  postApi,
+  useDeletePostMutation,
+  useGetSinglePostQuery,
+  useLikePostMutation,
+  useViewPostMutation,
+} from "./postApi";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetSingleUserQuery } from "../user/userApi";
 import { FaEdit, FaRegComment, FaRegEye } from "react-icons/fa";
@@ -13,14 +19,32 @@ import { PiHandsClappingLight } from "react-icons/pi";
 const SinglePost = () => {
   const { id } = useParams();
   const { data, isLoading } = useGetSinglePostQuery(id);
-  console.log(data)
-  const { data: author, isLoading: authorLoading } = useGetSingleUserQuery(data?.author._id);
-  const [deletePost, {isLoading: deleteLoading}] = useDeletePostMutation()
-  const [likePost] = useLikePostMutation()
-  const {id : authorId} = useAuth()
-  const navigate = useNavigate()
+  const { data: author, isLoading: authorLoading } = useGetSingleUserQuery(
+    data?.author._id
+  );
+  const [deletePost, { isLoading: deleteLoading }] = useDeletePostMutation();
+  const [likePost] = useLikePostMutation();
+  const [viewPost] = useViewPostMutation();
+  const { id: authorId } = useAuth();
+  const navigate = useNavigate();
 
-  const date = new Date(data?.createdAt)
+  useEffect(() => {
+    const handleView = async () => {
+      try {
+        if (!isLoading && data) {
+          await viewPost(data._id);
+          toast.success("Post viewed")
+        }
+      } catch (error) {
+        toast.error("Failed to view post");
+        console.log(error.message);
+      }
+    };
+    handleView();
+  }, [id]);
+
+  // FORMATING DATE
+  const date = new Date(data?.createdAt);
   const options = { day: "numeric", month: "long", year: "numeric" };
   const formattedDate = date.toLocaleDateString("en-US", options);
 
@@ -29,9 +53,7 @@ const SinglePost = () => {
       <div className="flex justify-center items-center min-h-screen bg-slate-200">
         <BeatLoader color="#000000" size={15} />
       </div>
-    )
-
-  
+    );
 
   const handleDelete = async (id) => {
     try {
@@ -65,7 +87,7 @@ const SinglePost = () => {
           });
         } else {
           toast.success(response.data.message);
-          navigate(-1)
+          navigate(-1);
         }
       }
     } catch (error) {
@@ -79,19 +101,21 @@ const SinglePost = () => {
             "!py-1 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
         },
       });
-      console.log(error)
+      console.log(error);
     }
   };
 
   const handleLike = async (id) => {
     try {
-      const res = await likePost(id)
-      toast.success(res.data.message)
+      const res = await likePost(id);
+      toast.success(res.data.message);
       // window.location.reload()
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.message);
     }
-  }
+  };
+
+  
 
   return (
     <div className="flex justify-center items-center">
@@ -103,26 +127,47 @@ const SinglePost = () => {
         />
         <div className="flex justify-between items-center px-2">
           <div className="flex justify-center items-center gap-3">
-            <img className="h-9 w-9 object-cover rounded-full text-xs" src={author?.capitalized.profile} alt="Profile" />
+            <img
+              className="h-9 w-9 object-cover rounded-full text-xs"
+              src={author?.capitalized.profile}
+              alt="Profile"
+            />
             <span className="italic">{author?.capitalized.username}</span>
           </div>
           <span className="italic">{formattedDate}</span>
         </div>
-        {authorId === data?.author._id && <div className="flex justify-end items-center gap-3">
-          <FaEdit onClick={() => navigate(`/posts/update/${data?._id}`)} size={25} color="orange"/>
-          <MdDelete onClick={() => handleDelete(data?._id)} size={30} color="red"/>
-        </div>}
+        {authorId === data?.author._id && (
+          <div className="flex justify-end items-center gap-3">
+            <FaEdit
+              onClick={() => navigate(`/posts/update/${data?._id}`)}
+              size={25}
+              color="orange"
+            />
+            <MdDelete
+              onClick={() => handleDelete(data?._id)}
+              size={30}
+              color="red"
+            />
+          </div>
+        )}
         <div className="flex justify-center items-center gap-2 mt-3">
           {data?.categories.map((cat) => (
-            <span className="px-2 py-1 rounded-full bg-slate-200 text-sm" key={cat._id}>{cat.name}</span>
+            <span
+              className="px-2 py-1 rounded-full bg-slate-200 text-sm"
+              key={cat._id}
+            >
+              {cat.name}
+            </span>
           ))}
         </div>
         <h1 className="px-2 text-center text-2xl font-bold py-4 md:text-3xl">
           {data?.title}
         </h1>
-        
 
-        <div className="px-2 md:px-7" dangerouslySetInnerHTML={{__html: data?.content}}/>
+        <div
+          className="px-2 md:px-7"
+          dangerouslySetInnerHTML={{ __html: data?.content }}
+        />
         {/* <p className="">
           <span className="text-2xl md:text-3xl italic">
             {data?.content[0]}
@@ -131,20 +176,21 @@ const SinglePost = () => {
         </p> */}
         <div className="my-4 flex justify-start items-center gap-4 px-2 md:px-7">
           <span className="flex justify-center items-center gap-1 text-sm">
-          <PiHandsClappingLight size={21} onClick={() => handleLike(data?._id)}/>
-          {data?.likes}
+            <PiHandsClappingLight
+              size={21}
+              onClick={() => handleLike(data?._id)}
+            />
+            {data?.likes}
           </span>
           <span className="flex justify-center items-center gap-1 text-sm">
-          <FaRegComment size={20}/>
-          {0}
+            <FaRegComment size={20} />
+            {0}
           </span>
           <span className="flex justify-center items-center gap-1 text-sm">
-          <FaRegEye size={20}/>
-          {data?.views}
+            <FaRegEye size={20} />
+            {data?.views}
           </span>
         </div>
-
-        
       </div>
     </div>
   );

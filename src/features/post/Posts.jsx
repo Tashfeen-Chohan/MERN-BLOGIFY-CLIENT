@@ -4,18 +4,21 @@ import { BeatLoader } from "react-spinners";
 import { Link, useNavigate } from "react-router-dom";
 import { MdSearch } from "react-icons/md";
 import { PiHandsClappingLight } from "react-icons/pi";
-import { FaRegComment, FaRegEye } from "react-icons/fa";
+import { FaFilter, FaRegComment, FaRegEye } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { resetCategory, resetPublisher, selectCategory, selectPublisher } from "../../app/dataSlice";
 
 const Posts = () => {
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(6);
   const [sort, setSort] = useState("");
   const [filter, setFilter] = useState("");
-  const postUrl = `/posts?searchBy=${search}&sortBy=${sort}&filterBy=${filter}&limit=${limit}`;
+  const publisher = useSelector(selectPublisher);
+  const category = useSelector(selectCategory);
+  const postUrl = `/posts?searchBy=${search}&sortBy=${sort}&filterBy=${filter}&authorId=${publisher.id}&limit=${limit}`;
   const { data, isLoading } = useGetPostsQuery(postUrl);
   const navigate = useNavigate();
-
-  console.log(data)
+  const dispatch = useDispatch()
 
   if (isLoading)
     return (
@@ -24,7 +27,15 @@ const Posts = () => {
       </div>
     );
 
-  const { posts, totalPosts } = data;
+  const removeCategoryFilter = () => {
+    dispatch(resetCategory())
+  }
+
+  const removePublisherFilter = () => {
+    dispatch(resetPublisher())
+  }
+
+  const { posts, totalPosts } = data ?? {};
 
   const Posts = posts?.map((val) => {
     const date = new Date(val.createdAt);
@@ -35,8 +46,8 @@ const Posts = () => {
       <div
         className=" col-span-12 md:col-span-4 shadow-lg rounded hover:scale-105 transition-transform duration-300"
         onClick={() => {
-          navigate(`posts/single/${val._id}`)
-          window.scrollTo(0,0)
+          navigate(`posts/single/${val._id}`);
+          window.scrollTo(0, 0);
         }}
         key={val._id}
       >
@@ -69,7 +80,7 @@ const Posts = () => {
             <span className="text-sm italic">{formattedDate}</span>
           </div>
         </div>
-        
+
         <h2 className="font-bold text-2xl text-center my-3 line-clamp-2 px-2">
           {val.title}
         </h2>
@@ -105,6 +116,7 @@ const Posts = () => {
     );
   });
 
+
   return (
     <div className="flex justify-center items-center">
       <div>
@@ -133,7 +145,9 @@ const Posts = () => {
         <div className="w-[95%] mx-auto">
           {/* <h1 className="text-2xl font-bold text-center">All Blogs</h1> */}
           {/* <hr /> */}
-          <span className="bg-slate-700 text-white px-3 py-1 rounded shadow-xl text-sm">{totalPosts} Posts</span>
+          <span className="bg-slate-700 text-white px-3 py-1 rounded shadow-xl text-sm">
+            {totalPosts} Posts
+          </span>
           <div className="flex justify-between items-center mt-3">
             <select
               onChange={(e) => setFilter(e.target.value)}
@@ -156,6 +170,23 @@ const Posts = () => {
             </select>
           </div>
         </div>
+        {/* PUBLISHER & CATEGORY FILTER */}
+        {(category.name || publisher.name) && <div className="w-[90%] md:max-w-md mx-auto bg-slate-100 p-5 rounded shadow-md mt-5">
+          <span className="flex justify-start items-center gap-2">
+            <FaFilter />
+            Filters
+          </span>
+          <div className="flex justify-center items-center gap-3 mt-3">
+            {publisher.name && <span onClick={removePublisherFilter} className="bg-sky-500 text-gray-200  py-1 px-3 rounded-full ">
+              <span className="text-xs">{publisher.name}</span>
+              <span className="text-lg ml-2 font-bold">x</span>
+            </span>}
+            {category.name &&  <span onClick={removeCategoryFilter} className="bg-sky-500 text-gray-200    py-1 px-3 rounded-full ">
+              <span className="text-xs">{publisher.name}</span>
+              <span className="text-lg ml-2 font-bold">x</span>
+            </span>}
+          </div>
+        </div>}
         {/* POSTS */}
         <div className="grid mx-auto grid-cols-12 gap-7 md:gap-x-5 md:gap-y-7 w-[95%] md:max-w-5xl my-7">
           {Posts}

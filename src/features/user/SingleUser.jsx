@@ -1,13 +1,26 @@
 import React from "react";
 import { useGetSingleUserQuery } from "./userApi";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { TiArrowBack } from "react-icons/ti";
 import useAuth from "../../hooks/useAuth";
+import { useDispatch } from "react-redux";
+import { setPublisher } from "../../app/dataSlice";
 
 const SingleUser = () => {
   const { id } = useParams();
   const { data } = useGetSingleUserQuery(id);
   const {status} = useAuth()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const handleViewPosts = () => {
+
+    dispatch(setPublisher({
+      id: data?.capitalized._id,
+      name: data?.capitalized.username
+    }))
+    navigate("/")
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen mt-[-60px]">
@@ -23,7 +36,7 @@ const SingleUser = () => {
           <img
             src={data?.capitalized.profile}
             alt="User Profile"
-            className="w-full h-full object-cover text-white text-center"
+            className="w-full h-full rounded-full  object-cover text-white text-center"
           />
         </div>
         {/* <img className="my-5" src={Profile2} alt="Profile Icon" width={70} /> */}
@@ -54,7 +67,7 @@ const SingleUser = () => {
         </div>}
         {data?.totalPosts > 0 && (
           <div className="flex justify-center items-center mt-4 w-full">
-            <button className="w-[70%] bg-cyan-600 hover:bg-cyan-700 transition-colors duration-300 text-white py-1 px-3 rounded  mt-3">
+            <button onClick={handleViewPosts} className="w-[75%] bg-cyan-600 hover:bg-cyan-700 transition-colors duration-300 text-white py-1 px-3 rounded  mt-3">
               View Posts
             </button>
           </div>

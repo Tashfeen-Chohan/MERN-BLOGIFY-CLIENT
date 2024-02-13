@@ -7,6 +7,7 @@ import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import app from "../../firebase";
 import { v4 } from "uuid";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
+import { MdCancel } from "react-icons/md";
 
 const Register = () => {
   const [addUser] = useAddUserMutation();
@@ -17,12 +18,14 @@ const Register = () => {
   const [profile, setProfile] = useState(undefined);
   const [uploadedImg, setUploadedImg] = useState(undefined);
   const [showPassword, setShowPassword] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
   const uploadFile = async (file) => {
+    setIsDisabled(true);
     try {
       const storage = getStorage(app);
       const storageRef = ref(storage, `UserProfiles/${file.name + v4()}`);
@@ -32,6 +35,7 @@ const Register = () => {
         const downloadURL = await getDownloadURL(snapshot.ref);
         console.log("DownloadURL - ", downloadURL);
         setUploadedImg(downloadURL);
+        setIsDisabled(false);
       } catch (error) {
         toast.error("Error getting download URL : ", error.code);
       }
@@ -95,6 +99,11 @@ const Register = () => {
     }
   };
 
+  const profileCancel = () => {
+    setUploadedImg(undefined)
+    setProfile(undefined)
+  }
+
   return (
     <section className="bg-gray-50 dark:bg-gray-900 flex justify-center items-center min-h-screen">
       <div className="mt-[-60px] md:mt-0 flex flex-col items-center justify-center py-6 mx-auto w-[90%]">
@@ -104,12 +113,17 @@ const Register = () => {
               New Registration
             </h1>
             {profile && (
-              <div className="w-20 h-20 md:w-28 md:h-28 rounded-full overflow-hidden mx-auto">
-                <img
-                  src={profile}
-                  alt="User Profile"
-                  className="w-full h-full object-cover text-white text-center"
-                />
+              <div className="relative">
+                <div className="w-20 h-20 md:w-28 md:h-28 rounded-full overflow-hidden mx-auto">
+                  <img
+                    src={profile}
+                    alt="User Profile"
+                    className="w-full h-full object-cover text-white text-center"
+                  />
+                </div>
+                <div className="absolute top-0 right-20 md:right-28" >
+                  <MdCancel onClick={profileCancel} color="gray" size={25}/>
+                </div>
               </div>
             )}
 
@@ -199,7 +213,8 @@ const Register = () => {
               </div>
               <button
                 type="submit"
-                className="w-full text-white bg-blue-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                disabled={isDisabled}
+                className="w-full text-white disabled:bg-blue-400 bg-blue-600 hover:bg-blue-700 transition-colors duration-300 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
                 Create an account
               </button>

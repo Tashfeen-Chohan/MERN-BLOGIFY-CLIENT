@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useGetPostsQuery } from "./postApi";
 import { BeatLoader } from "react-spinners";
 import { Link, useNavigate } from "react-router-dom";
@@ -22,6 +22,7 @@ const Posts = () => {
   const category = useSelector(selectCategory);
   const postUrl = `/posts?searchBy=${search}&sortBy=${sort}&filterBy=${filter}&authorId=${publisher.id}&categoryId=${category.id}&limit=${limit}`;
   const { data, isLoading } = useGetPostsQuery(postUrl);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -47,16 +48,18 @@ const Posts = () => {
     const option = { day: "numeric", month: "short", year: "numeric" };
     const formattedDate = date.toLocaleDateString("en-US", option);
 
+    const viewPost = () => {
+      navigate(`posts/single/${val._id}`);
+      window.scrollTo(0, 0);
+    };
+
     return (
       <div
         className=" col-span-12 md:col-span-4 shadow-lg rounded hover:scale-105 transition-transform duration-300"
-        onClick={() => {
-          navigate(`posts/single/${val._id}`);
-          window.scrollTo(0, 0);
-        }}
         key={val._id}
       >
-        <div className="relative">
+        {/* BLOG COVER IMG */}
+        <div onClick={viewPost} className="relative">
           {val.popular && (
             <div className="bg-rose-500 text-gray-100 absolute top-3 text-sm right-2 px-3 py-1 rounded">
               Popular
@@ -70,8 +73,13 @@ const Posts = () => {
             />
           )}
         </div>
+
+        {/* AUTHOR INFO */}
         <div className="flex justify-between items-center mt-2 px-2">
-          <div className="flex justify-center items-center gap-2">
+          <div
+            onClick={() => navigate(`users/single/${val.author._id}`)}
+            className="flex justify-center items-center gap-2"
+          >
             <div className="h-8 w-8 rounded-full overflow-hidden">
               <img
                 className="h-full w-full object-cover text-xs"
@@ -86,24 +94,36 @@ const Posts = () => {
           </div>
         </div>
 
-        <h2 className="font-bold text-2xl text-center my-3 line-clamp-2 px-2">
+        {/* TITLE */}
+        <h2
+          onClick={viewPost}
+          className="font-bold text-2xl text-center my-3 line-clamp-2 px-2"
+        >
           {val.title}
         </h2>
+
+        {/* CONTENT */}
         <p
+          onClick={viewPost}
           className="px-2 line-clamp-3"
           dangerouslySetInnerHTML={{ __html: val.content }}
         />
+
+        {/* CATEGORIES */}
         <div className="mt-3 flex justify-center items-center gap-2 flex-wrap px-2">
           {val.categories.map((cat) => (
             <span
               className="px-2 py-1 rounded-full bg-slate-200 text-xs"
               key={cat._id}
+              onClick={() => navigate(`categories/single/${cat._id}`)}
             >
               {cat.name}
             </span>
           ))}
         </div>
-        <div className="my-4 flex justify-start items-center gap-4 px-2">
+
+        {/* LIKES, COMMENTS, VIEWS */}
+        <div onClick={viewPost} className="my-4 flex justify-start items-center gap-4 px-2">
           <span className="flex justify-center items-center gap-1 text-sm">
             <PiHandsClappingLight size={21} />
             {val.likes}
@@ -147,8 +167,6 @@ const Posts = () => {
         </div>
         {/* FILTER && SORT */}
         <div className="w-[95%] mx-auto">
-          {/* <h1 className="text-2xl font-bold text-center">All Blogs</h1> */}
-          {/* <hr /> */}
           <span className="bg-slate-700 text-white px-3 py-1 rounded shadow-xl text-sm">
             {totalPosts} Posts
           </span>

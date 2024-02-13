@@ -26,7 +26,7 @@ const SingleCategory = () => {
     <div className="flex justify-center items-center min-h-screen mt-[-60px]">
       <div className="flex justify-start items-start flex-col bg-slate-100 px-5 pt-1 pb-7  rounded shadow-md w-[90%] md:max-w-sm">
         <Link
-          to={"/categories"}
+          to={-1}
           className="flex self-end hover:scale-125 transition-all duration-300"
         >
           <TiArrowBack size={40} />

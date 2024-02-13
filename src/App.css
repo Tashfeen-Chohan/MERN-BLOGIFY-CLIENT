@@ -10,6 +10,29 @@
   height: calc(100% - 42px);
 }
 
+.post-content h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: sans-serif;
+}
+
+.post-content h2 {
+  font-size: 1.4rem;
+  font-family: sans-serif;
+  font-weight: 600;
+}
+
+.post-content h3{
+  font-size: 1.2rem;
+  font-family: sans-serif;
+  font-weight: 600;
+}
+
+.post-content a{
+  color: blue;
+  text-decoration: underline;
+}
+
 ::-webkit-scrollbar{
   display: none;
 }

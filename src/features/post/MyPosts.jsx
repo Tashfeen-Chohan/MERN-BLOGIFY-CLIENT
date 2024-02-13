@@ -4,7 +4,7 @@ import useAuth from '../../hooks/useAuth'
 import { BeatLoader } from 'react-spinners'
 import { PiHandsClappingLight } from 'react-icons/pi'
 import { FaRegComment, FaRegEye } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { MdSearch } from 'react-icons/md'
 
 const MyPosts = () => {
@@ -14,6 +14,7 @@ const MyPosts = () => {
   const [limit, setLimit] = useState(6);
   const [sort, setSort] = useState("");
   const [filter, setFilter] = useState("");
+  const navigate = useNavigate()
 
   const postUrl = `/posts?authorId=${authorId}&searchBy=${search}&sortBy=${sort}&filterBy=${filter}&limit=${limit}`;
   const {data, isLoading} = useGetPostsQuery(postUrl)
@@ -33,16 +34,17 @@ const MyPosts = () => {
     const option = { day: "numeric", month: "short", year: "numeric" };
     const formattedDate = date.toLocaleDateString("en-US", option);
 
+    const viewPost = () => {
+      navigate(`/posts/single/${val._id}`)
+      window.scrollTo(0,0)
+    }
+
     return (
       <div
         className=" col-span-12 md:col-span-4 shadow-lg rounded hover:scale-105 transition-transform duration-300"
-        onClick={() => {
-          navigate(`posts/single/${val._id}`)
-          window.scrollTo(0,0)
-        }}
-        key={val._id}
       >
-        <div className="relative">
+        {/* BLOG COVER IMG */}
+        <div onClick={viewPost} className="relative">
           {val.popular && (
             <div className="bg-rose-500 text-gray-100 absolute top-3 text-sm right-2 px-3 py-1 rounded">
               Popular
@@ -56,8 +58,10 @@ const MyPosts = () => {
             />
           )}
         </div>
+
+        {/* AUTHOR INFO */}
         <div className="flex justify-between items-center mt-2 px-2">
-          <div className="flex justify-center items-center gap-2">
+          <div onClick={() => navigate(`/users/single/${val.author._id}`)} className="flex justify-center items-center gap-2">
             <div className="h-8 w-8 rounded-full overflow-hidden">
               <img
                 className="h-full w-full object-cover text-xs"
@@ -72,24 +76,30 @@ const MyPosts = () => {
           </div>
         </div>
         
-        <h2 className="font-bold text-2xl text-center my-3 line-clamp-2 px-2">
+        <h2 onClick={viewPost} className="font-bold text-2xl text-center my-3 line-clamp-2 px-2">
           {val.title}
         </h2>
         <p
+          onClick={viewPost}
           className="px-2 line-clamp-3"
           dangerouslySetInnerHTML={{ __html: val.content }}
         />
+
+        {/* CATEGORIES */}
         <div className="mt-3 flex justify-center items-center gap-2 flex-wrap px-2">
           {val.categories.map((cat) => (
             <span
               className="px-2 py-1 rounded-full bg-slate-200 text-xs"
               key={cat._id}
+              onClick={() => navigate(`/categories/single/${cat._id}`)}
             >
               {cat.name}
             </span>
           ))}
         </div>
-        <div className="my-4 flex justify-start items-center gap-4 px-2">
+
+        {/* LIKES, COMMENTS, VIEWS */}
+        <div onClick={viewPost} className="my-4 flex justify-start items-center gap-4 px-2">
           <span className="flex justify-center items-center gap-1 text-sm">
             <PiHandsClappingLight size={21} />
             {val.likes}

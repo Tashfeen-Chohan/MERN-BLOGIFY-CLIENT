@@ -8,14 +8,15 @@ import Swal from "sweetalert2";
 import {
   getStorage,
   ref,
-  uploadBytesResumable,
   getDownloadURL,
+  uploadBytes,
 } from "firebase/storage";
 import { v4 } from "uuid";
 import app from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { FaDeleteLeft } from "react-icons/fa6";
 
 const toolbarOptions = {
   toolbar: [
@@ -41,8 +42,8 @@ const CreatePost = () => {
   const [content, setContent] = useState("");
   const [categories, setCategories] = useState([]);
   const [img, setImg] = useState(undefined);
-  const [imgPercentage, setImgPercentage] = useState(0);
-  const [uploadedImg, setUploadedImg] = useState(null);
+  const [uploadedImg, setUploadedImg] = useState(undefined);
+  const [isDisabled, setIsDisabled] = useState(false)
   const { id } = useAuth();
   const navigate = useNavigate();
 
@@ -51,8 +52,6 @@ const CreatePost = () => {
     label: val.name,
   }));
 
-  console.log(categories)
-
   const handleCategoryChange = (selectedOptions) => {
     // Extracting only the 'value' (which is assumed to be 'id') and storing in the array
     setCategories(
@@ -60,58 +59,29 @@ const CreatePost = () => {
     );
   };
 
-  const uploadFile = (file) => {
+  const uploadFile = async (file) => {
+    setIsDisabled(true)
+    try {
     const storage = getStorage(app);
-    const storageRef = ref(storage, `blogImages/${file.name + v4()}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    // Listen for state changes, errors, and completion of the upload.
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setImgPercentage(Math.round(progress));
-        switch (snapshot.state) {
-          case "paused":
-            console.log("Upload is paused");
-            break;
-          case "running":
-            console.log("Upload is running");
-            break;
-          default:
-            break;
-        }
-      },
-      (error) => {
-        console.log(error);
-        switch (error.code) {
-          case "storage/unauthorized":
-            // User doesn't have permission to access the object
-            console.log(error);
-            break;
-          case "storage/canceled":
-            // User canceled the upload
-            break;
-          case "storage/unknown":
-            // Unknown error occurred, inspect error.serverResponse
-            break;
-          default:
-            break;
-        }
-      },
-      () => {
-        // Upload completed successfully, now we can get the download URL
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("DownloadURL - ", downloadURL);
-          setUploadedImg(downloadURL);
-        });
-      }
-    );
-  };
+    const storageRef = ref(storage, `BlogImages/${file.name + v4()}`);
+    const snapshot = await uploadBytes(storageRef, file);
+    toast.success("Blog Cover uploaded successfully!");
+    try {
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      // console.log("DownloadURL - ", downloadURL);
+      setUploadedImg(downloadURL);
+      setIsDisabled(false)
+    } catch (error) {
+      toast.error("Error getting download URL : ", error.code);
+    }
+  } catch (error) {
+    toast.error("Error uploading file : ", error);
+    console.log(error.message)
+  }
+};
 
   useEffect(() => {
-    if (img && !uploadedImg) {
+    if (img  && !uploadedImg) {
       uploadFile(img);
     }
   }, [img, uploadedImg]);
@@ -166,6 +136,11 @@ const CreatePost = () => {
     }
   };
 
+  const cancelCoverImg = () => {
+    setUploadedImg(undefined)
+    setImg(undefined)
+  }
+
   return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="px-5 py-7 my-10 bg-slate-200 shadow-lg md:max-w-4xl w-[95%] rounded">
@@ -173,15 +148,14 @@ const CreatePost = () => {
           Create Post
         </h1>
         {/* IMAGE CONTAINER */}
-        <div className="w-full mb-5">
-          {img && (
+        {img && <div className="w-full mb-5 relative">
             <img
               className="rounded shadow-lg w-full h-auto"
               src={img}
               alt="Uploaded Image"
             />
-          )}
-        </div>
+          <FaDeleteLeft onClick={cancelCoverImg} className="absolute top-3 right-3 md:right-7 md:top-5" color="red" size={30}/>
+        </div>}
         <form onSubmit={handleSubmit}>
           {/* TITLE */}
           <div className="mb-3">
@@ -198,6 +172,7 @@ const CreatePost = () => {
             <ReactQuill
               className="bg-white rounded shadow-md h-full overflow-y-auto"
               modules={toolbarOptions}
+              // formats={formats}
               value={content}
               onChange={setContent}
             />
@@ -225,7 +200,8 @@ const CreatePost = () => {
           <div className="md:mt-3 mt-4 flex justify-end items-center gap-3">
             <button
               type="submit"
-              className="bg-indigo-600 hover:bg-indigo-700 transition-colors duration-300 px-5 py-1 text-white rounded shadow-xl"
+              disabled={isDisabled}
+              className="bg-indigo-600 disabled:bg-indigo-400 hover:bg-indigo-700 transition-colors duration-300 px-5 py-1 text-white rounded shadow-xl"
             >
               Publish
             </button>

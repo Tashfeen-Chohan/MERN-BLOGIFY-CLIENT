@@ -26,7 +26,7 @@ const SingleUser = () => {
     <div className="flex justify-center items-center min-h-screen mt-[-60px]">
       <div className="flex justify-center items-center flex-col w-[85%] md:max-w-sm bg-slate-100 pb-10 pt-5 px-3 rounded  shadow-lg">
         <Link
-          to={"/users"}
+          to={-1}
           className="flex self-end hover:scale-125 transition-all duration-300"
         >
           <TiArrowBack size={40} />

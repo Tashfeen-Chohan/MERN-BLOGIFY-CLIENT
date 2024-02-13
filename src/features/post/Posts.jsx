@@ -6,7 +6,12 @@ import { MdSearch } from "react-icons/md";
 import { PiHandsClappingLight } from "react-icons/pi";
 import { FaFilter, FaRegComment, FaRegEye } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { resetCategory, resetPublisher, selectCategory, selectPublisher } from "../../app/dataSlice";
+import {
+  resetCategory,
+  resetPublisher,
+  selectCategory,
+  selectPublisher,
+} from "../../app/dataSlice";
 
 const Posts = () => {
   const [search, setSearch] = useState("");
@@ -15,10 +20,10 @@ const Posts = () => {
   const [filter, setFilter] = useState("");
   const publisher = useSelector(selectPublisher);
   const category = useSelector(selectCategory);
-  const postUrl = `/posts?searchBy=${search}&sortBy=${sort}&filterBy=${filter}&authorId=${publisher.id}&limit=${limit}`;
+  const postUrl = `/posts?searchBy=${search}&sortBy=${sort}&filterBy=${filter}&authorId=${publisher.id}&categoryId=${category.id}&limit=${limit}`;
   const { data, isLoading } = useGetPostsQuery(postUrl);
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   if (isLoading)
     return (
@@ -28,12 +33,12 @@ const Posts = () => {
     );
 
   const removeCategoryFilter = () => {
-    dispatch(resetCategory())
-  }
+    dispatch(resetCategory());
+  };
 
   const removePublisherFilter = () => {
-    dispatch(resetPublisher())
-  }
+    dispatch(resetPublisher());
+  };
 
   const { posts, totalPosts } = data ?? {};
 
@@ -116,7 +121,6 @@ const Posts = () => {
     );
   });
 
-
   return (
     <div className="flex justify-center items-center">
       <div>
@@ -171,22 +175,34 @@ const Posts = () => {
           </div>
         </div>
         {/* PUBLISHER & CATEGORY FILTER */}
-        {(category.name || publisher.name) && <div className="w-[90%] md:max-w-md mx-auto bg-slate-100 p-5 rounded shadow-md mt-5">
-          <span className="flex justify-start items-center gap-2">
-            <FaFilter />
-            Filters
-          </span>
-          <div className="flex justify-center items-center gap-3 mt-3">
-            {publisher.name && <span onClick={removePublisherFilter} className="bg-sky-500 text-gray-200  py-1 px-3 rounded-full ">
-              <span className="text-xs">{publisher.name}</span>
-              <span className="text-lg ml-2 font-bold">x</span>
-            </span>}
-            {category.name &&  <span onClick={removeCategoryFilter} className="bg-sky-500 text-gray-200    py-1 px-3 rounded-full ">
-              <span className="text-xs">{publisher.name}</span>
-              <span className="text-lg ml-2 font-bold">x</span>
-            </span>}
+        {(category.name || publisher.name) && (
+          <div className="w-[90%] md:max-w-md mx-auto bg-slate-100 p-5 rounded shadow-md mt-5">
+            <span className="flex justify-start items-center gap-2">
+              <FaFilter />
+              Filters
+            </span>
+            <div className="flex justify-center items-center gap-3 mt-3">
+              {publisher.name && (
+                <span
+                  onClick={removePublisherFilter}
+                  className="bg-sky-500 hover:bg-sky-600 transition-colors duration-300 text-gray-200  py-0.5 px-3 rounded-full "
+                >
+                  <span className="text-xs">{publisher.name}</span>
+                  <span className="text-lg ml-2 font-bold">x</span>
+                </span>
+              )}
+              {category.name && (
+                <span
+                  onClick={removeCategoryFilter}
+                  className="bg-sky-500 hover:bg-sky-600 transition-colors duration-300 text-gray-200 py-0.5 px-3 rounded-full "
+                >
+                  <span className="text-xs">{category.name}</span>
+                  <span className="text-lg ml-2 font-bold">x</span>
+                </span>
+              )}
+            </div>
           </div>
-        </div>}
+        )}
         {/* POSTS */}
         <div className="grid mx-auto grid-cols-12 gap-7 md:gap-x-5 md:gap-y-7 w-[95%] md:max-w-5xl my-7">
           {Posts}

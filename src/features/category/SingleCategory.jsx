@@ -4,10 +4,11 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { TiArrowBack } from "react-icons/ti";
 import { useDispatch } from "react-redux";
 import { setCategory } from "../../app/dataSlice";
+import { BeatLoader } from "react-spinners";
 
 const SingleCategory = () => {
   const { id } = useParams();
-  const { data } = useGetSingleCategoryQuery(id);
+  const { data, isLoading } = useGetSingleCategoryQuery(id);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -21,6 +22,13 @@ const SingleCategory = () => {
     );
     navigate("/");
   };
+
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center min-h-screen mt-[-60px] bg-slate-200">
+        <BeatLoader color="#000000" size={15} />
+      </div>
+    );
 
   return (
     <div className="flex justify-center items-center min-h-screen mt-[-60px]">

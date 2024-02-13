@@ -4,10 +4,20 @@ import { useGetSingleUserQuery } from "./userApi";
 import Profile2 from "../../assets/p2.png";
 import { TiArrowBack } from "react-icons/ti";
 import { Link } from "react-router-dom";
+import { BeatLoader } from "react-spinners";
 
 const Profile = () => {
   const { id, profile } = useAuth();
-  const { data } = useGetSingleUserQuery(id);
+  const { data, isLoading } = useGetSingleUserQuery(id);
+
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center min-h-screen mt-[-60px] bg-slate-200">
+        <BeatLoader color="#000000" size={15} />
+      </div>
+    );
+
+
   return (
     <div className="mt-[-60px] flex justify-center items-center min-h-screen">
       <div className="bg-slate-100 shadow-xl pb-10 pt-5 w-[85%] md:max-w-md flex justify-center items-center flex-col">

@@ -4,29 +4,40 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { useGetSingleUserQuery, useUpdateUserMutation } from "./userApi";
 import { ROLES } from "../../config/roles";
+import { BeatLoader } from "react-spinners";
 
 const UpdateUser = () => {
   const { id } = useParams();
-  const { data } = useGetSingleUserQuery(id);
-  const [updateUser] = useUpdateUserMutation()
+  const { data, isLoading } = useGetSingleUserQuery(id);
+  const [updateUser] = useUpdateUserMutation();
   const navigate = useNavigate();
 
   const [user, setUser] = useState({
     username: "",
     email: "",
-    roles: []
-  })
+    profile: "",
+    roles: [],
+  });
+
+  
 
   useEffect(() => {
     if (data) {
       setUser({
         username: data.capitalized.username,
         email: data.capitalized.email,
-        roles: data.capitalized.roles
-      })
+        profile: data.capitalized.profile,
+        roles: data.capitalized.roles,
+      });
     }
   }, [data]);
 
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center min-h-screen mt-[-60px] bg-slate-200">
+        <BeatLoader color="#000000" size={15} />
+      </div>
+    );
 
   const options = Object.values(ROLES).map((role) => {
     return (
@@ -37,12 +48,12 @@ const UpdateUser = () => {
   });
 
   const handleChange = (e) => {
-    const {name, value} = e.target
+    const { name, value } = e.target;
     setUser({
       ...user,
-      [name]: value
-    })
-  }
+      [name]: value,
+    });
+  };
 
   const onRolesChanged = (e) => {
     const values = Array.from(
@@ -51,8 +62,8 @@ const UpdateUser = () => {
     );
     setUser({
       ...user,
-      roles: values
-    })
+      roles: values,
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -76,7 +87,7 @@ const UpdateUser = () => {
       });
 
       if (result.isConfirmed) {
-        const {username, email, roles} = user;
+        const { username, email, roles } = user;
         const res = await updateUser({ id, username, email, roles });
         if (res.error) {
           Swal.fire({
@@ -95,8 +106,8 @@ const UpdateUser = () => {
           setUser({
             username: "",
             email: "",
-            roles: []
-          })
+            roles: [],
+          });
         }
       } else if (result.isDenied) {
         Swal.fire({
@@ -125,13 +136,20 @@ const UpdateUser = () => {
   };
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900 h-screen mt-0 md:mt-[-30px]">
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+    <section className="bg-gray-50 dark:bg-gray-900  mt-0">
+      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto">
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Account Update
             </h1>
+            <div className="my-5 w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden mx-auto">
+              <img
+                src={user.profile}
+                alt="User Profile"
+                className="w-full h-full rounded-full border-4 md:border-8 border-gray-300 object-cover text-black text-center"
+              />
+            </div>
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* USERNAME */}
               <div>
@@ -148,11 +166,11 @@ const UpdateUser = () => {
                   value={user.username}
                   onChange={handleChange}
                   disabled
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="disabled:text-gray-500 disabled:dark:text-gray-400 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   // placeholder="John Doe"
                 />
               </div>
-              {/* ROLES */}
+              {/* EMAIL */}
               <div>
                 <label
                   htmlFor="email"
@@ -167,7 +185,7 @@ const UpdateUser = () => {
                   value={user.email}
                   onChange={handleChange}
                   disabled
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="disabled:text-gray-600 disabled:dark:text-gray-400 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   // placeholder="name@company.com"
                 />
               </div>

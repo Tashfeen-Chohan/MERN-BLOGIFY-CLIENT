@@ -28,7 +28,7 @@ const Posts = () => {
 
   if (isLoading)
     return (
-      <div className="flex justify-center items-center min-h-screen bg-slate-200">
+      <div className="flex justify-center items-center min-h-screen mt-[-60px] bg-slate-200">
         <BeatLoader color="#000000" size={15} />
       </div>
     );
@@ -78,7 +78,7 @@ const Posts = () => {
         <div className="flex justify-between items-center mt-2 px-2">
           <div
             onClick={() => navigate(`users/single/${val.author._id}`)}
-            className="flex justify-center items-center gap-2"
+            className="cursor-pointer flex justify-center items-center gap-2"
           >
             <div className="h-8 w-8 rounded-full overflow-hidden">
               <img
@@ -113,7 +113,7 @@ const Posts = () => {
         <div className="mt-3 flex justify-center items-center gap-2 flex-wrap px-2">
           {val.categories.map((cat) => (
             <span
-              className="px-2 py-1 rounded-full bg-slate-200 text-xs"
+              className="cursor-pointer hover:scale-110 transition-all duration-300 px-2 py-1 rounded-full bg-slate-200 text-xs"
               key={cat._id}
               onClick={() => navigate(`categories/single/${cat._id}`)}
             >

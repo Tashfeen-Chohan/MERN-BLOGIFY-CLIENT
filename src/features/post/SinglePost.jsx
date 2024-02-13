@@ -188,7 +188,7 @@ const SinglePost = () => {
         <div className="flex justify-between items-center mt-2 px-2">
           <div
             onClick={() => navigate(`/users/single/${val.author._id}`)}
-            className="flex justify-center items-center gap-2"
+            className="cursor-pointer flex justify-center items-center gap-2"
           >
             <div className="h-8 w-8 rounded-full overflow-hidden">
               <img
@@ -215,15 +215,12 @@ const SinglePost = () => {
           className="px-2 line-clamp-2"
           dangerouslySetInnerHTML={{ __html: val.content }}
         />
-        {/* <div>
-          {parse(val.content)}
-        </div> */}
 
         {/* CATEGORIES */}
         <div className="mt-3 flex justify-center items-center gap-2 flex-wrap px-2">
           {val.categories.map((cat) => (
             <span
-              className="px-2 py-1 rounded-full bg-slate-200 text-xs"
+              className="cursor-pointer hover:scale-110 transition-all duration-300 px-2 py-1 rounded-full bg-slate-200 text-xs"
               key={cat._id}
               onClick={() => navigate(`/categories/single/${cat._id}`)}
             >
@@ -263,7 +260,7 @@ const SinglePost = () => {
         <div className="flex justify-between items-center px-2">
           <div
             onClick={() => navigate(`/users/single/${author?.capitalized._id}`)}
-            className="flex justify-center items-center gap-3"
+            className="flex justify-center items-center gap-3 cursor-pointer"
           >
             <img
               className="h-10 w-10 object-cover rounded-full text-xs"
@@ -297,7 +294,7 @@ const SinglePost = () => {
         <div className="flex justify-center items-center gap-2 mt-3 md:mt-0">
           {data?.categories.map((cat) => (
             <span
-              className="px-2 py-1 rounded-full bg-slate-200 text-sm"
+              className="cursor-pointer hover:scale-110 transition-all duration-300 px-2 py-1 rounded-full bg-slate-200 text-sm"
               key={cat._id}
               onClick={() => navigate(`/categories/single/${cat._id}`)}
             >
@@ -329,7 +326,7 @@ const SinglePost = () => {
         </p> */}
 
         {/* LIKES, COMMENTS & VIEWS */}
-        <div className="my-4 flex justify-start items-center gap-4 px-2 md:px-7">
+        <div className="cursor-pointer my-4 flex justify-start items-center gap-4 px-2 md:px-7">
           <span className="flex justify-center items-center gap-1 text-sm">
             {isLiked ? (
               <PiHandsClappingFill

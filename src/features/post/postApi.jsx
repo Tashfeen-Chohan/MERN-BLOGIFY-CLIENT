@@ -47,7 +47,7 @@ export const postApi = apiSlice.injectEndpoints({
     likePost: builder.mutation({
       query: (id) => ({
         url: `/posts/${id}/like`,
-        method: "POST",
+        method: "PATCH",
       }),
       invalidatesTags: (result, error, arg) => [{ type: "Post", id: arg.id }],
     }),
@@ -56,7 +56,7 @@ export const postApi = apiSlice.injectEndpoints({
     unlikePost: builder.mutation({
       query: (id) => ({
         url: `/posts/${id}/unlike`,
-        method: "POST",
+        method: "PATCH",
       }),
       invalidatesTags: (result, error, arg) => [{ type: "Post", id: arg.id }],
     }),
@@ -65,7 +65,7 @@ export const postApi = apiSlice.injectEndpoints({
     viewPost: builder.mutation({
       query: (id) => ({
         url: `/posts/${id}/view`,
-        method: "Post"
+        method: "PATCH"
       }),
       invalidatesTags: (result, error, arg) => [{type: "Post", id: arg.id}]
     })

@@ -28,6 +28,7 @@ import {
   PinterestIcon,
   LinkedinIcon,
 } from "react-share";
+import Comment from "../comment/Comment";
 
 const SinglePost = () => {
   const { id } = useParams();
@@ -358,7 +359,11 @@ const SinglePost = () => {
             <LinkedinIcon size={30} round />
           </LinkedinShareButton>
         </div>
+
+        {/* COMMENT SECTION */}
+        <Comment postId={data._id}/>
       </div>
+
 
       {/* RECENT ARTICLES */}
       <div className="w-[95%] mx-auto md:max-w-5xl">

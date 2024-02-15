@@ -55,11 +55,11 @@ export const commentApi = apiSlice.injectEndpoints({
   })
 })
 
-export const {
-  getAllComments,
-  getPostComments,
-  createComment,
-  likeComment,
-  editComment,
-  deleteComment
+export const   {
+  useGetAllCommentsQuery,
+  useGetPostCommentsQuery,
+  useCreateCommentMutation,
+  useLikeCommentMutation,
+  useEditCommentMutation,
+  useDeleteCommentMutation,
 } = commentApi; 

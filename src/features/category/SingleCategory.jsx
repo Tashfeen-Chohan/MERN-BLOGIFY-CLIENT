@@ -16,8 +16,8 @@ const SingleCategory = () => {
   const handleViewPosts = () => {
     dispatch(
       setCategory({
-        id: data?.capitalized._id,
-        name: data?.capitalized.name,
+        id: data?.category._id,
+        name: data?.category.name,
       })
     );
     navigate("/");
@@ -29,6 +29,8 @@ const SingleCategory = () => {
         <BeatLoader color="#000000" size={15} />
       </div>
     );
+
+  const {category, totalPosts} = data ?? null
 
   return (
     <div className="flex justify-center items-center min-h-screen mt-[-60px]">
@@ -43,14 +45,14 @@ const SingleCategory = () => {
           Category Information
         </h1>
         <h2>
-          Category Name :{" "}
-          <span className="font-semibold">{data?.capitalized.name}</span>
+          Category Name :
+          <span className="font-semibold">{category.name}</span>
         </h2>
         <p>
-          No. of Posts :{" "}
-          <span className="font-semibold">{data?.totalPosts}</span>
+          No. of Posts :
+          <span className="font-semibold">{totalPosts}</span>
         </p>
-        {data?.totalPosts > 0 && (
+        {totalPosts > 0 && (
           <div className="flex justify-center items-center mt-4 w-full">
             <button
               onClick={handleViewPosts}

@@ -97,7 +97,7 @@ const Posts = () => {
         {/* TITLE */}
         <h2
           onClick={viewPost}
-          className="font-bold text-2xl text-center my-3 line-clamp-2 px-2"
+          className="font-bold text-xl text-center my-3 line-clamp-2 px-2"
         >
           {val.title}
         </h2>
@@ -105,7 +105,7 @@ const Posts = () => {
         {/* CONTENT */}
         <p
           onClick={viewPost}
-          className="px-2 line-clamp-3"
+          className="px-2 line-clamp-2"
           dangerouslySetInnerHTML={{ __html: val.content }}
         />
 
@@ -206,7 +206,7 @@ const Posts = () => {
                   className="bg-sky-500 hover:bg-sky-600 transition-colors duration-300 text-gray-200  py-0.5 px-3 rounded-full "
                 >
                   <span className="text-xs">{publisher.name}</span>
-                  <span className="text-lg ml-2 font-bold">x</span>
+                  <span className="text-md ml-2 font-bold">x</span>
                 </span>
               )}
               {category.name && (
@@ -215,7 +215,7 @@ const Posts = () => {
                   className="bg-sky-500 hover:bg-sky-600 transition-colors duration-300 text-gray-200 py-0.5 px-3 rounded-full "
                 >
                   <span className="text-xs">{category.name}</span>
-                  <span className="text-lg ml-2 font-bold">x</span>
+                  <span className="text-md ml-2 font-bold">x</span>
                 </span>
               )}
             </div>

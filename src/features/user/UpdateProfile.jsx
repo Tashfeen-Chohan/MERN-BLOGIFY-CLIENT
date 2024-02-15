@@ -4,16 +4,24 @@ import { toast } from "react-toastify";
 import { useGetSingleUserQuery, useUpdateUserMutation } from "../user/userApi";
 import Swal from "sweetalert2";
 import useAuth from "../../hooks/useAuth";
+import { BeatLoader } from "react-spinners";
 
 const UpdateProfile = () => {
   const { id } = useAuth();  
-  const { data } = useGetSingleUserQuery(id);
+  const { data, isLoading } = useGetSingleUserQuery(id);
   const [updateUser] = useUpdateUserMutation()
   const navigate = useNavigate();
   const [user, setUser] = useState({
-    username: data?.capitalized.username,
-    email: data?.capitalized.email,
+    username: data?.user.username,
+    email: data?.user.email,
   });
+
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center min-h-screen mt-[-60px] bg-slate-200">
+        <BeatLoader color="#000000" size={15} />
+      </div>
+    );
 
   const handleChange = (e) => {
     const { name, value } = e.target;

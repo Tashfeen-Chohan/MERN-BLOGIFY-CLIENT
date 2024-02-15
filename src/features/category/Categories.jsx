@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 import { BeatLoader } from "react-spinners";
-import Sidebar from "../../components/Sidebar";
 import useAuth from "../../hooks/useAuth";
 
 const Categories = () => {
@@ -16,7 +15,7 @@ const Categories = () => {
   const [sortBy, setSortBy] = useState("");
   const [pageNo, setPageNo] = useState(1);
   const [loading, setLoading] = useState(true);
-  const { status } = useAuth();
+  const {status} = useAuth()
 
   let url = `categories?sortBy=${sortBy}&searchBy=${searchBy}&page=${pageNo}`;
   const { data, isLoading, isError, error } = useGetCategoriesQuery(url);
@@ -81,7 +80,7 @@ const Categories = () => {
   if (isError) return <p>{error}</p>;
 
   // OBJECT DESTRUCTURING
-  const { capitalized, totalCategories, totalPages, page, limit } = data;
+  const { categories, totalCategories, totalPages, page, limit } = data;
 
   return (
     <div className="">
@@ -157,7 +156,7 @@ const Categories = () => {
               </tr>
             </thead>
             <tbody className="font-semibold! text-sm">
-              {capitalized.map((val, index) => (
+              {categories.map((val, index) => (
                 <tr
                   key={val._id}
                   className="userTable bg-white border-b hover:bg-gray-200"

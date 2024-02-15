@@ -12,7 +12,6 @@ const Users = () => {
   const [filterBy, setFilterBy] = useState("");
   const [pageNo, setPageNo] = useState(1);
   const [loading, setLoading] = useState(true);
-  // const [errorDisplayed, setErrorDisplayed] = useState(false)
   const { status } = useAuth();
 
   if (status === "Admin") {
@@ -81,7 +80,7 @@ const Users = () => {
   if (isError) return <p>{error}</p>;
 
   // OBJECT DESTRUCTURING
-  const { capitalized, totalUsers, totalPages, page, limit } = data;
+  const { users, totalUsers, totalPages, page, limit } = data;
 
   return (
     <div>
@@ -187,7 +186,7 @@ const Users = () => {
             </tr>
           </thead>
           <tbody className="block md:table-row-group font-semibold! text-sm">
-            {capitalized?.map((val, index) => (
+            {users?.map((val, index) => (
               <tr
                 key={val._id}
                 className="userTable my-3 rounded shadow-md md:shadow-none border border-grey-500 md:border-none block md:table-row hover:bg-gray-200"

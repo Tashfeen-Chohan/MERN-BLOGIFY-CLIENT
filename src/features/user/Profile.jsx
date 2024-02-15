@@ -1,14 +1,13 @@
 import React from "react";
 import useAuth from "../../hooks/useAuth";
 import { useGetSingleUserQuery } from "./userApi";
-import Profile2 from "../../assets/p2.png";
 import { TiArrowBack } from "react-icons/ti";
 import { Link } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
 
 const Profile = () => {
-  const { id, profile } = useAuth();
-  const { data, isLoading } = useGetSingleUserQuery(id);
+  const {id} = useAuth();
+  const {data, isLoading} = useGetSingleUserQuery(id)
 
   if (isLoading)
     return (
@@ -17,6 +16,7 @@ const Profile = () => {
       </div>
     );
 
+  const {user, totalPosts} = data ?? null
 
   return (
     <div className="mt-[-60px] flex justify-center items-center min-h-screen">
@@ -31,7 +31,7 @@ const Profile = () => {
         <p>You can update the details!</p>
         <div className="my-5 w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden mx-auto">
           <img
-            src={profile}
+            src={user.profile}
             alt="User Profile"
             className="w-full h-full rounded-full border-4 md:border-8 border-gray-300 object-cover text-black text-center"
           />
@@ -40,14 +40,14 @@ const Profile = () => {
         {/* <img className="my-4" src={Profile2} alt="Profile Icon" width={70} /> */}
         <div className="flex w-full justify-center items-center flex-col gap-3">
           <span className="bg-white hover:bg-cyan-200 transition-colors duration-300 w-[70%] text-center py-1 rounded shadow-md flex-auto">
-            {data?.capitalized.username}
+            {user.username}
           </span>
           <span className="bg-white hover:bg-cyan-200 transition-colors duration-300 py-1 w-[70%] text-center rounded shadow-md">
-            {data?.capitalized.email}
+            {user.email}
           </span>
-          {data?.capitalized.roles.includes("Publisher") && (
+          {user.roles.includes("Publisher") && (
             <span className="bg-white hover:bg-cyan-200 transition-colors duration-300 py-1 w-[70%] text-center rounded shadow-md">
-              Total Posts : {data?.totalPosts}
+              Total Posts : {totalPosts}
             </span>
           )}
         </div>

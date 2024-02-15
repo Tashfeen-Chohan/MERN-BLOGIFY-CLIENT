@@ -17,8 +17,8 @@ const SingleUser = () => {
   const handleViewPosts = () => {
     dispatch(
       setPublisher({
-        id: data?.capitalized._id,
-        name: data?.capitalized.username,
+        id: data?.user._id,
+        name: data?.user.username,
       })
     );
     navigate("/");
@@ -30,6 +30,8 @@ const SingleUser = () => {
         <BeatLoader color="#000000" size={15} />
       </div>
     );
+
+  const {user, totalPosts} = data ?? null
 
   return (
     <div className="flex justify-center items-center min-h-screen mt-[-60px] md:mt-[-20px]">
@@ -43,7 +45,7 @@ const SingleUser = () => {
         <h1 className="text-2xl font-bold">User Profile</h1>
         <div className="my-5 w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden mx-auto">
           <img
-            src={data?.capitalized.profile}
+            src={user.profile}
             alt="User Profile"
             className="w-full h-full rounded-full border-4 md:border-8 border-gray-300 object-cover text-black text-center"
           />
@@ -51,12 +53,12 @@ const SingleUser = () => {
 
         <div className="flex w-full justify-center items-center flex-col gap-3 mt-3">
           <span className="bg-white w-[75%] text-center py-1 rounded shadow-md flex-auto">
-            {data?.capitalized.username}
+            {user.username}
           </span>
           <span className="bg-white py-1 w-[75%] text-center rounded shadow-md">
-            {data?.capitalized.email}
+            {user.email}
           </span>
-          {data?.capitalized.roles.includes("Publisher") && (
+          {user.roles.includes("Publisher") && (
             <span className="bg-white py-1 w-[75%] text-center rounded shadow-md">
               Total Posts : {data?.totalPosts}
             </span>
@@ -66,16 +68,16 @@ const SingleUser = () => {
           <div className="mt-3 w-[75%] bg-white px-3 py-1 rounded shadow-xl text-center">
             <span>
               Roles :
-              {data?.capitalized.roles.map((role, index) => (
+              {user.roles.map((role, index) => (
                 <span className="bg-white font-semibold p-1 " key={index}>
                   {role}
-                  {index < data?.capitalized.roles.length - 1 && ", "}
+                  {index < user.roles.length - 1 && ", "}
                 </span>
               ))}
             </span>
           </div>
         )}
-        {data?.totalPosts > 0 && (
+        {totalPosts > 0 && (
           <div className="flex justify-center items-center mt-4 w-full">
             <button
               onClick={handleViewPosts}

@@ -47,7 +47,7 @@ const CreatePost = () => {
   const { id } = useAuth();
   const navigate = useNavigate();
 
-  const options = data?.capitalized.map((val) => ({
+  const options = data?.categories.map((val) => ({
     value: val._id,
     label: val.name,
   }));
@@ -117,6 +117,7 @@ const CreatePost = () => {
         } else {
           toast.success(res.data.message);
           navigate(`/posts/single/${res.data.post._id}`);
+          window.scrollTo(0,0)
         }
       } catch (error) {
         Swal.fire({
@@ -168,9 +169,9 @@ const CreatePost = () => {
             />
           </div>
           {/* CONTENT */}
-          <div className="mt-8 mb-5 h-72">
+          <div className="mt-8 mb-5 h-80 md:h-72 bg-white">
             <ReactQuill
-              className="bg-white rounded shadow-md h-full overflow-y-auto"
+              className="bg-white rounded h-[71%] md:h-[85%]"
               modules={toolbarOptions}
               // formats={formats}
               value={content}

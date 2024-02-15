@@ -7,12 +7,13 @@ import {
 } from "./categoryApi";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { BeatLoader } from "react-spinners";
 
 const UpdateCategory = () => {
   const { id } = useParams();
   const [updateCategory] = useUpdateCategoryMutation();
   const [name, setName] = useState("");
-  const { data } = useGetSingleCategoryQuery(id);
+  const { data, isLoading } = useGetSingleCategoryQuery(id);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -82,9 +83,16 @@ const UpdateCategory = () => {
 
   useEffect(() => {
     if (data) {
-      setName(data.capitalized.name);
+      setName(data.category.name);
     }
   }, [data]);
+
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center min-h-screen mt-[-60px] bg-slate-200">
+        <BeatLoader color="#000000" size={15} />
+      </div>
+    );
 
   return (
     <div className="flex justify-center items-center min-h-screen">

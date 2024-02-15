@@ -19,15 +19,13 @@ const UpdateUser = () => {
     roles: [],
   });
 
-  
-
   useEffect(() => {
     if (data) {
       setUser({
-        username: data.capitalized.username,
-        email: data.capitalized.email,
-        profile: data.capitalized.profile,
-        roles: data.capitalized.roles,
+        username: data.user.username,
+        email: data.user.email,
+        profile: data.user.profile,
+        roles: data.user.roles,
       });
     }
   }, [data]);

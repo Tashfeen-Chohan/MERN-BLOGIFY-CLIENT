@@ -28,6 +28,12 @@
   font-weight: 600;
 }
 
+.post-content h4{
+  font-size: 1.1rem;
+  font-family: sans-serif;
+  font-weight: 600;
+}
+
 .post-content a{
   color: blue;
   text-decoration: underline;

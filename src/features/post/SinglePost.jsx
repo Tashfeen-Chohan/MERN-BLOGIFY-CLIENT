@@ -259,22 +259,22 @@ const SinglePost = () => {
         {/* AUTHOR INFO */}
         <div className="flex justify-between items-center px-2">
           <div
-            onClick={() => navigate(`/users/single/${author?.capitalized._id}`)}
+            onClick={() => navigate(`/users/single/${author?.user._id}`)}
             className="flex justify-center items-center gap-3 cursor-pointer"
           >
             <img
               className="h-10 w-10 object-cover rounded-full text-xs"
-              src={author?.capitalized.profile}
+              src={author?.user.profile}
               alt="Profile"
             />
-            <span className="italic">{author?.capitalized.username}</span>
+            <span className="italic font-semibold">{author?.user.username}</span>
           </div>
           <span className="italic">{formattedDate}</span>
         </div>
 
         {/* EDIT & DELETE */}
         {userId === data?.author._id && (
-          <div className="flex justify-end items-center gap-3">
+          <div className="flex justify-end items-center gap-3 mr-3">
             <FaEdit
               onClick={() => navigate(`/posts/update/${data?._id}`)}
               size={25}
@@ -313,30 +313,18 @@ const SinglePost = () => {
           
         />
 
-        {/* <p>
-          {parse(data?.content)}
-        </p> */}
-
-
-        {/* <p className="">
-          <span className="text-2xl md:text-3xl italic">
-            {data?.content[0]}
-          </span>
-          {data?.content.slice(1)}
-        </p> */}
-
         {/* LIKES, COMMENTS & VIEWS */}
         <div className="cursor-pointer my-4 flex justify-start items-center gap-4 px-2 md:px-7">
           <span className="flex justify-center items-center gap-1 text-sm">
             {isLiked ? (
               <PiHandsClappingFill
                 size={21}
-                onClick={() => handleUnlike(data?._id)}
+                onClick={() => handleUnlike(data._id)}
               />
             ) : (
               <PiHandsClappingLight
                 size={21}
-                onClick={() => handleLike(data?._id)}
+                onClick={() => handleLike(data._id)}
               />
             )}
             {data?.likes}
@@ -377,10 +365,10 @@ const SinglePost = () => {
         <h2 className="md:text-lg my-5 text-center">
           More from
           <span
-            onClick={() => navigate(`/users/single/${author?.capitalized._id}`)}
+            onClick={() => navigate(`/users/single/${author?.user._id}`)}
             className="font-bold italic ml-2"
           >
-            {author?.capitalized.username}
+            {author?.user.username}
           </span>
         </h2>
         <hr className="h-[2px] bg-gray-200" />

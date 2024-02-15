@@ -3,7 +3,9 @@ import useAuth from "../../hooks/useAuth";
 import { Link } from "react-router-dom";
 import {
   useCreateCommentMutation,
+  useDeleteCommentMutation,
   useGetPostCommentsQuery,
+  useLikeCommentMutation,
 } from "./commentApi";
 import { toast } from "react-toastify";
 import moment from "moment";
@@ -13,7 +15,9 @@ const Comment = ({ postId }) => {
   const url = `/comments/getPostComments/${postId}`;
   const { data } = useGetPostCommentsQuery(url);
   const [createComment] = useCreateCommentMutation();
-  const { id: userId, username, email, profile } = useAuth();
+  const [likeComment] = useLikeCommentMutation();
+  const [deleteComment] = useDeleteCommentMutation()
+  const { id: userId, username, email, profile, isAdmin } = useAuth();
   const [commentContent, setCommentContent] = useState("");
 
   const { comments, totalComments } = data ?? {};
@@ -38,6 +42,32 @@ const Comment = ({ postId }) => {
     }
   };
 
+  const handleLike = async (id) => {
+    try {
+      const res = await likeComment(id);
+      if (res.error) {
+        toast.error(res.error.data.message);
+      } else {
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const res = await deleteComment(id)
+      if (res.error){
+        toast.error(res.error.data.message)
+      } else {
+        toast.success(res.data.message)
+      }
+    } catch (error) {
+      toast.error("Something went wrong!")
+    }
+  }
+
   return (
     <div className="max-w-2xl mx-auto w-full p-3">
       {userId ? (
@@ -55,7 +85,7 @@ const Comment = ({ postId }) => {
       ) : (
         <div className="text-sm text-teal-500 my-5 flex gap-1">
           You must be signed in to comment.
-          <Link className="text-blue-500 hover:underline" to={"/sign-in"}>
+          <Link className="text-blue-500 hover:underline" to={"/login"}>
             Sign In
           </Link>
         </div>
@@ -90,7 +120,7 @@ const Comment = ({ postId }) => {
       {/* SHOWING POST COMMENT */}
       <div>
         {totalComments === 0 ? (
-          <p>No comment yet!</p>
+          <p className="mt-7 text-sm">No comment yet!</p>
         ) : (
           <div className="flex justify-between items-center mt-7">
             <span className="text-sm">Comments ({totalComments})</span>
@@ -104,9 +134,10 @@ const Comment = ({ postId }) => {
         {/* ALL COMMENTS */}
         {comments?.map((val) => (
           <div
-            className="flex justify-start items-start gap-3 mt-5"
+            className="flex justify-start items-start gap-3 mt-5 w-full"
             key={val._id}
           >
+            {/* PROFILE */}
             <div className="w-8 h-9 rounded-full overflow-hidden">
               <img
                 className="w-full h-full rounded-full object-cover"
@@ -114,32 +145,50 @@ const Comment = ({ postId }) => {
                 alt=""
               />
             </div>
-            <div>
+            <div className="w-full">
+              {/* USERNAME & DATE */}
               <div className="flex justify-start  items-center gap-4 text-sm">
                 <span className="font-bold  ">{val.userId.username}</span>
                 <span className="text-xs">
                   {moment(val.createdAt).fromNow()}
                 </span>
               </div>
+              {/* CONTENT */}
               <span className="text-sm">{val.content}</span>
-              <hr className="w-10" />
-              <div>
+              <hr className="w-20 my-1" />
+              {/* LIKE, EDIT & DELETE */}
+              <div className="flex justify-start items-center gap-3 mb-1">
                 <button
                   type="button"
-                  // onClick={() => onLike(comment._id)}
+                  onClick={() => handleLike(val._id)}
                   className={`text-gray-400 hover:text-blue-500 ${
                     userId && val.likedBy.includes(userId) && "!text-blue-500"
                   }`}
                 >
-                  <FaThumbsUp className="text-sm" />
+                  <FaThumbsUp className="text-sm my-2" />
                 </button>
-                <p className="text-gray-400">
-                  {val.numberOfLikes > 0 &&
-                    val.numberOfLikes +
-                      " " +
-                      (val.numberOfLikes === 1 ? "like" : "likes")}
+                <p className="text-gray-400 text-sm">
+                  {val.likes > 0 &&
+                    val.likes + " " + (val.likes === 1 ? "like" : "likes")}
                 </p>
+                {userId === val.userId._id && <button
+                  type="button"
+                  // onClick={handleEdit}
+                  className="text-gray-400 hover:text-blue-500 text-sm"
+                >
+                  Edit
+                </button>}
+                {(userId === val.userId._id || isAdmin) && (
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(val._id)}
+                    className="text-gray-400 hover:text-red-500 text-sm"
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
+              <hr />
             </div>
           </div>
         ))}

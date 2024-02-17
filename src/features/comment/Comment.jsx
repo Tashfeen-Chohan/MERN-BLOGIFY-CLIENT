@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import {
   useCreateCommentMutation,
   useDeleteCommentMutation,
+  useEditCommentMutation,
   useGetPostCommentsQuery,
   useLikeCommentMutation,
 } from "./commentApi";
@@ -13,12 +14,17 @@ import { FaThumbsUp } from "react-icons/fa";
 
 const Comment = ({ postId }) => {
   const url = `/comments/getPostComments/${postId}`;
-  const { data } = useGetPostCommentsQuery(url);
+  const { data, refetch } = useGetPostCommentsQuery(url);
   const [createComment] = useCreateCommentMutation();
   const [likeComment] = useLikeCommentMutation();
-  const [deleteComment] = useDeleteCommentMutation()
-  const { id: userId, username, email, profile, isAdmin } = useAuth();
+  const [editComment] = useEditCommentMutation()
+  const [deleteComment] = useDeleteCommentMutation();
+
+  const { id: userId, username, profile, isAdmin } = useAuth();
   const [commentContent, setCommentContent] = useState("");
+  const [editMode, setEditMode] = useState(false)
+  const [editCommentId, setEditCommentId] = useState("")
+  const [editedComment, setEditedComment] = useState("")
 
   const { comments, totalComments } = data ?? {};
 
@@ -57,14 +63,34 @@ const Comment = ({ postId }) => {
 
   const handleDelete = async (id) => {
     try {
-      const res = await deleteComment(id)
+      const res = await deleteComment(id);
+      if (res.error) {
+        toast.error(res.error.data.message);
+      } else {
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+    }
+  };
+
+  const handleEdit = async (id) => {
+    try {
+      const res = await editComment({
+        id,
+        content: editedComment
+      })
       if (res.error){
         toast.error(res.error.data.message)
       } else {
         toast.success(res.data.message)
+        refetch()
+        setEditMode(false)
+        setEditCommentId("")
+        setEditedComment("")
       }
     } catch (error) {
-      toast.error("Something went wrong!")
+      
     }
   }
 
@@ -154,40 +180,78 @@ const Comment = ({ postId }) => {
                 </span>
               </div>
               {/* CONTENT */}
-              <span className="text-sm">{val.content}</span>
-              <hr className="w-20 my-1" />
-              {/* LIKE, EDIT & DELETE */}
-              <div className="flex justify-start items-center gap-3 mb-1">
-                <button
-                  type="button"
-                  onClick={() => handleLike(val._id)}
-                  className={`text-gray-400 hover:text-blue-500 ${
-                    userId && val.likedBy.includes(userId) && "!text-blue-500"
-                  }`}
-                >
-                  <FaThumbsUp className="text-sm my-2" />
-                </button>
-                <p className="text-gray-400 text-sm">
-                  {val.likes > 0 &&
-                    val.likes + " " + (val.likes === 1 ? "like" : "likes")}
-                </p>
-                {userId === val.userId._id && <button
-                  type="button"
-                  // onClick={handleEdit}
-                  className="text-gray-400 hover:text-blue-500 text-sm"
-                >
-                  Edit
-                </button>}
-                {(userId === val.userId._id || isAdmin) && (
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(val._id)}
-                    className="text-gray-400 hover:text-red-500 text-sm"
-                  >
-                    Delete
-                  </button>
-                )}
-              </div>
+              {editMode && editCommentId === val._id ? (
+                <div className="my-2">
+                  <textarea
+                    className="w-full p-2 border  border-gray-400 rounded outline-none"
+                    cols="30"
+                    rows="2"
+                    value={editedComment}
+                    onChange={(e) => setEditedComment(e.target.value)}
+                  ></textarea>
+                  <div className="flex justify-end items-center gap-3 mt-1">
+                    <button
+                      onClick={() => handleEdit(val._id)}
+                      className="bg-cyan-500 text-white py-1 px-4 rounded shadow-md text-sm"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={() => setEditMode(false)}
+                      className="bg-red-500 text-sm text-white py-1 px-3 rounded shadow-md"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <span className="text-sm">{val.content}</span>
+                  <hr className="w-20 my-1" />
+                  {/* LIKE, EDIT & DELETE */}
+                  <div className="flex justify-start items-center gap-3 mb-1">
+                    <button
+                      type="button"
+                      onClick={() => handleLike(val._id)}
+                      className={`text-gray-400 hover:text-blue-500 ${
+                        userId &&
+                        val.likedBy.includes(userId) &&
+                        "!text-blue-500"
+                      }`}
+                    >
+                      <FaThumbsUp className="text-sm my-2" />
+                    </button>
+                    <p className="text-gray-400 text-sm">
+                      {val.likes > 0 &&
+                        val.likes +
+                          " " +
+                          (val.likes === 1 ? "like" : "likes")}
+                    </p>
+                    {userId === val.userId._id && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditMode(true);
+                          setEditCommentId(val._id)
+                          setEditedComment(val.content);
+                        }}
+                        className="text-gray-400 hover:text-blue-500 text-sm"
+                      >
+                        Edit
+                      </button>
+                    )}
+                    {(userId === val.userId._id || isAdmin) && (
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(val._id)}
+                        className="text-gray-400 hover:text-red-500 text-sm"
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </div>
+                </>
+              )}
               <hr />
             </div>
           </div>

@@ -28,7 +28,7 @@ import {
   PinterestIcon,
   LinkedinIcon,
 } from "react-share";
-import Comment from "../comment/Comment";
+import Comment from "../comment/Comment"
 
 const SinglePost = () => {
   const { id } = useParams();

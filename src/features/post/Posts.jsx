@@ -21,7 +21,7 @@ const Posts = () => {
   const publisher = useSelector(selectPublisher);
   const category = useSelector(selectCategory);
   const postUrl = `/posts?searchBy=${search}&sortBy=${sort}&filterBy=${filter}&authorId=${publisher.id}&categoryId=${category.id}&limit=${limit}`;
-  const { data, isLoading } = useGetPostsQuery(postUrl);
+  const { data, isLoading, error } = useGetPostsQuery(postUrl);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -33,6 +33,7 @@ const Posts = () => {
       </div>
     );
 
+
   const removeCategoryFilter = () => {
     dispatch(resetCategory());
   };
@@ -42,6 +43,7 @@ const Posts = () => {
   };
 
   const { posts, totalPosts } = data ?? {};
+  console.log(posts)
 
   const Posts = posts?.map((val) => {
     const date = new Date(val.createdAt);
@@ -130,7 +132,7 @@ const Posts = () => {
           </span>
           <span className="flex justify-center items-center gap-1 text-sm">
             <FaRegComment size={20} />
-            {0}
+            {val.commentsCount}
           </span>
           <span className="flex justify-center items-center gap-1 text-sm">
             <FaRegEye size={20} />

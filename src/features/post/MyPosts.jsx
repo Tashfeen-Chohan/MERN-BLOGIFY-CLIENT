@@ -106,7 +106,7 @@ const MyPosts = () => {
           </span>
           <span className="flex justify-center items-center gap-1 text-sm">
             <FaRegComment size={20} />
-            {0}
+            {val.commentsCount}
           </span>
           <span className="flex justify-center items-center gap-1 text-sm">
             <FaRegEye size={20} />

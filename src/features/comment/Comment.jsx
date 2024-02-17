@@ -101,7 +101,7 @@ const Comment = ({ postId }) => {
         <div className="flex items-center gap-1 my-5 text-gray-500 text-sm">
           <p>Signed in as:</p>
           <img
-            className="h-5 w-5 object-cover rounded-full"
+            className="h-6 w-6 object-cover rounded-full"
             src={profile}
             alt=""
           />
@@ -175,7 +175,7 @@ const Comment = ({ postId }) => {
                 key={val._id}
               >
                 {/* PROFILE */}
-                <div className="w-8 h-9 rounded-full overflow-hidden">
+                <div className="w-9 h-9 rounded-full overflow-hidden">
                   <img
                     className="w-full h-full rounded-full object-cover"
                     src={val.userId.profile}

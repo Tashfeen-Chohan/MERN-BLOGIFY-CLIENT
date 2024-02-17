@@ -33,16 +33,17 @@ import Comment from "../comment/Comment"
 const SinglePost = () => {
   const { id } = useParams();
   const { data, isLoading } = useGetSinglePostQuery(id);
-  const { data: author, isLoading: authorLoading } = useGetSingleUserQuery(
-    data?.author._id
-  );
-  const [deletePost, { isLoading: deleteLoading }] = useDeletePostMutation();
+  const [deletePost] = useDeletePostMutation();
   const [likePost] = useLikePostMutation();
   const [unlikePost] = useUnlikePostMutation();
   const [viewPost] = useViewPostMutation();
   const [limit, setLimit] = useState(3);
+
+  const {post, commentsCount} = data ?? {}
+  console.log(post)
+
   const { data: recentPosts } = useGetPostsQuery(
-    `/posts?authorId=${data?.author._id}&limit=${limit}`
+    `/posts?authorId=${post?.author._id}&limit=${limit}`
   );
 
   const { id: userId } = useAuth();
@@ -68,11 +69,11 @@ const SinglePost = () => {
   }, [id, isLoading, viewPost]);
 
   // FORMATING DATE
-  const date = new Date(data?.createdAt);
+  const date = new Date(post?.createdAt);
   const options = { day: "numeric", month: "long", year: "numeric" };
   const formattedDate = date.toLocaleDateString("en-US", options);
 
-  if (isLoading || authorLoading)
+  if (isLoading)
     return (
       <div className="flex justify-center items-center min-h-screen bg-slate-200">
         <BeatLoader color="#000000" size={15} />
@@ -238,7 +239,7 @@ const SinglePost = () => {
           </span>
           <span className="flex justify-center items-center gap-1 text-sm">
             <FaRegComment size={20} />
-            {0}
+            {val.commentsCount}
           </span>
           <span className="flex justify-center items-center gap-1 text-sm">
             <FaRegEye size={20} />
@@ -249,41 +250,43 @@ const SinglePost = () => {
     );
   });
 
+  
+
   return (
     <div className="flex justify-center items-center flex-col">
       <div className="w-[95%] my-5 rounded-t shadow-md  max-w-3xl pb-7">
         <img
           className="w-full rounded h-auto shadow-xl my-3"
-          src={data?.blogImg}
+          src={post?.blogImg}
           alt="Blog cover imgage"
         />
         {/* AUTHOR INFO */}
         <div className="flex justify-between items-center px-2">
           <div
-            onClick={() => navigate(`/users/single/${author?.user._id}`)}
+            onClick={() => navigate(`/users/single/${post?.author._id}`)}
             className="flex justify-center items-center gap-3 cursor-pointer"
           >
             <img
               className="h-10 w-10 object-cover rounded-full text-xs"
-              src={author?.user.profile}
+              src={post?.author.profile}
               alt="Profile"
             />
-            <span className="italic font-semibold">{author?.user.username}</span>
+            <span className="italic font-semibold">{post?.author.username}</span>
           </div>
           <span className="italic">{formattedDate}</span>
         </div>
 
         {/* EDIT & DELETE */}
-        {userId === data?.author._id && (
+        {userId === post?.author._id && (
           <div className="flex justify-end items-center gap-3 mr-3">
             <FaEdit
-              onClick={() => navigate(`/posts/update/${data?._id}`)}
+              onClick={() => navigate(`/posts/update/${post?._id}`)}
               size={25}
               color="orange"
               className="hover:scale-125 transition-all duration-300"
             />
             <MdDelete
-              onClick={() => handleDelete(data?._id)}
+              onClick={() => handleDelete(post?._id)}
               size={30}
               color="red"
               className="hover:scale-125 transition-all duration-300"
@@ -293,7 +296,7 @@ const SinglePost = () => {
 
         {/* CATEGORIES */}
         <div className="flex justify-center items-center gap-2 mt-3 md:mt-0">
-          {data?.categories.map((cat) => (
+          {post?.categories.map((cat) => (
             <span
               className="cursor-pointer hover:scale-110 transition-all duration-300 px-2 py-1 rounded-full bg-slate-200 text-sm"
               key={cat._id}
@@ -305,12 +308,12 @@ const SinglePost = () => {
         </div>
 
         <h1 className="px-2 text-center text-2xl font-bold py-5 md:text-3xl">
-          {data?.title}
+          {post?.title}
         </h1>
 
         <div
           className="px-2 md:px-7 post-content"
-          dangerouslySetInnerHTML={{ __html: data?.content }}
+          dangerouslySetInnerHTML={{ __html: post?.content }}
           
         />
 
@@ -320,48 +323,48 @@ const SinglePost = () => {
             {isLiked ? (
               <PiHandsClappingFill
                 size={21}
-                onClick={() => handleUnlike(data._id)}
+                onClick={() => handleUnlike(post._id)}
               />
             ) : (
               <PiHandsClappingLight
                 size={21}
-                onClick={() => handleLike(data._id)}
+                onClick={() => handleLike(post._id)}
               />
             )}
-            {data?.likes}
+            {post?.likes}
           </span>
           <span className="flex justify-center items-center gap-1 text-sm">
             <FaRegComment size={20} />
-            {0}
+            {commentsCount}
           </span>
           <span className="flex justify-center items-center gap-1 text-sm">
             <FaRegEye size={20} />
-            {data?.views}
+            {post?.views}
           </span>
         </div>
 
         {/* SOCIAL SHARE */}
         <div className="flex justify-end items-center px-5 md:px-7 gap-2">
           {/* Facebook Share Button */}
-          <FacebookShareButton url={postURL} title={data?.title}>
+          <FacebookShareButton url={postURL} title={post?.title}>
             <FacebookIcon size={30} round />
           </FacebookShareButton>
-          <WhatsappShareButton url={postURL} title={data?.title}>
+          <WhatsappShareButton url={postURL} title={post?.title}>
             <WhatsappIcon size={30} round />
           </WhatsappShareButton>
-          <TwitterShareButton url={postURL} title={data?.title}>
+          <TwitterShareButton url={postURL} title={post?.title}>
             <TwitterIcon size={30} round />
           </TwitterShareButton>
-          <PinterestShareButton url={postURL} title={data?.title}>
+          <PinterestShareButton url={postURL} title={post?.title}>
             <PinterestIcon size={30} round />
           </PinterestShareButton>
-          <LinkedinShareButton url={postURL} title={data?.title}>
+          <LinkedinShareButton url={postURL} title={post?.title}>
             <LinkedinIcon size={30} round />
           </LinkedinShareButton>
         </div>
 
         {/* COMMENT SECTION */}
-        <Comment postId={data._id}/>
+        <Comment postId={post._id}/>
       </div>
 
 
@@ -370,10 +373,10 @@ const SinglePost = () => {
         <h2 className="md:text-lg my-5 text-center">
           More from
           <span
-            onClick={() => navigate(`/users/single/${author?.user._id}`)}
+            onClick={() => navigate(`/users/single/${post?.author._id}`)}
             className="font-bold italic ml-2"
           >
-            {author?.user.username}
+            {post?.author.username}
           </span>
         </h2>
         <hr className="h-[2px] bg-gray-200" />

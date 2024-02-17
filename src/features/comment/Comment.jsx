@@ -11,20 +11,23 @@ import {
 import { toast } from "react-toastify";
 import moment from "moment";
 import { FaThumbsUp } from "react-icons/fa";
+import { BeatLoader } from "react-spinners";
 
 const Comment = ({ postId }) => {
-  const url = `/comments/getPostComments/${postId}`;
-  const { data, refetch } = useGetPostCommentsQuery(url);
+  const [sort, setSort] = useState("");
+  const [limit, setLimit] = useState(3);
+  const url = `/comments/getPostComments/${postId}?sortBy=${sort}&limit=${limit}`;
+  const { data, isLoading, refetch } = useGetPostCommentsQuery(url);
   const [createComment] = useCreateCommentMutation();
   const [likeComment] = useLikeCommentMutation();
-  const [editComment] = useEditCommentMutation()
+  const [editComment] = useEditCommentMutation();
   const [deleteComment] = useDeleteCommentMutation();
 
   const { id: userId, username, profile, isAdmin } = useAuth();
   const [commentContent, setCommentContent] = useState("");
-  const [editMode, setEditMode] = useState(false)
-  const [editCommentId, setEditCommentId] = useState("")
-  const [editedComment, setEditedComment] = useState("")
+  const [editMode, setEditMode] = useState(false);
+  const [editCommentId, setEditCommentId] = useState("");
+  const [editedComment, setEditedComment] = useState("");
 
   const { comments, totalComments } = data ?? {};
 
@@ -78,21 +81,19 @@ const Comment = ({ postId }) => {
     try {
       const res = await editComment({
         id,
-        content: editedComment
-      })
-      if (res.error){
-        toast.error(res.error.data.message)
+        content: editedComment,
+      });
+      if (res.error) {
+        toast.error(res.error.data.message);
       } else {
-        toast.success(res.data.message)
-        refetch()
-        setEditMode(false)
-        setEditCommentId("")
-        setEditedComment("")
+        toast.success(res.data.message);
+        refetch();
+        setEditMode(false);
+        setEditCommentId("");
+        setEditedComment("");
       }
-    } catch (error) {
-      
-    }
-  }
+    } catch (error) {}
+  };
 
   return (
     <div className="max-w-2xl mx-auto w-full p-3">
@@ -135,7 +136,7 @@ const Comment = ({ postId }) => {
             </p>
             <button
               type="submit"
-              className="bg-cyan-500 text-white py-1 px-3 rounded shadow-md"
+              className="bg-cyan-500 hover:bg-cyan-400 transition-colors duration-300 text-white py-1 px-3 rounded shadow-md"
             >
               Submit
             </button>
@@ -150,112 +151,134 @@ const Comment = ({ postId }) => {
         ) : (
           <div className="flex justify-between items-center mt-7">
             <span className="text-sm">Comments ({totalComments})</span>
-            <select className="outline-none py-1 px-3 text-sm border-b border-gray-400">
+            <select
+              onChange={(e) => setSort(e.target.value)}
+              className="outline-none py-1 px-3 text-sm border-b border-gray-400"
+            >
               <option value="">Recent</option>
-              <option value="">Top</option>
+              <option value="oldest">Oldest</option>
+              <option value="top">Top</option>
             </select>
           </div>
         )}
 
         {/* ALL COMMENTS */}
-        {comments?.map((val) => (
-          <div
-            className="flex justify-start items-start gap-3 mt-5 w-full"
-            key={val._id}
-          >
-            {/* PROFILE */}
-            <div className="w-8 h-9 rounded-full overflow-hidden">
-              <img
-                className="w-full h-full rounded-full object-cover"
-                src={val.userId.profile}
-                alt=""
-              />
-            </div>
-            <div className="w-full">
-              {/* USERNAME & DATE */}
-              <div className="flex justify-start  items-center gap-4 text-sm">
-                <span className="font-bold  ">{val.userId.username}</span>
-                <span className="text-xs">
-                  {moment(val.createdAt).fromNow()}
-                </span>
-              </div>
-              {/* CONTENT */}
-              {editMode && editCommentId === val._id ? (
-                <div className="my-2">
-                  <textarea
-                    className="w-full p-2 border  border-gray-400 rounded outline-none"
-                    cols="30"
-                    rows="2"
-                    value={editedComment}
-                    onChange={(e) => setEditedComment(e.target.value)}
-                  ></textarea>
-                  <div className="flex justify-end items-center gap-3 mt-1">
-                    <button
-                      onClick={() => handleEdit(val._id)}
-                      className="bg-cyan-500 text-white py-1 px-4 rounded shadow-md text-sm"
-                    >
-                      Save
-                    </button>
-                    <button
-                      onClick={() => setEditMode(false)}
-                      className="bg-red-500 text-sm text-white py-1 px-3 rounded shadow-md"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <span className="text-sm">{val.content}</span>
-                  <hr className="w-20 my-1" />
-                  {/* LIKE, EDIT & DELETE */}
-                  <div className="flex justify-start items-center gap-3 mb-1">
-                    <button
-                      type="button"
-                      onClick={() => handleLike(val._id)}
-                      className={`text-gray-400 hover:text-blue-500 ${
-                        userId &&
-                        val.likedBy.includes(userId) &&
-                        "!text-blue-500"
-                      }`}
-                    >
-                      <FaThumbsUp className="text-sm my-2" />
-                    </button>
-                    <p className="text-gray-400 text-sm">
-                      {val.likes > 0 &&
-                        val.likes +
-                          " " +
-                          (val.likes === 1 ? "like" : "likes")}
-                    </p>
-                    {userId === val.userId._id && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setEditMode(true);
-                          setEditCommentId(val._id)
-                          setEditedComment(val.content);
-                        }}
-                        className="text-gray-400 hover:text-blue-500 text-sm"
-                      >
-                        Edit
-                      </button>
-                    )}
-                    {(userId === val.userId._id || isAdmin) && (
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(val._id)}
-                        className="text-gray-400 hover:text-red-500 text-sm"
-                      >
-                        Delete
-                      </button>
-                    )}
-                  </div>
-                </>
-              )}
-              <hr />
-            </div>
+        {isLoading ? (
+          <div className="w-full">
+            <BeatLoader color="#000000" size={15} />
           </div>
-        ))}
+        ) : (
+          <>
+            {comments?.map((val) => (
+              <div
+                className="flex justify-start items-start gap-3 mt-5 w-full"
+                key={val._id}
+              >
+                {/* PROFILE */}
+                <div className="w-8 h-9 rounded-full overflow-hidden">
+                  <img
+                    className="w-full h-full rounded-full object-cover"
+                    src={val.userId.profile}
+                    alt=""
+                  />
+                </div>
+                <div className="w-full">
+                  {/* USERNAME & DATE */}
+                  <div className="flex justify-start  items-center gap-4 text-sm">
+                    <span className="font-bold  ">{val.userId.username}</span>
+                    <span className="text-xs">
+                      {moment(val.createdAt).fromNow()}
+                    </span>
+                  </div>
+                  {/* CONTENT */}
+                  {editMode && editCommentId === val._id ? (
+                    <div className="my-2">
+                      <textarea
+                        className="w-full p-2 border  border-gray-400 rounded outline-none"
+                        cols="30"
+                        rows="2"
+                        value={editedComment}
+                        onChange={(e) => setEditedComment(e.target.value)}
+                      ></textarea>
+                      <div className="flex justify-end items-center gap-3 mt-1">
+                        <button
+                          onClick={() => handleEdit(val._id)}
+                          className="bg-cyan-500 hover:bg-cyan-400 transition-colors duration-300 text-white py-1 px-4 rounded shadow-md text-sm"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={() => setEditMode(false)}
+                          className="bg-red-500 hover:bg-red-600 transition-colors duration-300 text-sm text-white py-1 px-3 rounded shadow-md"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <span className="text-sm">{val.content}</span>
+                      <hr className="w-20 my-1" />
+                      {/* LIKE, EDIT & DELETE */}
+                      <div className="flex justify-start items-center gap-3 mb-1">
+                        <button
+                          type="button"
+                          onClick={() => handleLike(val._id)}
+                          className={`text-gray-400 hover:text-blue-500 ${
+                            userId &&
+                            val.likedBy.includes(userId) &&
+                            "!text-blue-500"
+                          }`}
+                        >
+                          <FaThumbsUp className="text-sm my-2" />
+                        </button>
+                        <p className="text-gray-400 text-sm">
+                          {val.likes > 0 &&
+                            val.likes +
+                              " " +
+                              (val.likes === 1 ? "like" : "likes")}
+                        </p>
+                        {userId === val.userId._id && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditMode(true);
+                              setEditCommentId(val._id);
+                              setEditedComment(val.content);
+                            }}
+                            className="text-gray-400 hover:text-blue-500 text-sm"
+                          >
+                            Edit
+                          </button>
+                        )}
+                        {(userId === val.userId._id || isAdmin) && (
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(val._id)}
+                            className="text-gray-400 hover:text-red-500 text-sm"
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </div>
+                    </>
+                  )}
+                  <hr />
+                </div>
+              </div>
+            ))}
+            {totalComments > 3 && limit < totalComments && (
+              <div className="flex justify-center items-center mt-7">
+                <button
+                  onClick={() => setLimit(limit + 3)}
+                  className="bg-cyan-500 hover:bg-cyan-400 transition-colors duration-300 text-white py-1 px-3 rounded shadow-xl"
+                >
+                  See More
+                </button>
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

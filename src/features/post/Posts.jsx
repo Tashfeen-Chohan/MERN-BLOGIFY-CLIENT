@@ -3,7 +3,7 @@ import { useGetPostsQuery } from "./postApi";
 import { BeatLoader } from "react-spinners";
 import { Link, useNavigate } from "react-router-dom";
 import { MdSearch } from "react-icons/md";
-import { PiHandsClappingLight } from "react-icons/pi";
+import { PiHandsClappingFill, PiHandsClappingLight } from "react-icons/pi";
 import { FaFilter, FaRegComment, FaRegEye } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -12,6 +12,8 @@ import {
   selectCategory,
   selectPublisher,
 } from "../../app/dataSlice";
+import moment from "moment";
+import useAuth from "../../hooks/useAuth";
 
 const Posts = () => {
   const [search, setSearch] = useState("");
@@ -22,6 +24,7 @@ const Posts = () => {
   const category = useSelector(selectCategory);
   const postUrl = `/posts?searchBy=${search}&sortBy=${sort}&filterBy=${filter}&authorId=${publisher.id}&categoryId=${category.id}&limit=${limit}`;
   const { data, isLoading, error } = useGetPostsQuery(postUrl);
+  const {id: userId} = useAuth()
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -92,7 +95,8 @@ const Posts = () => {
             <span className="text-sm italic">{val.author.username}</span>
           </div>
           <div className="flex justify-center items-start flex-col">
-            <span className="text-sm italic">{formattedDate}</span>
+            {/* <span className="text-sm italic">{formattedDate}</span> */}
+            <span className="text-sm italic">{moment(val.createdAt).fromNow()}</span>
           </div>
         </div>
 
@@ -126,9 +130,15 @@ const Posts = () => {
 
         {/* LIKES, COMMENTS, VIEWS */}
         <div onClick={viewPost} className="my-4 flex justify-start items-center gap-4 px-2">
-          <span className="flex justify-center items-center gap-1 text-sm">
-            <PiHandsClappingLight size={21} />
-            {val.likes}
+        <span className="flex justify-center items-center gap-1 text-sm"> 
+            {userId && val?.likedBy.includes(userId) ? (
+              <PiHandsClappingFill
+                size={21}
+              />
+            ) : <PiHandsClappingLight
+            size={21}
+          />}
+            {val?.likes}
           </span>
           <span className="flex justify-center items-center gap-1 text-sm">
             <FaRegComment size={20} />

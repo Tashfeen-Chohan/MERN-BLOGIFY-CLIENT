@@ -21,6 +21,7 @@ import SinglePost from "./features/post/SinglePost";
 import Posts from "./features/post/Posts";
 import UpdatePost from "./features/post/UpdatePost";
 import MyPosts from "./features/post/MyPosts";
+import Dashboard from "./components/Dashboard";
 
 const App = () => {
   return (
@@ -45,6 +46,9 @@ const App = () => {
         {/* AUTH ROURES */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
+        {/* DASHBOARD */}
+        <Route path="/dashboard" element={<Dashboard/>}/>
 
         {/* CATEGORIES ROUTES */}
         <Route path="/categories" element={<Categories/>} />

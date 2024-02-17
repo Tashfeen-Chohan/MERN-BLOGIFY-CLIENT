@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import { useGetPostsQuery } from './postApi'
 import useAuth from '../../hooks/useAuth'
 import { BeatLoader } from 'react-spinners'
-import { PiHandsClappingLight } from 'react-icons/pi'
+import { PiHandsClappingFill, PiHandsClappingLight } from 'react-icons/pi'
 import { FaRegComment, FaRegEye } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 import { MdSearch } from 'react-icons/md'
+import moment from 'moment'
 
 const MyPosts = () => {
 
@@ -72,7 +73,8 @@ const MyPosts = () => {
             <span className="text-sm italic">{val.author.username}</span>
           </div>
           <div className="flex justify-center items-start flex-col">
-            <span className="text-sm italic">{formattedDate}</span>
+            {/* <span className="text-sm italic">{formattedDate}</span> */}
+            <span className="text-sm italic">{moment(val.createdAt).fromNow()}</span>
           </div>
         </div>
         
@@ -100,9 +102,15 @@ const MyPosts = () => {
 
         {/* LIKES, COMMENTS, VIEWS */}
         <div onClick={viewPost} className="my-4 flex justify-start items-center gap-4 px-2">
-          <span className="flex justify-center items-center gap-1 text-sm">
-            <PiHandsClappingLight size={21} />
-            {val.likes}
+          <span className="flex justify-center items-center gap-1 text-sm"> 
+            {authorId && val?.likedBy.includes(authorId) ? (
+              <PiHandsClappingFill
+                size={21}
+              />
+            ) : <PiHandsClappingLight
+            size={21}
+          />}
+            {val?.likes}
           </span>
           <span className="flex justify-center items-center gap-1 text-sm">
             <FaRegComment size={20} />

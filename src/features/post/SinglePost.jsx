@@ -4,12 +4,10 @@ import {
   useGetPostsQuery,
   useGetSinglePostQuery,
   useLikePostMutation,
-  useUnlikePostMutation,
   useViewPostMutation,
 } from "./postApi";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetSingleUserQuery } from "../user/userApi";
-import { FaEdit, FaFacebook, FaRegComment, FaRegEye } from "react-icons/fa";
+import { FaEdit, FaRegComment, FaRegEye } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import useAuth from "../../hooks/useAuth";
 import { BeatLoader } from "react-spinners";
@@ -28,25 +26,24 @@ import {
   PinterestIcon,
   LinkedinIcon,
 } from "react-share";
-import Comment from "../comment/Comment"
+import Comment from "../comment/Comment";
+import moment from "moment";
 
 const SinglePost = () => {
   const { id } = useParams();
   const { data, isLoading } = useGetSinglePostQuery(id);
   const [deletePost] = useDeletePostMutation();
   const [likePost] = useLikePostMutation();
-  const [unlikePost] = useUnlikePostMutation();
   const [viewPost] = useViewPostMutation();
   const [limit, setLimit] = useState(3);
 
-  const {post, commentsCount} = data ?? {}
-  console.log(post)
+  const { post, commentsCount } = data ?? {};
 
   const { data: recentPosts } = useGetPostsQuery(
-    `/posts?authorId=${post?.author._id}&limit=${limit}`
+    `/posts?authorId=${post?.author._id}&sortBy=views&limit=${limit}`
   );
 
-  const { id: userId } = useAuth();
+  const { id: userId, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState(false);
   const [showButton, setShowButton] = useState(true);
@@ -57,8 +54,8 @@ const SinglePost = () => {
   useEffect(() => {
     const handleView = async () => {
       try {
-        if (!isLoading && data) {
-          await viewPost(data._id);
+        if (!isLoading && post) {
+          await viewPost(post._id);
         }
       } catch (error) {
         toast.error("Failed to view post");
@@ -145,16 +142,6 @@ const SinglePost = () => {
     }
   };
 
-  const handleUnlike = async (id) => {
-    try {
-      const res = await unlikePost(id);
-      toast.success(res.data.message);
-      setIsLiked(false);
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
-
   // const {posts} = recentPosts;
   const RecentPosts = recentPosts?.posts?.map((val) => {
     const date = new Date(val.createdAt);
@@ -202,7 +189,10 @@ const SinglePost = () => {
             <span className="text-sm italic">{val.author.username}</span>
           </div>
           <div className="flex justify-center items-start flex-col">
-            <span className="text-sm italic">{formattedDate}</span>
+            {/* <span className="text-sm italic">{formattedDate}</span> */}
+            <span className="text-sm italic">
+              {moment(val.createdAt).fromNow()}
+            </span>
           </div>
         </div>
 
@@ -232,7 +222,10 @@ const SinglePost = () => {
         </div>
 
         {/* LIKES, COMMENTS & VIEWS */}
-        <div onClick={viewPost} className="my-4 flex justify-start items-center gap-4 px-2 ">
+        <div
+          onClick={viewPost}
+          className="my-4 flex justify-start items-center gap-4 px-2 "
+        >
           <span className="flex justify-center items-center gap-1 text-sm">
             <PiHandsClappingLight size={21} />
             {val.likes}
@@ -249,8 +242,6 @@ const SinglePost = () => {
       </div>
     );
   });
-
-  
 
   return (
     <div className="flex justify-center items-center flex-col">
@@ -271,28 +262,32 @@ const SinglePost = () => {
               src={post?.author.profile}
               alt="Profile"
             />
-            <span className="italic font-semibold">{post?.author.username}</span>
+            <span className="italic font-semibold">
+              {post?.author.username}
+            </span>
           </div>
-          <span className="italic">{formattedDate}</span>
+          <span className="italic">{moment(post?.createdAt).fromNow()}</span>
         </div>
 
         {/* EDIT & DELETE */}
-        {userId === post?.author._id && (
-          <div className="flex justify-end items-center gap-3 mr-3">
+        <div className="flex justify-end items-center gap-3 mr-3">
+          {userId === post?.author._id && (
             <FaEdit
               onClick={() => navigate(`/posts/update/${post?._id}`)}
               size={25}
               color="orange"
               className="hover:scale-125 transition-all duration-300"
             />
+          )}
+          {(userId === post?.author._id || isAdmin) && (
             <MdDelete
               onClick={() => handleDelete(post?._id)}
               size={30}
               color="red"
               className="hover:scale-125 transition-all duration-300"
             />
-          </div>
-        )}
+          )}
+        </div>
 
         {/* CATEGORIES */}
         <div className="flex justify-center items-center gap-2 mt-3 md:mt-0">
@@ -314,23 +309,20 @@ const SinglePost = () => {
         <div
           className="px-2 md:px-7 post-content"
           dangerouslySetInnerHTML={{ __html: post?.content }}
-          
         />
 
         {/* LIKES, COMMENTS & VIEWS */}
         <div className="cursor-pointer my-4 flex justify-start items-center gap-4 px-2 md:px-7">
-          <span className="flex justify-center items-center gap-1 text-sm">
-            {isLiked ? (
+          <span className="flex justify-center items-center gap-1 text-sm"> 
+            {userId && post?.likedBy.includes(userId) ? (
               <PiHandsClappingFill
-                size={21}
-                onClick={() => handleUnlike(post._id)}
-              />
-            ) : (
-              <PiHandsClappingLight
                 size={21}
                 onClick={() => handleLike(post._id)}
               />
-            )}
+            ) : <PiHandsClappingLight
+            size={21}
+            onClick={() => handleLike(post._id)}
+          />}
             {post?.likes}
           </span>
           <span className="flex justify-center items-center gap-1 text-sm">
@@ -364,9 +356,8 @@ const SinglePost = () => {
         </div>
 
         {/* COMMENT SECTION */}
-        <Comment postId={post._id}/>
+        <Comment postId={post._id} />
       </div>
-
 
       {/* RECENT ARTICLES */}
       <div className="w-[95%] mx-auto md:max-w-5xl">

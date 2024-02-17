@@ -52,15 +52,6 @@ export const postApi = apiSlice.injectEndpoints({
       invalidatesTags: (result, error, arg) => [{ type: "Post", id: arg.id }],
     }),
 
-    // LIKE POST
-    unlikePost: builder.mutation({
-      query: (id) => ({
-        url: `/posts/${id}/unlike`,
-        method: "PATCH",
-      }),
-      invalidatesTags: (result, error, arg) => [{ type: "Post", id: arg.id }],
-    }),
-
     // VIEW POST
     viewPost: builder.mutation({
       query: (id) => ({
@@ -79,6 +70,5 @@ export const {
   useUpdatePostMutation,
   useDeletePostMutation,
   useLikePostMutation,
-  useUnlikePostMutation,
   useViewPostMutation
 } = postApi;

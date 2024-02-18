@@ -8,6 +8,11 @@ export const postApi = apiSlice.injectEndpoints({
       providesTags: (result, error, arg) => [{type: "Post", id: arg.id}]
     }),
 
+    // GET TOTAL LIKES AND VIEWS
+    getTotalLikesAndViews: builder.query({
+      query: (url) => url,
+    }),
+
     // GET SINGLE POST
     getSinglePost: builder.query({
       query: (id) => `/posts/${id}`,
@@ -66,6 +71,7 @@ export const postApi = apiSlice.injectEndpoints({
 export const {
   useGetPostsQuery,
   useGetSinglePostQuery,
+  useGetTotalLikesAndViewsQuery,
   useCreatePostMutation,
   useUpdatePostMutation,
   useDeletePostMutation,

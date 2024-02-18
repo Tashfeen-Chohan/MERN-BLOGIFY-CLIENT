@@ -46,7 +46,6 @@ const Posts = () => {
   };
 
   const { posts, totalPosts } = data ?? {};
-  console.log(posts)
 
   const Posts = posts?.map((val) => {
     const date = new Date(val.createdAt);

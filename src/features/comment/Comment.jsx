@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import moment from "moment";
 import { FaThumbsUp } from "react-icons/fa";
 import { BeatLoader } from "react-spinners";
+import Swal from "sweetalert2";
 
 const Comment = ({ postId }) => {
   const [sort, setSort] = useState("");
@@ -66,14 +67,50 @@ const Comment = ({ postId }) => {
 
   const handleDelete = async (id) => {
     try {
-      const res = await deleteComment(id);
-      if (res.error) {
-        toast.error(res.error.data.message);
-      } else {
-        toast.success(res.data.message);
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        showCancelButton: true,
+        confirmButtonText: "Delete",
+        width: "27rem",
+        customClass: {
+          title: "!font-bold",
+          confirmButton:
+            "!py-1 !px-4 !bg-red-600 !hover:bg-red-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+          cancelButton:
+            "!py-1 !px-4 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+        },
+      });
+
+      if (result.isConfirmed) {
+        const response = await deleteComment(id);
+        if (response.error) {
+          Swal.fire({
+            title: "Error!",
+            text: response.error.data.message,
+            width: "27rem",
+            customClass: {
+              title: "!text-red-500 !font-bold",
+              confirmButton:
+                "!py-1 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+            },
+          });
+        } else {
+          toast.success(response.data.message);
+        }
       }
     } catch (error) {
-      toast.error("Something went wrong!");
+      Swal.fire({
+        title: "Error!",
+        text: "An unexpected error occured on the server!",
+        width: "27rem",
+        customClass: {
+          title: "!text-red-500 !font-bold",
+          confirmButton:
+            "!py-1 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+        },
+      });
+      console.log("Error deleting category");
     }
   };
 

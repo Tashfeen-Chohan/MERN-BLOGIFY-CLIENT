@@ -26,8 +26,6 @@ const Dashboard = () => {
     useGetCategoriesQuery("/categories");
   const { data, isLoading: totalLoading } =
     useGetTotalLikesAndViewsQuery("/posts/likes-views");
-  const { data: allComments, allComLoading } =
-    useGetAllCommentsQuery("/comments");
 
   const [limit, setLimit] = useState(3);
   const [sort, setSort] = useState("");
@@ -81,7 +79,7 @@ const Dashboard = () => {
         >
           <LiaComments size={50} />
           <div className="flex justify-center items-center flex-col">
-            <p className="text-xl font-bold">{Comments?.length}</p>
+            <p className="text-xl font-bold">{Comments?.totalComments}</p>
             <p>Comments</p>
           </div>
         </div>
@@ -223,7 +221,7 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody className="font-semibold! text-sm">
-                  {allComments?.map((val, index) => (
+                  {Comments?.comments.map((val, index) => (
                     <tr
                       key={val._id}
                       className="userTable bg-white border-b hover:bg-gray-200"

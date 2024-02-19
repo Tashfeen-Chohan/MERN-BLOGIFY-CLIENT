@@ -22,6 +22,7 @@ import Posts from "./features/post/Posts";
 import UpdatePost from "./features/post/UpdatePost";
 import MyPosts from "./features/post/MyPosts";
 import Dashboard from "./components/Dashboard";
+import AllComments from "./features/comment/AllComments";
 
 const App = () => {
   return (
@@ -49,6 +50,7 @@ const App = () => {
 
         {/* DASHBOARD */}
         <Route path="/dashboard" element={<Dashboard/>}/>
+        <Route path="/all-comments" element={<AllComments/>}/>
 
         {/* CATEGORIES ROUTES */}
         <Route path="/categories" element={<Categories/>} />

@@ -9,6 +9,12 @@ export const categoryApi = apiSlice.injectEndpoints({
       providesTags: ["Category"]
     }),
 
+    // TOTAL CATEGORIES
+    totalCategories: builder.query({
+      query: () => "/categories/total-categories",
+      providesTags: ["Category"]
+    }),
+
     // GET SINGLE CATEGORY
     getSingleCategory: builder.query({
       query: (id) => `/categories/${id}`,
@@ -47,9 +53,10 @@ export const categoryApi = apiSlice.injectEndpoints({
 })
 
 export const {
-  useGetCategoriesQuery ,
+  useGetCategoriesQuery,
   useGetSingleCategoryQuery,
   useAddCategoryMutation,
   useUpdateCategoryMutation,
-  useDeleteCategoryMutation
+  useDeleteCategoryMutation,
+  useTotalCategoriesQuery
 } = categoryApi;

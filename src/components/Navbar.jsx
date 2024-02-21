@@ -56,7 +56,7 @@ const Navbar = ({ showSidebar, setShowSidebar }) => {
   };
 
   return (
-    <nav className="z-20 flex justify-between items-center bg-[#162B56] text-white py-3 px-5 md:px-20  shadow-md shadow-gray-800 fixed w-full">
+    <nav className="z-20 flex justify-between items-center bg-[#162B56] text-white py-3 px-5 md:pl-20 md:pr-7  shadow-md shadow-gray-800 fixed w-full">
       {/* LOGO */}
       <div className="flex gap-4 md:gap-8 items-center flex-row-reverse md:flex-row">
         <h2 className="text-2xl italic font-semibold font-sans">Blogify</h2>
@@ -95,6 +95,7 @@ const Navbar = ({ showSidebar, setShowSidebar }) => {
             />
             <span className="font-semibold font-serif">{username}</span>
             <FaCaretDown />
+            <button className="bg-white text-sm font-serif font-bold py-1 px-2 rounded shadow-xl text-blue-900" onClick={handleLogout}>Logout</button>
           </div>
           <div
             className={`absolute right-20 top-14 w-56 p-2 bg-primary border border-gray-500 rounded shadow-xl ${

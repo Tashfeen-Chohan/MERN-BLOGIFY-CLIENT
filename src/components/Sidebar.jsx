@@ -14,10 +14,14 @@ import Swal from "sweetalert2";
 import { RiArticleFill } from "react-icons/ri";
 import { FaFilePen } from "react-icons/fa6";
 
-const Sidebar = ({ showSidebar }) => {
+const Sidebar = ({ showSidebar, setShowSidebar }) => {
   const { isAdmin, isPublisher, username } = useAuth();
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
+  const closeSidebar = () => {
+    setShowSidebar(false)
+  }
 
   const handleLogout = async () => {
     try {
@@ -49,58 +53,58 @@ const Sidebar = ({ showSidebar }) => {
       } md:block bg-[#162B56] text-white w-64 h-screen transition-transform duration-700 ease-in-out`}
     >
       <ul className="pt-24 px-3">
-        <li className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
+        <Link to={"/"} onClick={closeSidebar} className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
           <IoHome size={20} />
-          <Link to={"/"}>Home</Link>
-        </li>
+          <span>Home</span>
+        </Link>
         {isAdmin && (
-          <li className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
+          <Link to={"/dashboard"} onClick={closeSidebar} className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
             <AiFillDashboard size={20} />
-            <Link to={"/dashboard"}>Dashboard</Link>
-          </li>
+            <span>Dashboard</span>
+          </Link>
         )}
         {isPublisher && (
-          <li className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
+          <Link to={"/posts/new"} onClick={closeSidebar} className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
             <FaFilePen size={20} />
-            <Link to={"/posts/new"}>Write</Link>
-          </li>
+            <span>Write</span>
+          </Link>
         )}
         {isPublisher && (
-          <li className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
+          <Link to={`/posts/${username}`} onClick={closeSidebar} className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
             <RiArticleFill size={20} />
-            <Link to={`/posts/${username}`}>My Posts</Link>
-          </li>
+            <span>My Posts</span>
+          </Link>
         )}
         {isAdmin && (
-          <li className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
+          <Link to={"/all-comments"} onCanPlay={closeSidebar} className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
             <FaComments size={20} />
-            <Link to={"/all-comments"}>Comments</Link>
-          </li>
+            <span>Comments</span>
+          </Link>
         )}
         {isAdmin && (
-          <li className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
+          <Link to={"/users"} onClick={closeSidebar} className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
             <FaUsers size={20} />
-            <Link to={"/users"}>Users</Link>
-          </li>
+            <span>Users</span>
+          </Link>
         )}
         {!isAdmin && (
-          <li className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
+          <Link to={"/users"} onClick={closeSidebar} className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
             <FaUsers size={20} />
-            <Link to={"/users"}>Publishers</Link>
-          </li>
+            <span>Publishers</span>
+          </Link>
         )}
-        <li className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
+        <Link to={"/categories"} onClick={closeSidebar} className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
           <BiSolidCategoryAlt size={20} />
-          <Link to={"/users"}>Categories</Link>
-        </li>
-        <li className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
+          <span>Categories</span>
+        </Link>
+        <Link to={"/profile"} onClick={closeSidebar} className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
           <AiFillSetting size={20} />
-          <Link to={"/profile"}>Settings</Link>
-        </li>
-        <li className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
+          <span>Settings</span>
+        </Link>
+        <span className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
           <LuLogOut size={20} />
           <span onClick={handleLogout}>Logout</span>
-        </li>
+        </span>
       </ul>
     </div>
   );

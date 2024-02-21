@@ -8,6 +8,7 @@ import { logout } from "../features/auth/authSlice";
 import Swal from "sweetalert2";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+import { HiDotsVertical } from "react-icons/hi";
 
 const Navbar = ({ showSidebar, setShowSidebar }) => {
   const { status, username, profile } = useAuth();
@@ -81,7 +82,7 @@ const Navbar = ({ showSidebar, setShowSidebar }) => {
           {status === "Admin" && <span className="ml-3">[ Admin Panel ]</span>}
         </div>
       )}
-      {/* PROFILE */}
+      {/* PROFILE - LAPTOP */}
       {status !== "" && (
         <div className="hidden md:block">
           <div
@@ -95,7 +96,12 @@ const Navbar = ({ showSidebar, setShowSidebar }) => {
             />
             <span className="font-semibold font-serif">{username}</span>
             <FaCaretDown />
-            <button className="bg-white text-sm font-serif font-bold py-1 px-2 rounded shadow-xl text-blue-900" onClick={handleLogout}>Logout</button>
+            <button
+              className="bg-white text-sm font-serif font-bold py-1 px-2 rounded shadow-xl text-blue-900"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
           </div>
           <div
             className={`absolute right-20 top-14 w-56 p-2 bg-primary border border-gray-500 rounded shadow-xl ${
@@ -126,7 +132,42 @@ const Navbar = ({ showSidebar, setShowSidebar }) => {
           </div>
         </div>
       )}
-      {/* NON - USER LAPTOP*/}
+
+      {/* PROFILE - MOBILE */}
+      {status !== "" && (
+        <div className="relative md:hidden ">
+          <HiDotsVertical className="bg-blue-800 p-1 rounded-sm"  onClick={toggleDropdown} size={28} />
+          <div
+            className={`absolute right-0 mt-3 w-48 p-2 bg-primary border border-gray-500 rounded shadow-xl ${
+              isDropdownOpen ? "block" : "hidden"
+            }`}
+          >
+            <ul>
+              <li
+                className="hover:bg-slate-700 w-full px-2 py-1 rounded transition-colors duration-300"
+                onClick={viewProfile}
+              >
+                Profile
+              </li>
+              <li
+                className="hover:bg-slate-700 w-full px-2 py-1 rounded transition-colors duration-300"
+                onClick={changePassword}
+              >
+                Change Password
+              </li>
+              <hr className="my-1" />
+              <li
+                className="hover:bg-slate-700 w-full px-2 py-1 rounded transition-colors duration-300"
+                onClick={handleLogout}
+              >
+                Logout
+              </li>
+            </ul>
+          </div>
+        </div>
+      )}
+
+      {/* NON - USER LAPTOP */}
       {status === "" && (
         <div className="hidden md:flex gap-5 text-xl font-serif">
           <Link
@@ -169,18 +210,20 @@ const Navbar = ({ showSidebar, setShowSidebar }) => {
       )}
 
       {/* NON - USER MOBILE */}
-      <div className="md:hidden flex items-center justify-center gap-3">
-        <Link to={"/register"}>
-          <button className="text-sm font-bold py-1 bg-white hover:bg-slate-200 transition-all duration-500 border px-2 rounded shadow-xl text-blue-800">
-            Sign up
-          </button>
-        </Link>
-        <Link to={"/login"}>
-          <button className="bg-transparent hover:bg-blue-900 hover:border hover:text-white transition-all duration-500 border text-sm font-bold py-1 px-3 rounded  shadow-xl">
-            Login
-          </button>
-        </Link>
-      </div>
+      {status === "" && (
+        <div className="md:hidden flex items-center justify-center gap-3">
+          <Link to={"/register"}>
+            <button className="text-sm font-bold py-1 bg-white hover:bg-slate-200 transition-all duration-500 border px-2 rounded shadow-xl text-blue-800">
+              Sign up
+            </button>
+          </Link>
+          <Link to={"/login"}>
+            <button className="bg-transparent hover:bg-blue-900 hover:border hover:text-white transition-all duration-500 border text-sm font-bold py-1 px-3 rounded  shadow-xl">
+              Login
+            </button>
+          </Link>
+        </div>
+      )}
     </nav>
   );
 };

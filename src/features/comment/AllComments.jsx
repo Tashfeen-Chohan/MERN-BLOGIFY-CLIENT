@@ -100,27 +100,27 @@ const AllComments = () => {
             "min-w-full border-collapse block md:table mt-3 mb-5 shadow-xl"
           }
         >
-          <thead className="block md:table-header-group bg-slate-300 text-black">
+          <thead className="block md:table-header-group bg-slate-700 text-white">
             <tr className="border border-grey-500 md:border-none block md:table-row absolute -top-full md:top-auto -left-full md:left-auto  md:relative ">
-              <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+              <th className="p-2 text-sm font-bold md:border md:border-grey-500 text-left block md:table-cell">
                 #
               </th>
-              <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+              <th className="p-2 text-sm font-bold md:border md:border-grey-500 text-left block md:table-cell">
                 Post
               </th>
-              <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+              <th className="text-sm p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
                 Username
               </th>
-              <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+              <th className="text-sm p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
                 Content
               </th>
-              <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+              <th className="text-sm p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
                 Likes
               </th>
-              <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+              <th className="text-sm p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
                 Date
               </th>
-              <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+              <th className="text-sm p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
                 Actions
               </th>
             </tr>

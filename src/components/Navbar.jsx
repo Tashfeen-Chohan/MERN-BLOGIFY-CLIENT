@@ -1,21 +1,187 @@
-import React from 'react'
+import React, { useState } from "react";
+import { GiHamburgerMenu } from "react-icons/gi";
+import useAuth from "../hooks/useAuth";
+import { FaCaretDown } from "react-icons/fa";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { logout } from "../features/auth/authSlice";
+import Swal from "sweetalert2";
+import { useDispatch } from "react-redux";
+import axios from "axios";
 
-const Navbar = ({showSidebar, setShowSidebar}) => {
+const Navbar = ({ showSidebar, setShowSidebar }) => {
+  const { status, username, profile } = useAuth();
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const location = useLocation();
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!isDropdownOpen);
+  };
+
+  const viewProfile = () => {
+    navigate("/profile");
+    setDropdownOpen(false);
+  };
+
+  const changePassword = () => {
+    setDropdownOpen(false);
+    navigate("/profile/change-password");
+  };
+
+  const handleLogout = async () => {
+    try {
+      setDropdownOpen(false);
+      const res = await axios.post("http://localhost:3000/auth/logout");
+      toast.success(res.data.message);
+      dispatch(logout());
+      navigate("/login");
+      // Clear the "jwt" cookie on the client side
+      document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    } catch (error) {
+      console.log(error.message);
+      Swal.fire({
+        title: "Error!",
+        text: "An unexpected error occured on the server!",
+        width: "27rem",
+        customClass: {
+          title: "!text-red-500 !font-bold",
+          confirmButton:
+            "!py-2 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+        },
+      });
+    }
+  };
 
   return (
-    <nav className='z-20 flex justify-between items-center bg-slate-800 text-white py-4 px-7 shadow-xl fixed w-full'>
-      <div className='flex gap-4 items-center flex-row-reverse md:flex-row'>
-        <h2>Blogify</h2>
-        <span className='hidden md:block text-2xl'>#</span>
-        <span className='md:hidden text-2xl' onClick={() => setShowSidebar(!showSidebar)}>=</span>
+    <nav className="z-20 flex justify-between items-center bg-[#162B56] text-white py-3 px-5 md:px-20  shadow-md shadow-gray-800 fixed w-full">
+      {/* LOGO */}
+      <div className="flex gap-4 md:gap-8 items-center flex-row-reverse md:flex-row">
+        <h2 className="text-2xl italic font-semibold font-sans">Blogify</h2>
+        <span className="hidden md:block text-2xl">
+          <GiHamburgerMenu />
+        </span>
+        <span
+          className="md:hidden text-2xl"
+          onClick={() => setShowSidebar(!showSidebar)}
+        >
+          <GiHamburgerMenu />
+        </span>
       </div>
-      <div className='flex gap-5'>
-        <span>Home</span>
-        <span>About</span>
-        <span>Contant</span>
+      {/* PANEL */}
+      {status !== "" && (
+        <div className="hidden md:block text-lg font-serif">
+          <span>Welcome to Blogify Platform</span>
+          {status === "User" && <span className="ml-3">[ User Panel ]</span>}
+          {status === "Publisher" && (
+            <span className="ml-3">[ Publisher Panel ]</span>
+          )}
+          {status === "Admin" && <span className="ml-3">[ Admin Panel ]</span>}
+        </div>
+      )}
+      {/* PROFILE */}
+      {status !== "" && (
+        <div className="hidden md:block">
+          <div
+            onClick={toggleDropdown}
+            className="cursor-pointer flex justify-center items-center gap-2"
+          >
+            <img
+              src={profile}
+              alt="Profile"
+              className="h-9 w-9 object-cover rounded-full"
+            />
+            <span className="font-semibold font-serif">{username}</span>
+            <FaCaretDown />
+          </div>
+          <div
+            className={`absolute right-20 top-14 w-56 p-2 bg-primary border border-gray-500 rounded shadow-xl ${
+              isDropdownOpen ? "block" : "hidden"
+            }`}
+          >
+            <ul className="flex justify- items-start flex-col">
+              <li
+                className="hover:bg-blue-800 w-full px-2 py-1 rounded transition-colors duration-300"
+                onClick={viewProfile}
+              >
+                Profile
+              </li>
+              <li
+                className="hover:bg-blue-800 w-full px-2 py-1 rounded transition-colors duration-300"
+                onClick={changePassword}
+              >
+                Change Password
+              </li>
+              <hr className="w-full my-1" />
+              <li
+                onClick={handleLogout}
+                className="hover:bg-blue-800 w-full px-2 py-1 rounded transition-colors duration-300"
+              >
+                Logout
+              </li>
+            </ul>
+          </div>
+        </div>
+      )}
+      {/* NON - USER LAPTOP*/}
+      {status === "" && (
+        <div className="hidden md:flex gap-5 text-xl font-serif">
+          <Link
+            to="/"
+            className={`${location.pathname === "/" ? "text-cyan-300" : ""}`}
+          >
+            Home
+          </Link>
+
+          <Link
+            to="/users"
+            className={`${
+              location.pathname === "/users" ? "text-cyan-300" : ""
+            }`}
+          >
+            Publishers
+          </Link>
+          <Link
+            to="/categories"
+            className={`${
+              location.pathname === "/categories" ? "text-cyan-300" : ""
+            }`}
+          >
+            Categories
+          </Link>
+
+          <div className="flex  items-center mt-5 md:mt-0 gap-3 md:ml-5 ">
+            <Link to={"/register"}>
+              <button className="text-sm font-bold py-1 bg-white hover:bg-slate-200 transition-all duration-500 border px-2 rounded shadow-xl text-blue-800">
+                Sign up
+              </button>
+            </Link>
+            <Link to={"/login"}>
+              <button className="bg-transparent hover:bg-blue-900 hover:border hover:text-white transition-all duration-500 border text-sm font-bold py-1 px-3 rounded  shadow-xl">
+                Login
+              </button>
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* NON - USER MOBILE */}
+      <div className="md:hidden flex items-center justify-center gap-3">
+        <Link to={"/register"}>
+          <button className="text-sm font-bold py-1 bg-white hover:bg-slate-200 transition-all duration-500 border px-2 rounded shadow-xl text-blue-800">
+            Sign up
+          </button>
+        </Link>
+        <Link to={"/login"}>
+          <button className="bg-transparent hover:bg-blue-900 hover:border hover:text-white transition-all duration-500 border text-sm font-bold py-1 px-3 rounded  shadow-xl">
+            Login
+          </button>
+        </Link>
       </div>
     </nav>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

@@ -142,7 +142,7 @@ const Categories = () => {
         {/* TABLE */}
         <div className="relative overflow-x-auto md:w-full shadow-md sm:rounded mb-5 mt-3 w-[100%]">
           <table className="w-full text-sm text-left rtl:text-right">
-            <thead className="text-md text-black uppercase bg-slate-300">
+            <thead className="text-md text-white uppercase bg-slate-700">
               <tr>
                 <th scope="col" className="px-6 py-3">
                   #

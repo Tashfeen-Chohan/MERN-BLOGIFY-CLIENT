@@ -11,7 +11,7 @@ const Layout = ({ children }) => {
       <div className="flex w-full">
         <Sidebar showSidebar={showSidebar} />
         <div className="flex flex-col w-full md:pl-64">
-          <div className="p-2 mt-14  overflow-y-auto">{children}</div>
+          <div className="mt-14  overflow-y-auto">{children}</div>
         </div>
       </div>
     </div>

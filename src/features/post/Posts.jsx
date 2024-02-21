@@ -156,7 +156,7 @@ const Posts = () => {
     <div className="flex justify-center items-center">
       <div>
         {/* HEADER */}
-        <div className="my-10 p-3 flex justify-center items-center flex-col mx-auto rounded-lg w-[95%] md:max-w-xl shadow-xl">
+        <div className="bg-slate-50 my-10 py-2 md:py-5 flex justify-center items-center flex-col mx-auto rounded-lg w-[95%] md:max-w-xl shadow-xl">
           <Link className="text-sm" to={"/register"}>
             Get started with <span className="font-bold italic">Blogify</span>
           </Link>
@@ -171,14 +171,14 @@ const Posts = () => {
               placeholder="Search any blog..."
               onChange={(e) => setSearch(e.target.value)}
             />
-            <button className="bg-slate-700 hover:bg-slate-800 transition-colors duration-300 text-white rounded py-1 px-3">
+            <button className="bg-blue-900 hover:bg-blue-700 transition-colors duration-300 text-white rounded py-1 px-3">
               Search
             </button>
           </div>
         </div>
         {/* FILTER && SORT */}
         <div className="w-[95%] mx-auto">
-          <span className="bg-slate-700 text-white px-3 py-1 rounded shadow-xl text-sm">
+          <span className="bg-blue-900 text-white px-3 py-1 rounded shadow-xl text-sm">
             {totalPosts} Posts
           </span>
           <div className="flex justify-between items-center mt-3">
@@ -251,7 +251,7 @@ const Posts = () => {
           <div className="my-5 flex justify-center items-center ">
             <button
               onClick={() => setLimit(limit + 6)}
-              className="py-1 px-3 rounded shadow-xl bg-slate-700 text-white hover:bg-slate-800 transition-colors duration-300"
+              className="py-1 px-3 rounded shadow-xl bg-blue-900 text-white hover:bg-blue-700 transition-colors duration-300"
             >
               See More
             </button>

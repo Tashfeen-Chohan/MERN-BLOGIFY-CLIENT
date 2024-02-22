@@ -94,7 +94,7 @@ const CreatePost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if ((title, content, categories.length > 0)) {
+    if (title && content && categories.length > 0 && img ) {
       try {
         const res = await createPost({
           author: id,

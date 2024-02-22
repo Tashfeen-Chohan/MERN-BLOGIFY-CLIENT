@@ -245,7 +245,7 @@ const SinglePost = () => {
 
   return (
     <div className="flex justify-center items-center flex-col">
-      <div className="w-[95%] my-5 rounded-t shadow-md  max-w-3xl pb-7">
+      <div className="w-[95%] my-5 rounded-t shadow  max-w-3xl pb-7">
         <img
           className="w-full rounded h-auto shadow-xl my-3"
           src={post?.blogImg}

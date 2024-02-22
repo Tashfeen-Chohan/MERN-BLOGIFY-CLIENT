@@ -16,6 +16,7 @@ import { MdOutlinePreview } from "react-icons/md";
 import { PiHandsClappingFill, PiHandsClappingLight } from "react-icons/pi";
 import moment from "moment";
 import { FaLongArrowAltUp, FaRegComment, FaRegEye } from "react-icons/fa";
+import { Bar } from "react-chartjs-2";
 
 const Dashboard = () => {
   const [limit, setLimit] = useState(3);
@@ -56,8 +57,8 @@ const Dashboard = () => {
             setLastMonth(false);
           }}
           className={`${
-            lastWeek ? "bg-cyan-500 shadow-xl  text-white" : "bg-transparent"
-          }  py-1 px-3 rounded-l border border-cyan-500`}
+            lastWeek ? "bg-blue-900 shadow-xl  text-white" : "bg-transparent"
+          }  py-1 px-3 rounded-l border border-blue-900`}
         >
           Last Week
         </button>
@@ -67,8 +68,8 @@ const Dashboard = () => {
             setLastMonth(true);
           }}
           className={`${
-            lastMonth ? "bg-cyan-500 shadow-xl  text-white" : "bg-transparent"
-          }  py-1 px-3 rounded-r  border border-cyan-500`}
+            lastMonth ? "bg-blue-900 shadow-xl  text-white" : "bg-transparent"
+          }  py-1 px-3 rounded-r  border border-blue-900`}
         >
           Last Month
         </button>
@@ -309,7 +310,7 @@ const Dashboard = () => {
                 onClick={() => setLimit(limit + 3)}
                 className="flex justify-center items-center mt-3"
               >
-                <button className="hover:bg-cyan-400 transition-colors duration-300 bg-cyan-500 text-white py-1 px-3 rounded shadow-xl">
+                <button className="hover:bg-blue-900 transition-colors duration-300 bg-blue-800 text-white py-1 px-3 rounded shadow-xl">
                   See More
                 </button>
               </div>
@@ -323,7 +324,7 @@ const Dashboard = () => {
             <h2 className="text-lg font-bold font-serif">Recent Comments</h2>
             <button
               onClick={() => navigate("/all-comments")}
-              className="bg-cyan-500 text-white hover:bg-cyan-400 transition-colors duration-300 py-1 px-3 rounded shadow-xl"
+              className="bg-blue-900 text-white hover:bg-blue-800 transition-colors duration-300 py-1 px-3 rounded shadow-xl"
             >
               See All
             </button>

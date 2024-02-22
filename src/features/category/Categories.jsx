@@ -100,7 +100,7 @@ const Categories = () => {
               setPageNo(1);
             }}
           />
-          <button className="bg-slate-800 text-white rounded py-1 px-3 shadow-xl hover:bg-slate-700 transition-colors duration-500">
+          <button className="bg-blue-900 text-white rounded py-1 px-3 shadow-xl hover:bg-blue-800 transition-colors duration-500">
             Search
           </button>
         </div>
@@ -109,7 +109,7 @@ const Categories = () => {
       <div className="flex justify-center items-center flex-col w-[90%] md:max-w-3xl mx-auto">
         {/* Add Category Container */}
         <div className="flex justify-between items-center w-full md:w-full mb-3 md:mb-0">
-          <span className="bg-slate-800 transition-colors duration-500 hover:bg-slate-700 py-1 px-3 md:px-4 text-white rounded shadow-xl">
+          <span className="bg-blue-900 transition-colors duration-500 hover:bg-blue-800 py-1 px-3 md:px-4 text-white rounded shadow-xl">
             Total : {totalCategories}
           </span>
           {status === "Admin" || status === "Publisher" ? (
@@ -142,7 +142,7 @@ const Categories = () => {
         {/* TABLE */}
         <div className="relative overflow-x-auto md:w-full shadow-md sm:rounded mb-5 mt-3 w-[100%]">
           <table className="w-full text-sm text-left rtl:text-right">
-            <thead className="text-md text-white uppercase bg-slate-700">
+            <thead className="text-md text-black uppercase bg-slate-300">
               <tr>
                 <th scope="col" className="px-6 py-3">
                   #

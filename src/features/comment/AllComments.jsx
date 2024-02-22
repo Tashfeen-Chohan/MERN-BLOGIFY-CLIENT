@@ -76,7 +76,7 @@ const AllComments = () => {
     <div>
       <div className="w-[95%] md:max-w-5xl mx-auto">
         {/* TABLE */}
-        <div className="flex justify-center items-center my-5 md:mb-0">
+        <div className="flex justify-center items-center my-8 md:mb-0">
           <h2 className="text-xl md:text-2xl font-serif font-bold">
             All Comments
           </h2>

@@ -11,6 +11,7 @@ export const postApi = apiSlice.injectEndpoints({
     // GET TOTAL LIKES AND VIEWS
     getTotalLikesAndViews: builder.query({
       query: (url) => url,
+      providesTags: ["Post"]
     }),
 
     // GET SINGLE POST

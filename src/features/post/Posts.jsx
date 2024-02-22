@@ -156,7 +156,7 @@ const Posts = () => {
     <div className="flex justify-center items-center">
       <div>
         {/* HEADER */}
-        <div className="bg-slate-50 my-10 py-2 md:py-5 flex justify-center items-center flex-col mx-auto rounded-lg w-[95%] md:max-w-xl shadow-xl">
+        <div className="bg-slate-50 shadow-md my-10 py-2 md:py-4 flex justify-center items-center flex-col mx-auto rounded-lg w-[95%] md:max-w-xl ">
           <Link className="text-sm" to={"/register"}>
             Get started with <span className="font-bold italic">Blogify</span>
           </Link>
@@ -166,7 +166,7 @@ const Posts = () => {
           <div className="flex md:w-full justify-center items-center gap-3 mt-2 rounded-lg py-2 px-3">
             <MdSearch color="gray" size={22} />
             <input
-              className="md:w-[60%] py-1 px-2 outline-none border-b-2 focus-within:border-black"
+              className="md:w-[60%] py-1 px-2 outline-none border-b border-black focus-within:border-b-2"
               type="text"
               placeholder="Search any blog..."
               onChange={(e) => setSearch(e.target.value)}
@@ -178,9 +178,6 @@ const Posts = () => {
         </div>
         {/* FILTER && SORT */}
         <div className="w-[95%] mx-auto">
-          <span className="bg-blue-900 text-white px-3 py-1 rounded shadow-xl text-sm">
-            {totalPosts} Posts
-          </span>
           <div className="flex justify-between items-center mt-3">
             <select
               onChange={(e) => setFilter(e.target.value)}

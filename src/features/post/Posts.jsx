@@ -59,7 +59,7 @@ const Posts = () => {
 
     return (
       <div
-        className=" col-span-12 md:col-span-4 shadow-lg rounded hover:scale-105 transition-transform duration-300"
+        className="col-span-12 md:col-span-4 shadow-lg rounded hover:scale-105 transition-transform duration-300"
         key={val._id}
       >
         {/* BLOG COVER IMG */}

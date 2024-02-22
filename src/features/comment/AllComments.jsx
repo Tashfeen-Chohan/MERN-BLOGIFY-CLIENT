@@ -83,12 +83,12 @@ const AllComments = () => {
         </div>
         {/* SORTING */}
         <div className="flex justify-between items-center">
-          <span className="bg-slate-700 text-sm text-white py-1 px-3 rounded shadow-xl">
+          <span className="bg-blue-900 text-sm text-white py-1 px-3 rounded shadow-xl">
             Total : {totalComments}
           </span>
           <select
             onChange={(e) => setSort(e.target.value)}
-            className="outline-none py-1 px-2 border-b-2 border-slate-700"
+            className="outline-none py-1 px-2 bg-slate-200 text-black rounded shadow-md"
           >
             <option value="">Recent</option>
             <option value="oldest">Oldest</option>
@@ -100,7 +100,7 @@ const AllComments = () => {
             "min-w-full border-collapse block md:table mt-3 mb-5 shadow-xl"
           }
         >
-          <thead className="block md:table-header-group bg-slate-700 text-white">
+          <thead className="block md:table-header-group bg-slate-300 text-black">
             <tr className="border border-grey-500 md:border-none block md:table-row absolute -top-full md:top-auto -left-full md:left-auto  md:relative ">
               <th className="p-2 text-sm font-bold md:border md:border-grey-500 text-left block md:table-cell">
                 #
@@ -125,13 +125,13 @@ const AllComments = () => {
               </th>
             </tr>
           </thead>
-          <tbody className="block md:table-row-group font-semibold! text-sm md:text-xs">
+          <tbody className="block md:table-row-group text-sm md:text-xs">
             {comments?.map((val, index) => (
               <tr
                 key={val._id}
                 className="userTable my-3 rounded shadow-md md:shadow-none border border-grey-500 md:border-none block md:table-row hover:bg-gray-200"
               >
-                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                <td className="p-1 md:border md:border-grey-500 text-left block md:table-cell">
                   <span className="inline-block w-1/3 md:hidden font-bold">
                     #
                   </span>
@@ -167,13 +167,13 @@ const AllComments = () => {
                   </span>
                   {moment(val.createdAt).fromNow()}
                 </td>
-                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                <td className="p-1 md:border md:border-grey-500 text-left block md:table-cell">
                   <span className="inline-block w-1/3 md:hidden font-bold">
                     Actions
                   </span>
                   <button
                     onClick={() => navigate(`/posts/single/${val.postId._id}`)}
-                    className="mr-2"
+                    className="mr-1"
                   >
                     <MdOutlinePreview className="hover:scale-125 transition-all duration-300" size={25} color="blue" />
                   </button>

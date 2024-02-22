@@ -8,6 +8,11 @@ export const userApi = apiSlice.injectEndpoints({
       query: (url) => url,
       providesTags: ["User"]
     }),
+    // TOTAL USERS
+    totalUsers: builder.query({
+      query: () => "/users/total-users",
+      providesTags: ["User"]
+    }),
     // GET SINGLE USER
     getSingleUser: builder.query({
       query: (id) => `/users/${id}`,
@@ -56,5 +61,6 @@ export const {
   useAddUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
-  useChangePasswordMutation
+  useChangePasswordMutation,
+  useTotalUsersQuery
 } = userApi

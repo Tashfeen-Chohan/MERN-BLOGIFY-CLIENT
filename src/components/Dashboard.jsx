@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useGetUsersQuery } from "../features/user/userApi";
+import { useTotalUsersQuery } from "../features/user/userApi";
 import { TbUsersGroup } from "react-icons/tb";
 import { RiArticleLine } from "react-icons/ri";
 import {
@@ -22,7 +22,7 @@ const Dashboard = () => {
   const [sort, setSort] = useState("");
   let url = `posts?filterBy=popular&sortBy=${sort}&limit=${limit}`;
 
-  const { data: Users, isLoading } = useGetUsersQuery("/users");
+  const { data: Users, isLoading } = useTotalUsersQuery();
   const { data: Posts, isLoading: postLoading } = useGetPostsQuery(url);
   const { data: Comments, isLoading: comLoading } =
     useGetAllCommentsQuery("/comments");
@@ -30,6 +30,8 @@ const Dashboard = () => {
   const { data, isLoading: totalLoading } =
     useGetTotalLikesAndViewsQuery("/posts/likes-views");
 
+  const [lastWeek, setLastWeek] = useState(true);
+  const [lastMonth, setLastMonth] = useState(false);
   const navigate = useNavigate();
 
   if (isLoading || postLoading || comLoading || catLoading || totalLoading)
@@ -46,24 +48,60 @@ const Dashboard = () => {
 
   return (
     <div>
+      {/* LAST WEEK & MONT */}
+      <div className="w-[95%] md:max-w-5xl flex justify-center items-center mt-7">
+        <button
+          onClick={() => {
+            setLastWeek(true);
+            setLastMonth(false);
+          }}
+          className={`${
+            lastWeek ? "bg-cyan-500 shadow-xl  text-white" : "bg-transparent"
+          }  py-1 px-3 rounded-l border border-cyan-500`}
+        >
+          Last Week
+        </button>
+        <button
+          onClick={() => {
+            setLastWeek(false);
+            setLastMonth(true);
+          }}
+          className={`${
+            lastMonth ? "bg-cyan-500 shadow-xl  text-white" : "bg-transparent"
+          }  py-1 px-3 rounded-r  border border-cyan-500`}
+        >
+          Last Month
+        </button>
+      </div>
       {/* STATS */}
-      <div className="w-[95%] md:max-w-3xl mx-auto grid grid-cols-12 gap-3 md:gap-4 mt-10">
+      <div
+        className={`w-[95%] md:max-w-3xl mx-auto grid grid-cols-12 gap-3 md:gap-4 mt-7`}
+      >
         {/* USERS */}
         <div
           onClick={() => navigate("/users")}
-          className="px-3 bg-gray-800 text-gray-100 hover:scale-110 hover:bg-gray-900 transition-all duration-300 col-span-6 md:col-span-4 py-3 shadow-xl rounded  "
+          className={`px-3 bg-gray-800 text-gray-100 hover:scale-110 hover:bg-gray-900 transition-all duration-300 col-span-6 md:col-span-4 py-3 shadow-xl rounded  `}
         >
           <div className="flex justify-between items-start">
             <div className="flex justify-center items-start flex-col">
               <p>Users</p>
-              <p className="text-xl font-bold">{Users?.totalUsers}</p>
+              <p className="text-xl font-bold">{Users?.total}</p>
             </div>
             <TbUsersGroup size={50} className="text-violet-500" />
           </div>
           <div className="text-sm flex justify-start items-center ml-[-3px] mt-1">
             <FaLongArrowAltUp className="text-green-400" />
-            <span>{Posts?.lastWeekPosts}</span>
-            <span className="ml-1">Last Week</span>
+            {lastWeek ? (
+              <>
+                <span>{Users?.lastWeek}</span>
+                <span className="ml-1">Last Week</span>
+              </>
+            ) : (
+              <>
+                <span>{Users?.lastMonth}</span>
+                <span className="ml-1">Last Week</span>
+              </>
+            )}
           </div>
         </div>
         {/* POSTS */}
@@ -80,8 +118,17 @@ const Dashboard = () => {
           </div>
           <div className="flex justify-start items-center ml-[-3px] mt-1">
             <FaLongArrowAltUp className="text-green-400" />
-            <span>{Posts?.lastWeekPosts}</span>
-            <span className="ml-1">Last Week</span>
+            {lastWeek ? (
+              <>
+                <span>{Posts?.lastWeekPosts}</span>
+                <span className="ml-1">Last Week</span>
+              </>
+            ) : (
+              <>
+                <span>{Posts?.lastMonthPosts}</span>
+                <span className="ml-1">Last Week</span>
+              </>
+            )}
           </div>
         </div>
         {/* COMMENTS */}
@@ -98,8 +145,17 @@ const Dashboard = () => {
           </div>
           <div className="flex justify-start items-center ml-[-3px] mt-1">
             <FaLongArrowAltUp className="text-green-400" />
-            <span>{Posts?.lastWeekPosts}</span>
-            <span className="ml-1">Last Week</span>
+            {lastWeek ? (
+              <>
+                <span>{Comments?.lastWeek}</span>
+                <span className="ml-1">Last Week</span>
+              </>
+            ) : (
+              <>
+                <span>{Comments?.lastMonth}</span>
+                <span className="ml-1">Last Week</span>
+              </>
+            )}
           </div>
         </div>
         {/* CATEGORIES */}
@@ -116,14 +172,21 @@ const Dashboard = () => {
           </div>
           <div className="flex justify-start items-center ml-[-3px] mt-1">
             <FaLongArrowAltUp className="text-green-400" />
-            <span>{Categories?.lastWeek}</span>
-            <span className="ml-1">Last Week</span>
+            {lastWeek ? (
+              <>
+                <span>{Categories?.lastWeek}</span>
+                <span className="ml-1">Last Week</span>
+              </>
+            ) : (
+              <>
+                <span>{Categories?.lastMonth}</span>
+                <span className="ml-1">Last Week</span>
+              </>
+            )}
           </div>
         </div>
         {/* VIEWS */}
-        <div
-          className="text-sm px-3 bg-gray-800 text-gray-100 hover:scale-110 hover:bg-gray-900 transition-all duration-300 col-span-6 md:col-span-4 py-3 shadow-xl rounded"
-        >
+        <div className="text-sm px-3 bg-gray-800 text-gray-100 hover:scale-110 hover:bg-gray-900 transition-all duration-300 col-span-6 md:col-span-4 py-3 shadow-xl rounded">
           <div className="flex justify-between items-start">
             <div className="flex justify-center items-start flex-col">
               <p>Views</p>
@@ -133,14 +196,21 @@ const Dashboard = () => {
           </div>
           <div className="flex justify-start items-center ml-[-3px] mt-1">
             <FaLongArrowAltUp className="text-green-400" />
-            <span>{Posts?.lastWeekPosts}</span>
-            <span className="ml-1">Last Week</span>
+            {lastWeek ? (
+              <>
+                <span>{data?.lastWeekViews}</span>
+                <span className="ml-1">Last Week</span>
+              </>
+            ) : (
+              <>
+                <span>{data?.lastMonthViews}</span>
+                <span className="ml-1">Last Week</span>
+              </>
+            )}
           </div>
         </div>
         {/* LIKES */}
-        <div
-          className="text-sm px-3 bg-gray-800 text-gray-100 hover:scale-110 hover:bg-gray-900 transition-all duration-300 col-span-6 md:col-span-4 py-3 shadow-xl rounded"
-        >
+        <div className="text-sm px-3 bg-gray-800 text-gray-100 hover:scale-110 hover:bg-gray-900 transition-all duration-300 col-span-6 md:col-span-4 py-3 shadow-xl rounded">
           <div className="flex justify-between items-start">
             <div className="flex justify-center items-start flex-col">
               <p>Likes</p>
@@ -150,8 +220,17 @@ const Dashboard = () => {
           </div>
           <div className="flex justify-start items-center ml-[-3px] mt-1">
             <FaLongArrowAltUp className="text-green-400" />
-            <span>{Posts?.lastWeekPosts}</span>
-            <span className="ml-1">Last Week</span>
+            {lastWeek ? (
+              <>
+                <span>{data?.lastWeekLikes}</span>
+                <span className="ml-1">Last Week</span>
+              </>
+            ) : (
+              <>
+                <span>{data?.lastMonthLikes}</span>
+                <span className="ml-1">Last Week</span>
+              </>
+            )}
           </div>
         </div>
       </div>

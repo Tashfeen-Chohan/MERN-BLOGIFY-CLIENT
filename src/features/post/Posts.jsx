@@ -211,7 +211,7 @@ const Posts = () => {
               {publisher.name && (
                 <span
                   onClick={removePublisherFilter}
-                  className="bg-sky-500 hover:bg-sky-600 transition-colors duration-300 text-gray-200  py-0.5 px-3 rounded-full "
+                  className="bg-blue-900 hover:bg-blue-800 transition-colors duration-300 text-gray-200  py-0.5 px-3 rounded-full "
                 >
                   <span className="text-xs">{publisher.name}</span>
                   <span className="text-md ml-2 font-bold">x</span>
@@ -220,7 +220,7 @@ const Posts = () => {
               {category.name && (
                 <span
                   onClick={removeCategoryFilter}
-                  className="bg-sky-500 hover:bg-sky-600 transition-colors duration-300 text-gray-200 py-0.5 px-3 rounded-full "
+                  className="bg-blue-900 hover:bg-blue-800 transition-colors duration-300 text-gray-200 py-0.5 px-3 rounded-full "
                 >
                   <span className="text-xs">{category.name}</span>
                   <span className="text-md ml-2 font-bold">x</span>

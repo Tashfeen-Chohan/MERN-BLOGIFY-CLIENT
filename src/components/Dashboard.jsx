@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTotalUsersQuery } from "../features/user/userApi";
 import { TbUsersGroup } from "react-icons/tb";
 import { RiArticleLine } from "react-icons/ri";
@@ -17,6 +17,19 @@ import { PiHandsClappingFill, PiHandsClappingLight } from "react-icons/pi";
 import moment from "moment";
 import { FaLongArrowAltUp, FaRegComment, FaRegEye } from "react-icons/fa";
 import { Bar } from "react-chartjs-2";
+import { Chart as ChartJS } from "chart.js/auto";
+
+// import {
+//   Bar,
+//   BarChart,
+//   CartesianGrid,
+//   Legend,
+//   Rectangle,
+//   ResponsiveContainer,
+//   Tooltip,
+//   XAxis,
+//   YAxis,
+// } from "recharts";
 
 const Dashboard = () => {
   const [limit, setLimit] = useState(3);
@@ -34,6 +47,60 @@ const Dashboard = () => {
   const [lastWeek, setLastWeek] = useState(true);
   const [lastMonth, setLastMonth] = useState(false);
   const navigate = useNavigate();
+
+  const dashboardData = [
+    {
+      name: "Users",
+      value: Users?.total,
+    },
+    {
+      name: "Posts",
+      value: Posts?.allPosts,
+    },
+    {
+      name: "Categories",
+      value: Categories?.total,
+    },
+    {
+      name: "Comments",
+      value: Comments?.totalComments,
+    },
+  ];
+
+  // const [chartData, setChartData] = useState({})
+  // useEffect(() => {
+  //   if (Users && Posts && Categories && Comments) {
+  //     const newChartData = {
+  //       labels: ["Users", "Posts", "Comments", "Categories"],
+  //       datasets: [
+  //         {
+  //           label: "Overview",
+  //           data: [Users.total, Posts.allPosts, Categories.total, Comments.totalComments],
+  //           backgroundColor: ["red", "black", "blue", "orange"],
+  //         },
+  //       ],
+  //     };
+  //     setChartData(newChartData);
+  //   }
+  // }, [Users, Posts, Categories, Comments]);
+
+  const [chartData, setChartData] = useState({
+    // labels: dashboardData.map((data) => data.name),
+    labels: ["Users", "Posts", "Comments", "Categories"],
+    datasets: [
+      {
+        label: "Overview",
+        data: dashboardData?.map((data) => data?.value),
+        // data: [
+        //   Users?.total,
+        //   Posts?.allPosts,
+        //   Categories?.total,
+        //   Comments?.totalComments,
+        // ],
+        backgroundColor: ["red", "black", "blue", "orange"],
+      },
+    ],
+  });
 
   if (isLoading || postLoading || comLoading || catLoading || totalLoading)
     return (
@@ -234,6 +301,19 @@ const Dashboard = () => {
             )}
           </div>
         </div>
+      </div>
+
+      {/* CHARTS */}
+      <div className="w-[95%] mx-auto md:max-w-3xl mt-10">
+        <Bar data={chartData} />
+
+        {/* <BarChart width={500} height={300} data={dashboardData}>
+          <CartesianGrid strokeDasharray="1 1" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Bar dataKey="value" fill="orange" activeBar={<Rectangle fill="red" stroke="blue" />}/>
+        </BarChart> */}
       </div>
 
       {/* TOP ARTICLE & RECENT COMMENT*/}

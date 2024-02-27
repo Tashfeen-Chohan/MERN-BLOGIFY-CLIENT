@@ -150,7 +150,7 @@ const SinglePost = () => {
 
     const viewPost = () => {
       navigate(`/posts/single/${val._id}`);
-      window.scrollTo(0, 0);
+      window.scrollTo(0, 10);
     };
 
     return (
@@ -245,7 +245,7 @@ const SinglePost = () => {
 
   return (
     <div className="flex justify-center items-center flex-col">
-      <div className="w-[95%] my-5 rounded-t shadow  max-w-3xl pb-7">
+      <div className="w-[95%] my-5 rounded-t shadow  max-w-4xl pb-7">
         <img
           className="w-full rounded h-auto shadow-xl my-3"
           src={post?.blogImg}
@@ -307,12 +307,12 @@ const SinglePost = () => {
         </h1>
 
         <div
-          className="px-2 md:px-7 post-content"
+          className="px-2 md:px-20 post-content"
           dangerouslySetInnerHTML={{ __html: post?.content }}
         />
 
         {/* LIKES, COMMENTS & VIEWS */}
-        <div className="cursor-pointer my-4 flex justify-start items-center gap-4 px-2 md:px-7">
+        <div className="cursor-pointer my-4 flex justify-start items-center gap-4 px-2 md:px-20">
           <span className="flex justify-center items-center gap-1 text-sm"> 
             {userId && post?.likedBy.includes(userId) ? (
               <PiHandsClappingFill
@@ -336,7 +336,7 @@ const SinglePost = () => {
         </div>
 
         {/* SOCIAL SHARE */}
-        <div className="flex justify-end items-center px-5 md:px-7 gap-2">
+        <div className="flex justify-end items-center px-5 md:px-20 gap-2">
           {/* Facebook Share Button */}
           <FacebookShareButton url={postURL} title={post?.title}>
             <FacebookIcon size={30} round />

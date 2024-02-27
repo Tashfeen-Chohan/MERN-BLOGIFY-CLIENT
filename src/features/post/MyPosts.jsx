@@ -139,12 +139,12 @@ const MyPosts = () => {
           <div className="flex md:w-full justify-center items-center gap-3 mt-2 rounded-lg py-2 px-3">
             <MdSearch color="gray" size={22} />
             <input
-              className="md:w-[60%] py-1 px-2 outline-none border-b-2 focus-within:border-black"
+              className="md:w-[60%] py-1 px-2 outline-none border-b border-black focus-within:border-b-2"
               type="text"
               placeholder="Search any blog..."
               onChange={(e) => setSearch(e.target.value)}
             />
-            <button className="bg-slate-700 hover:bg-slate-800 transition-colors duration-300 text-white rounded py-1 px-3">
+            <button className="bg-blue-900 hover:bg-blue-800 transition-colors duration-300 text-white rounded py-1 px-3">
               Search
             </button>
           </div>

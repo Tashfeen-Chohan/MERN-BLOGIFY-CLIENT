@@ -102,9 +102,9 @@ const Sidebar = ({ showSidebar, setShowSidebar }) => {
           <AiFillSetting size={20} />
           <span>Settings</span>
         </Link>
-        <span className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
+        <span onClick={handleLogout} className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
           <LuLogOut size={20} />
-          <span onClick={handleLogout}>Logout</span>
+          <span>Logout</span>
         </span>
       </ul>
     </div>

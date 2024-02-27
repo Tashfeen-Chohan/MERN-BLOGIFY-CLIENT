@@ -13,6 +13,7 @@ import { HiDotsVertical } from "react-icons/hi";
 const Navbar = ({ showSidebar, setShowSidebar }) => {
   const { status, username, profile } = useAuth();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  console.log(isDropdownOpen)
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -23,8 +24,8 @@ const Navbar = ({ showSidebar, setShowSidebar }) => {
   };
 
   const viewProfile = () => {
-    navigate("/profile");
     setDropdownOpen(false);
+    navigate("/profile");
   };
 
   const changePassword = () => {

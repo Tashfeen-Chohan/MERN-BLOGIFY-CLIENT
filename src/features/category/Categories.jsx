@@ -91,7 +91,7 @@ const Categories = () => {
         </h1>
         <div className="flex justify-center items-center gap-4 w-full px-4 md:pb-2">
           <input
-            className="shadow-lg border-b-2 border-slate-400 px-2 w-[75%] py-[2px] md:w-[50%]  outline-none focus:border-b-2 focus:border-black"
+            className="shadow-lg border-b-2 border-slate-600 px-2 w-[75%] py-[2px] md:w-[50%]  outline-none focus:border-b-2 focus:border-black"
             type="text"
             placeholder="Search any category..."
             value={searchBy}
@@ -132,8 +132,8 @@ const Categories = () => {
             <option className="font-bold" value="">
               Sort by Default
             </option>
-            <option value="name">Name Asc</option>
-            <option value="name desc">Name Desc</option>
+            <option value="name">A to Z &#8595;</option>
+            <option value="name desc">Z to A &#8593;</option>
             <option value="date desc">Newest</option>
             <option value="date">Oldest</option>
           </select>

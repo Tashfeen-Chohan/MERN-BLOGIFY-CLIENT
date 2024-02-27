@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useGetCategoriesQuery } from "../category/categoryApi";
 import Select from "react-select";
 import { toast } from "react-toastify";
-import { useCreatePostMutation, useGetSinglePostQuery, useUpdatePostMutation } from "./postApi";
+import { useGetSinglePostQuery, useUpdatePostMutation } from "./postApi";
 import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
 import {
@@ -37,6 +37,7 @@ const UpdatePost = () => {
   const catUrl = `categories?sortBy=name&limit=1000`;
   const { data } = useGetCategoriesQuery(catUrl);
   const {data: singlePost} = useGetSinglePostQuery(postId)
+  console.log(singlePost)
   const [updatePost] = useUpdatePostMutation()
 
   const [title, setTitle] = useState("");
@@ -51,33 +52,32 @@ const UpdatePost = () => {
 
   useEffect(() => {
     if (singlePost){
-      setTitle(singlePost.title)
-      setContent(singlePost.content)
-      setImg(singlePost.blogImg)
+      setTitle(singlePost.post.title)
+      setContent(singlePost.post.content)
+      setImg(singlePost.post.blogImg)
       // const selectedOptions = singlePost.categories.map((val) => ({
       //   value: val._id,
       //   // label: val.name
       // }))
-      setSelectedCategories(singlePost.categories)
+      setSelectedCategories(singlePost.post.categories)
     }
-  }, [singlePost])
+  }, [singlePost, postId])
 
-  console.log(singlePost)
-  console.log("sc: ", selectedCategories)
-  console.log("c: ", categories)
+  console.log(title)
+  console.log(content)
 
-  const options = data?.capitalized.map((val) => ({
-    value: val._id,
-    label: val.name,
-  }));
+  // const options = data?.capitalized.map((val) => ({
+  //   value: val._id,
+  //   label: val.name,
+  // }));
 
-  const handleCategoryChange = (selectedOptions) => {
-    setSelectedCategories(selectedOptions);
-    // Extracting only the 'value' (which is assumed to be 'id') and storing in the array
-    setCategories(
-      selectedOptions ? selectedOptions.map((option) => option.value) : []
-    );
-  };
+  // const handleCategoryChange = (selectedOptions) => {
+  //   setSelectedCategories(selectedOptions);
+  //   // Extracting only the 'value' (which is assumed to be 'id') and storing in the array
+  //   setCategories(
+  //     selectedOptions ? selectedOptions.map((option) => option.value) : []
+  //   );
+  // };
 
   const uploadFile = (file) => {
     const storage = getStorage(app);
@@ -213,9 +213,9 @@ const UpdatePost = () => {
           <div className="flex gap-2 md:gap-5 justify-start  items-center flex-col md:flex-row">
             <Select
               className="w-full md:w-[50%] shadow-md"
-              defaultValue={selectedCategories._id}
+              // defaultValue={selectedCategories._id}
               // onChange={handleCategoryChange}
-              options={options}
+              // options={options}
               isMulti
               isSearchable
               placeholder="Select categories"
@@ -234,7 +234,7 @@ const UpdatePost = () => {
               type="submit"
               className="bg-indigo-600 hover:bg-indigo-700 transition-colors duration-300 px-5 py-1 text-white rounded shadow-xl"
             >
-              Publish
+              Update
             </button>
             <button
               onClick={() => navigate(-1)}

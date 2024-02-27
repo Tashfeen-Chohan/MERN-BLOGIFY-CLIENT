@@ -19,8 +19,8 @@ const Profile = () => {
   const {user, totalPosts} = data ?? null
 
   return (
-    <div className="mt-[-60px] flex justify-center items-center min-h-screen">
-      <div className="bg-slate-100 shadow-xl pb-10 pt-5 w-[85%] md:max-w-md flex justify-center items-center flex-col">
+    <div className=" flex justify-center items-center mt-10 md:mt-6">
+      <div className="bg-slate-100 rounded-xl shadow-xl pb-10  pt-5 w-[85%] md:max-w-md flex justify-center items-center flex-col">
         <Link
           to={-1}
           className="flex self-end px-3 hover:scale-125 transition-all duration-300"

@@ -34,8 +34,8 @@ const SingleUser = () => {
   const {user, totalPosts} = data ?? null
 
   return (
-    <div className="flex justify-center items-center min-h-screen mt-[-60px] md:mt-[-20px]">
-      <div className="flex justify-center items-center flex-col w-[85%] md:max-w-sm bg-slate-100 pb-10 pt-5 px-3 rounded  shadow-lg">
+    <div className="flex justify-center items-center mt-16 md:mt-8">
+      <div className="flex justify-center items-center flex-col w-[85%] md:max-w-sm bg-slate-100 pb-16 pt-5 px-3 rounded-xl  shadow-lg">
         <Link
           to={-1}
           className="flex self-end hover:scale-125 transition-all duration-300"
@@ -43,7 +43,7 @@ const SingleUser = () => {
           <TiArrowBack size={40} />
         </Link>
         <h1 className="text-2xl font-bold">User Profile</h1>
-        <div className="my-5 w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden mx-auto">
+        <div className="my-2 w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden mx-auto">
           <img
             src={user.profile}
             alt="User Profile"

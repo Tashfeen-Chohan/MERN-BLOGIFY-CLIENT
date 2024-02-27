@@ -24,7 +24,7 @@ const Comment = ({ postId }) => {
   const [editComment] = useEditCommentMutation();
   const [deleteComment] = useDeleteCommentMutation();
 
-  const { id: userId, username, profile, isAdmin } = useAuth();
+  const { id: userId, username, profile, isPublisher, isAdmin } = useAuth();
   const [commentContent, setCommentContent] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [editCommentId, setEditCommentId] = useState("");
@@ -226,6 +226,7 @@ const Comment = ({ postId }) => {
                     <span className="text-xs">
                       {moment(val.createdAt).fromNow()}
                     </span>
+                    {/* {val.updatedAt !== val.createdAt && <span>(edited)</span>} */}
                   </div>
                   {/* CONTENT */}
                   {editMode && editCommentId === val._id ? (
@@ -275,7 +276,7 @@ const Comment = ({ postId }) => {
                               " " +
                               (val.likes === 1 ? "like" : "likes")}
                         </p>
-                        {userId === val.userId._id && (
+                        {(userId === val.userId._id) && (
                           <button
                             type="button"
                             onClick={() => {
@@ -288,7 +289,7 @@ const Comment = ({ postId }) => {
                             Edit
                           </button>
                         )}
-                        {(userId === val.userId._id || isAdmin) && (
+                        {(userId === val.userId._id || userId === val.postId.author  || isAdmin) && (
                           <button
                             type="button"
                             onClick={() => handleDelete(val._id)}

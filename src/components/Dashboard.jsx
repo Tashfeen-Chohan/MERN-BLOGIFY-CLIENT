@@ -16,7 +16,7 @@ import { MdOutlinePreview } from "react-icons/md";
 import { PiHandsClappingFill, PiHandsClappingLight } from "react-icons/pi";
 import moment from "moment";
 import { FaLongArrowAltUp, FaRegComment, FaRegEye } from "react-icons/fa";
-import { Bar } from "react-chartjs-2";
+import { Bar, Pie } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
 
 // import {
@@ -47,60 +47,6 @@ const Dashboard = () => {
   const [lastWeek, setLastWeek] = useState(true);
   const [lastMonth, setLastMonth] = useState(false);
   const navigate = useNavigate();
-
-  const dashboardData = [
-    {
-      name: "Users",
-      value: Users?.total,
-    },
-    {
-      name: "Posts",
-      value: Posts?.allPosts,
-    },
-    {
-      name: "Categories",
-      value: Categories?.total,
-    },
-    {
-      name: "Comments",
-      value: Comments?.totalComments,
-    },
-  ];
-
-  // const [chartData, setChartData] = useState({})
-  // useEffect(() => {
-  //   if (Users && Posts && Categories && Comments) {
-  //     const newChartData = {
-  //       labels: ["Users", "Posts", "Comments", "Categories"],
-  //       datasets: [
-  //         {
-  //           label: "Overview",
-  //           data: [Users.total, Posts.allPosts, Categories.total, Comments.totalComments],
-  //           backgroundColor: ["red", "black", "blue", "orange"],
-  //         },
-  //       ],
-  //     };
-  //     setChartData(newChartData);
-  //   }
-  // }, [Users, Posts, Categories, Comments]);
-
-  const [chartData, setChartData] = useState({
-    // labels: dashboardData.map((data) => data.name),
-    labels: ["Users", "Posts", "Comments", "Categories"],
-    datasets: [
-      {
-        label: "Overview",
-        data: dashboardData?.map((data) => data?.value),
-        // data: [
-        //   Users?.total,
-        //   Posts?.allPosts,
-        //   Categories?.total,
-        //   Comments?.totalComments,
-        // ],
-        backgroundColor: ["red", "black", "blue", "orange"],
-      },
-    ],
-  });
 
   if (isLoading || postLoading || comLoading || catLoading || totalLoading)
     return (
@@ -303,17 +249,27 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* CHARTS */}
-      <div className="w-[95%] mx-auto md:max-w-3xl mt-10">
-        <Bar data={chartData} />
-
-        {/* <BarChart width={500} height={300} data={dashboardData}>
-          <CartesianGrid strokeDasharray="1 1" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Bar dataKey="value" fill="orange" activeBar={<Rectangle fill="red" stroke="blue" />}/>
-        </BarChart> */}
+      {/* BAR CHART */}
+      <div className="w-[95%] mx-auto md:max-w-5xl mt-10 flex justify-center items-center">
+        <div className="w-[100%] md:w-[60%]">
+        <Bar
+          data={{
+            labels: ["Posts", "Categories", "Users", "Comments"],
+            datasets: [{
+              label: "App Overview",
+              data: [
+                Posts?.allPosts,
+                Categories?.total,
+                Users?.total,
+                Comments?.totalComments,
+              ],
+              backgroundColor: ["black", "red", "blue", "orange"],
+            },
+              
+            ],
+          }}
+        />
+        </div>
       </div>
 
       {/* TOP ARTICLE & RECENT COMMENT*/}
@@ -404,7 +360,7 @@ const Dashboard = () => {
             <h2 className="text-lg font-bold font-serif">Recent Comments</h2>
             <button
               onClick={() => navigate("/all-comments")}
-              className="bg-blue-900 text-white hover:bg-blue-800 transition-colors duration-300 py-1 px-3 rounded shadow-xl"
+              className="bg-blue-800 text-white hover:bg-blue-700 transition-colors duration-300 py-1 px-3 rounded shadow-xl"
             >
               See All
             </button>

@@ -73,7 +73,7 @@ const Users = () => {
 
   if (isLoading)
     return (
-      <div className="flex justify-center items-center min-h-screen bg-slate-200">
+      <div className="flex justify-center items-center min-h-screen mt-[-60px] bg-slate-200">
         <BeatLoader color="#000000" size={15} />
       </div>
     )
@@ -100,7 +100,7 @@ const Users = () => {
               setPageNo(1);
             }}
           />
-          <button className="bg-slate-800 text-white rounded py-1 px-3 shadow-xl hover:bg-slate-700 transition-colors duration-500">
+          <button className="bg-blue-900 text-white rounded py-1 px-3 shadow-xl hover:bg-blue-800 transition-colors duration-500">
             Search
           </button>
         </div>
@@ -109,7 +109,7 @@ const Users = () => {
       <div className="flex justify-center items-center flex-col w-[90%] md:max-w-3xl mx-auto">
         {/* TOTAL USERS */}
         <div className="flex justify-between items-center w-full mb-3 md:mb-0">
-          <span className="bg-slate-800 transition-colors duration-500 hover:bg-slate-700 py-1 px-3 md:px-4 text-white rounded shadow-xl">
+          <span className="bg-blue-900 transition-colors duration-500 hover:bg-slate-700 py-1 px-3 md:px-4 text-white rounded shadow-xl">
             Total : {totalUsers}
           </span>
           {status === "Admin" && (

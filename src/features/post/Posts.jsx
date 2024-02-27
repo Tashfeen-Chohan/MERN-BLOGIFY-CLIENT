@@ -24,7 +24,7 @@ const Posts = () => {
   const category = useSelector(selectCategory);
   const postUrl = `/posts?searchBy=${search}&sortBy=${sort}&filterBy=${filter}&authorId=${publisher.id}&categoryId=${category.id}&limit=${limit}`;
   const { data, isLoading, error } = useGetPostsQuery(postUrl);
-  const {id: userId} = useAuth()
+  const { id: userId } = useAuth();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -35,7 +35,6 @@ const Posts = () => {
         <BeatLoader color="#000000" size={15} />
       </div>
     );
-
 
   const removeCategoryFilter = () => {
     dispatch(resetCategory());
@@ -95,7 +94,9 @@ const Posts = () => {
           </div>
           <div className="flex justify-center items-start flex-col">
             {/* <span className="text-sm italic">{formattedDate}</span> */}
-            <span className="text-sm italic">{moment(val.createdAt).fromNow()}</span>
+            <span className="text-sm italic">
+              {moment(val.createdAt).fromNow()}
+            </span>
           </div>
         </div>
 
@@ -128,15 +129,16 @@ const Posts = () => {
         </div>
 
         {/* LIKES, COMMENTS, VIEWS */}
-        <div onClick={viewPost} className="my-4 flex justify-start items-center gap-4 px-2">
-        <span className="flex justify-center items-center gap-1 text-sm"> 
+        <div
+          onClick={viewPost}
+          className="my-4 flex justify-start items-center gap-4 px-2"
+        >
+          <span className="flex justify-center items-center gap-1 text-sm">
             {userId && val?.likedBy.includes(userId) ? (
-              <PiHandsClappingFill
-                size={21}
-              />
-            ) : <PiHandsClappingLight
-            size={21}
-          />}
+              <PiHandsClappingFill size={21} />
+            ) : (
+              <PiHandsClappingLight size={21} />
+            )}
             {val?.likes}
           </span>
           <span className="flex justify-center items-center gap-1 text-sm">
@@ -203,9 +205,15 @@ const Posts = () => {
         {/* PUBLISHER & CATEGORY FILTER */}
         {(category.name || publisher.name) && (
           <div className="w-[90%] md:max-w-md mx-auto bg-slate-100 p-5 rounded shadow-md mt-5">
-            <span className="flex justify-start items-center gap-2">
-              <FaFilter />
-              Filters
+            <span className="relative">
+              <span className=" flex justify-start items-center gap-2">
+                <FaFilter />
+                Filters
+                
+              </span>
+              <span className="absolute -top-1 left-[70px] bg-blue-900 rounded-full text-white w-4 h-4 flex justify-center items-center text-xs">
+                  {category.name && publisher.name ? 2 : 1}
+                </span>
             </span>
             <div className="flex justify-center items-center gap-3 mt-3">
               {publisher.name && (
@@ -214,7 +222,7 @@ const Posts = () => {
                   className="bg-blue-900 hover:bg-blue-800 transition-colors duration-300 text-gray-200  py-0.5 px-3 rounded-full "
                 >
                   <span className="text-xs">{publisher.name}</span>
-                  <span className="text-md ml-2 font-bold">x</span>
+                  <span className="text-sm ml-2 font-bold">x</span>
                 </span>
               )}
               {category.name && (
@@ -223,7 +231,7 @@ const Posts = () => {
                   className="bg-blue-900 hover:bg-blue-800 transition-colors duration-300 text-gray-200 py-0.5 px-3 rounded-full "
                 >
                   <span className="text-xs">{category.name}</span>
-                  <span className="text-md ml-2 font-bold">x</span>
+                  <span className="text-sm ml-2 font-bold">x</span>
                 </span>
               )}
             </div>

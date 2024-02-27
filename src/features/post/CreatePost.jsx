@@ -59,6 +59,7 @@ const CreatePost = () => {
     );
   };
 
+
   const uploadFile = async (file) => {
     setIsDisabled(true)
     try {
@@ -173,7 +174,6 @@ const CreatePost = () => {
             <ReactQuill
               className="bg-white rounded h-[71%] md:h-[85%]"
               modules={toolbarOptions}
-              // formats={formats}
               value={content}
               onChange={setContent}
             />

@@ -176,7 +176,9 @@ const SinglePost = () => {
         {/* AUTHOR INFO */}
         <div className="flex justify-between items-center mt-2 px-2">
           <div
-            onClick={() => navigate(`/users/single/${val.author._id}`)}
+            onClick={() => {
+              navigate(`/users/single/${val.author._id}`);
+            }}
             className="cursor-pointer flex justify-center items-center gap-2"
           >
             <div className="h-8 w-8 rounded-full overflow-hidden">
@@ -273,7 +275,10 @@ const SinglePost = () => {
         <div className="flex justify-end items-center gap-3 mr-3">
           {userId === post?.author._id && (
             <FaEdit
-              onClick={() => navigate(`/posts/update/${post?._id}`)}
+              onClick={() => {
+                navigate(`/posts/update/${post?._id}`);
+                window.scrollTo(0, 0);
+              }}
               size={25}
               color="orange"
               className="hover:scale-125 transition-all duration-300"
@@ -313,16 +318,18 @@ const SinglePost = () => {
 
         {/* LIKES, COMMENTS & VIEWS */}
         <div className="cursor-pointer my-4 flex justify-start items-center gap-4 px-2 md:px-20">
-          <span className="flex justify-center items-center gap-1 text-sm"> 
+          <span className="flex justify-center items-center gap-1 text-sm">
             {userId && post?.likedBy.includes(userId) ? (
               <PiHandsClappingFill
                 size={21}
                 onClick={() => handleLike(post._id)}
               />
-            ) : <PiHandsClappingLight
-            size={21}
-            onClick={() => handleLike(post._id)}
-          />}
+            ) : (
+              <PiHandsClappingLight
+                size={21}
+                onClick={() => handleLike(post._id)}
+              />
+            )}
             {post?.likes}
           </span>
           <span className="flex justify-center items-center gap-1 text-sm">

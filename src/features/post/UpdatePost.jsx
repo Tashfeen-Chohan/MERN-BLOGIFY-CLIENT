@@ -37,7 +37,6 @@ const UpdatePost = () => {
   const catUrl = `categories?sortBy=name&limit=1000`;
   const { data } = useGetCategoriesQuery(catUrl);
   const {data: singlePost} = useGetSinglePostQuery(postId)
-  console.log(singlePost)
   const [updatePost] = useUpdatePostMutation()
 
   const [title, setTitle] = useState("");
@@ -55,29 +54,27 @@ const UpdatePost = () => {
       setTitle(singlePost.post.title)
       setContent(singlePost.post.content)
       setImg(singlePost.post.blogImg)
-      // const selectedOptions = singlePost.categories.map((val) => ({
-      //   value: val._id,
-      //   // label: val.name
-      // }))
-      setSelectedCategories(singlePost.post.categories)
+      const selectedCategories = singlePost.post.categories.map(category => ({
+        value: category._id,
+        label: category.name
+      }));
+      setSelectedCategories(selectedCategories)
+      setCategories(selectedCategories.map((category) => category.value))
     }
-  }, [singlePost, postId])
+  }, [singlePost])
 
-  console.log(title)
-  console.log(content)
+   const options = data?.categories.map((val) => ({
+    value: val._id,
+    label: val.name,
+  }));
 
-  // const options = data?.capitalized.map((val) => ({
-  //   value: val._id,
-  //   label: val.name,
-  // }));
-
-  // const handleCategoryChange = (selectedOptions) => {
-  //   setSelectedCategories(selectedOptions);
-  //   // Extracting only the 'value' (which is assumed to be 'id') and storing in the array
-  //   setCategories(
-  //     selectedOptions ? selectedOptions.map((option) => option.value) : []
-  //   );
-  // };
+  const handleCategoryChange = (selectedOptions) => {
+    setSelectedCategories(selectedOptions);
+    // Extracting only the 'value' (which is assumed to be 'id') and storing in the array
+    setCategories(
+      selectedOptions ? selectedOptions.map((option) => option.value) : []
+    );
+  };
 
   const uploadFile = (file) => {
     const storage = getStorage(app);
@@ -133,7 +130,8 @@ const UpdatePost = () => {
     e.preventDefault();
     if ((title, content, categories.length > 0)) {
       try {
-        const res = await createPost({
+        const res = await updatePost({
+          id: postId,
           author: id,
           title,
           content,
@@ -153,7 +151,8 @@ const UpdatePost = () => {
           });
         } else {
           toast.success(res.data.message);
-          navigate(`/posts/${res.data.post._id}`);
+          navigate(`/posts/single/${singlePost.post._id}`);
+          window.scrollTo(0,0)
         }
       } catch (error) {
         Swal.fire({
@@ -201,9 +200,9 @@ const UpdatePost = () => {
             />
           </div>
           {/* CONTENT */}
-          <div className="mt-8 mb-5">
+          <div className="mt-8 mb-5 h-80 md:h-72 bg-white">
             <ReactQuill
-              className="bg-white rounded shadow-md"
+              className="bg-white rounded h-[71%] md:h-[85%]"
               modules={toolbarOptions}
               value={content}
               onChange={setContent}
@@ -213,9 +212,10 @@ const UpdatePost = () => {
           <div className="flex gap-2 md:gap-5 justify-start  items-center flex-col md:flex-row">
             <Select
               className="w-full md:w-[50%] shadow-md"
-              // defaultValue={selectedCategories._id}
-              // onChange={handleCategoryChange}
-              // options={options}
+              defaultValue={selectedCategories}
+              value={selectedCategories}
+              onChange={handleCategoryChange}
+              options={options}
               isMulti
               isSearchable
               placeholder="Select categories"

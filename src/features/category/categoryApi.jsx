@@ -17,7 +17,7 @@ export const categoryApi = apiSlice.injectEndpoints({
 
     // GET SINGLE CATEGORY
     getSingleCategory: builder.query({
-      query: (id) => `/categories/${id}`,
+      query: (slug) => `/categories/${slug}`,
       providesTags: ["Category"]
     }),
 
@@ -33,8 +33,8 @@ export const categoryApi = apiSlice.injectEndpoints({
 
     // UPDATE CATEGORY
     updateCategory: builder.mutation({
-      query: ({id, ...updatedCategory}) => ({
-        url: `/categories/${id}`,
+      query: ({slug, ...updatedCategory}) => ({
+        url: `/categories/${slug}`,
         method: "PATCH",
         body: updatedCategory
       }),

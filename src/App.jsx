@@ -54,8 +54,8 @@ const App = () => {
           {/* CATEGORIES ROUTES */}
           <Route path="/categories" element={<Categories />} />
           <Route path="/categories/new" element={<AddCategory />} />
-          <Route path="/categories/single/:id" element={<SingleCategory />} />
-          <Route path="/categories/update/:id" element={<UpdateCategory />} />
+          <Route path="/categories/:slug" element={<SingleCategory />} />
+          <Route path="/categories/update/:slug" element={<UpdateCategory />} />
 
           {/* USERS ROUTES */}
           <Route path="/users" element={<Users />} />
@@ -67,9 +67,9 @@ const App = () => {
 
           {/* POST ROUTES */}
           <Route path="/posts/new" element={<CreatePost />} />
-          <Route path="/posts/:username" element={<MyPosts />} />
-          <Route path="/posts/single/:id" element={<SinglePost />} />
-          <Route path="/posts/update/:id" element={<UpdatePost />} />
+          <Route path="/posts/my-posts/:username" element={<MyPosts />} />
+          <Route path="/posts/:slug" element={<SinglePost />} />
+          <Route path="/posts/update/:slug" element={<UpdatePost />} />
         </Routes>
       </Layout>
     </div>

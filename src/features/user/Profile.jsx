@@ -16,7 +16,7 @@ const Profile = () => {
       </div>
     );
 
-  const {user, totalPosts} = data ?? null
+  const {user} = data ?? null
 
   return (
     <div className=" flex justify-center items-center mt-10 md:mt-6">
@@ -36,8 +36,6 @@ const Profile = () => {
             className="w-full h-full rounded-full border-4 md:border-8 border-gray-300 object-cover text-black text-center"
           />
         </div>
-
-        {/* <img className="my-4" src={Profile2} alt="Profile Icon" width={70} /> */}
         <div className="flex w-full justify-center items-center flex-col gap-3">
           <span className="bg-white hover:bg-cyan-200 transition-colors duration-300 w-[70%] text-center py-1 rounded shadow-md flex-auto">
             {user.username}
@@ -47,7 +45,7 @@ const Profile = () => {
           </span>
           {user.roles.includes("Publisher") && (
             <span className="bg-white hover:bg-cyan-200 transition-colors duration-300 py-1 w-[70%] text-center rounded shadow-md">
-              Total Posts : {totalPosts}
+              Total Posts : {user.noOfPosts}
             </span>
           )}
         </div>

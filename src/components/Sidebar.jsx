@@ -71,7 +71,7 @@ const Sidebar = ({ showSidebar, setShowSidebar }) => {
           </Link>
         )}
         {isPublisher && (
-          <Link to={`/posts/${username}`} onClick={closeSidebar} className={`${location.pathname.includes(`/posts/${firstName}`) && "bg-blue-900"} transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3`}>
+          <Link to={`/posts/my-posts/${firstName}`} onClick={closeSidebar} className={`${location.pathname.includes(`/posts/my-posts/${firstName}`) && "bg-blue-900"} transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3`}>
             <RiArticleFill size={20} />
             <span>My Posts</span>
           </Link>

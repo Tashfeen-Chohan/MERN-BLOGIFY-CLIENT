@@ -33,10 +33,10 @@ const toolbarOptions = {
 };
 
 const UpdatePost = () => {
-  const {id: postId} = useParams()
+  const {slug} = useParams()
   const catUrl = `categories?sortBy=name&limit=1000`;
   const { data } = useGetCategoriesQuery(catUrl);
-  const {data: singlePost} = useGetSinglePostQuery(postId)
+  const {data: singlePost} = useGetSinglePostQuery(slug)
   const [updatePost] = useUpdatePostMutation()
 
   const [title, setTitle] = useState("");
@@ -131,7 +131,7 @@ const UpdatePost = () => {
     if ((title, content, categories.length > 0)) {
       try {
         const res = await updatePost({
-          id: postId,
+          slug,
           author: id,
           title,
           content,
@@ -150,9 +150,9 @@ const UpdatePost = () => {
             },
           });
         } else {
-          toast.success(res.data.message);
-          navigate(`/posts/single/${singlePost.post._id}`);
+          navigate(`/posts/${singlePost.post.slug}`);
           window.scrollTo(0,0)
+          toast.success(res.data.message);
         }
       } catch (error) {
         Swal.fire({

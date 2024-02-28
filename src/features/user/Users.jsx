@@ -81,6 +81,7 @@ const Users = () => {
 
   // OBJECT DESTRUCTURING
   const { users, totalUsers, totalPages, page, limit } = data;
+  console.log(users)
 
   return (
     <div>
@@ -106,7 +107,7 @@ const Users = () => {
         </div>
       </div>
 
-      <div className="flex justify-center items-center flex-col w-[90%] md:max-w-3xl mx-auto">
+      <div className="flex justify-center items-center flex-col w-[90%] md:max-w-4xl mx-auto">
         {/* TOTAL USERS */}
         <div className="flex justify-between items-center w-full mb-3 md:mb-0">
           <span className="bg-blue-900 transition-colors duration-500 hover:bg-slate-700 py-1 px-3 md:px-4 text-white rounded shadow-xl">
@@ -145,12 +146,9 @@ const Users = () => {
             onChange={(e) => setSortBy(e.target.value)}
             className="bg-slate-200 shadow-md  rounded text-black outline-none px-2 py-1 flex"
           >
-            <option className="font-bold" value="">
-              Sort by Default
-            </option>
-            <option value="name">Name Asc</option>
-            <option value="name desc">Name Desc</option>
-            <option value="date desc">Newest</option>
+            <option className="font-bold" value="">Default</option>
+            <option value="posts">Posts &#8593;</option>
+            <option value="date desc">Recent</option>
             <option value="date">Oldest</option>
           </select>
         </div>
@@ -180,6 +178,9 @@ const Users = () => {
                   Roles
                 </th>
               )}
+              <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                Posts
+              </th>
               <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
                 Actions
               </th>
@@ -236,6 +237,12 @@ const Users = () => {
                     ))}
                   </td>
                 )}
+                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                  <span className="inline-block w-1/3 md:hidden font-bold">
+                    Posts
+                  </span>
+                  {val.noOfPosts}
+                </td>
                 <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
                   <span className="inline-block w-1/3 md:hidden font-bold">
                     Actions

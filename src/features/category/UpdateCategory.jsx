@@ -10,10 +10,10 @@ import Swal from "sweetalert2";
 import { BeatLoader } from "react-spinners";
 
 const UpdateCategory = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const [updateCategory] = useUpdateCategoryMutation();
   const [name, setName] = useState("");
-  const { data, isLoading } = useGetSingleCategoryQuery(id);
+  const { data, isLoading } = useGetSingleCategoryQuery(slug);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -37,7 +37,7 @@ const UpdateCategory = () => {
       });
 
       if (result.isConfirmed) {
-        const res = await updateCategory({ id, name });
+        const res = await updateCategory({slug, name });
         if (res.error) {
           Swal.fire({
             title: "Error!",

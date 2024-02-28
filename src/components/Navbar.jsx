@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { GiHamburgerMenu } from "react-icons/gi";
+import { GiHamburgerMenu, GiCrossMark } from "react-icons/gi";
 import useAuth from "../hooks/useAuth";
 import { FaCaretDown } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -68,7 +68,7 @@ const Navbar = ({ showSidebar, setShowSidebar }) => {
           className="md:hidden text-2xl"
           onClick={() => setShowSidebar(!showSidebar)}
         >
-          <GiHamburgerMenu />
+          {showSidebar ? <GiCrossMark /> : <GiHamburgerMenu />}
         </span>
       </div>
       {/* PANEL */}
@@ -85,17 +85,17 @@ const Navbar = ({ showSidebar, setShowSidebar }) => {
       {/* PROFILE - LAPTOP */}
       {status !== "" && (
         <div className="hidden md:block">
-          <div
-            onClick={toggleDropdown}
-            className="cursor-pointer flex justify-center items-center gap-2"
-          >
+          <div className="cursor-pointer flex justify-center items-center gap-2">
             <img
               src={profile}
               alt="Profile"
+              onClick={toggleDropdown}
               className="h-9 w-9 object-cover rounded-full"
             />
-            <span className="font-semibold font-serif">{username}</span>
-            <FaCaretDown />
+            <span onClick={toggleDropdown} className="font-semibold font-serif">
+              {username}
+            </span>
+            <FaCaretDown onClick={toggleDropdown} />
             <button
               className="bg-white text-sm font-serif font-bold py-1 px-2 rounded shadow-xl text-blue-900"
               onClick={handleLogout}
@@ -136,7 +136,11 @@ const Navbar = ({ showSidebar, setShowSidebar }) => {
       {/* PROFILE - MOBILE */}
       {status !== "" && (
         <div className="relative md:hidden ">
-          <HiDotsVertical className="bg-blue-800 p-1 rounded-sm"  onClick={toggleDropdown} size={28} />
+          <HiDotsVertical
+            className="bg-blue-800 p-1 rounded-sm"
+            onClick={toggleDropdown}
+            size={28}
+          />
           <div
             className={`absolute right-0 mt-3 w-48 p-2 bg-primary border border-gray-500 rounded shadow-xl ${
               isDropdownOpen ? "block" : "hidden"

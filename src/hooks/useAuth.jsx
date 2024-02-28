@@ -13,7 +13,7 @@ const useAuth = () => {
     const { id, username, email, profile, roles } = decoded.UserInfo;
 
     let firstName = username.split(" ");
-    firstName = firstName[0].toUpperCase();
+    firstName = firstName[0];
 
     isPublisher = roles.includes("Publisher");
     isAdmin = roles.includes("Admin");

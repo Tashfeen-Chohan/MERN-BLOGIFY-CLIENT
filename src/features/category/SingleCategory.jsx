@@ -7,8 +7,8 @@ import { setCategory } from "../../app/dataSlice";
 import { BeatLoader } from "react-spinners";
 
 const SingleCategory = () => {
-  const { id } = useParams();
-  const { data, isLoading } = useGetSingleCategoryQuery(id);
+  const { slug } = useParams();
+  const { data, isLoading } = useGetSingleCategoryQuery(slug);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ const SingleCategory = () => {
       </div>
     );
 
-  const {category, totalPosts} = data ?? null
+  const {category} = data ?? null
 
   return (
     <div className="flex justify-center items-center min-h-screen mt-[-60px]">
@@ -50,9 +50,9 @@ const SingleCategory = () => {
         </h2>
         <p>
           No. of Posts :
-          <span className="font-semibold">{totalPosts}</span>
+          <span className="font-semibold">{category.noOfPosts}</span>
         </p>
-        {totalPosts > 0 && (
+        {category.noOfPosts > 0 && (
           <div className="flex justify-center items-center mt-4 w-full">
             <button
               onClick={handleViewPosts}

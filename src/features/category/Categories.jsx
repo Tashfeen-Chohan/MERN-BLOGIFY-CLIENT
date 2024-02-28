@@ -129,13 +129,12 @@ const Categories = () => {
             onChange={(e) => setSortBy(e.target.value)}
             className="bg-slate-200 shadow-md  rounded text-black outline-none px-2 py-1"
           >
-            <option className="font-bold" value="">
-              Sort by Default
-            </option>
+            <option className="font-bold" value="">Default</option>
+            <option value="date desc">Recent</option>
+            <option value="date">Oldest</option>
+            <option value="posts">Post &#8593;</option>
             <option value="name">A to Z &#8595;</option>
             <option value="name desc">Z to A &#8593;</option>
-            <option value="date desc">Newest</option>
-            <option value="date">Oldest</option>
           </select>
         </div>
 
@@ -149,6 +148,9 @@ const Categories = () => {
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Name
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Posts
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Actions
@@ -165,16 +167,19 @@ const Categories = () => {
                     {(page - 1) * limit + index + 1}
                   </td>
                   <td className="px-6 py-2">
-                    <Link to={`/categories/single/${val._id}`}>{val.name}</Link>
+                    <span>{val.name}</span>
+                  </td>
+                  <td className="px-6 py-2">
+                    <span>{val.noOfPosts}</span>
                   </td>
                   <td className="px-6 py-2 text-right flex justify-start items-center gap-2">
-                    <Link to={`/categories/single/${val._id}`}>
+                    <Link to={`/categories/${val.slug}`}>
                       <button className="bg-indigo-500 hover:bg-indigo-600 text-white transition-colors duration-500 py-1 px-3 rounded shadow-xl">
                         View
                       </button>
                     </Link>
                     {status === "Admin" && (
-                      <Link to={`/categories/update/${val._id}`}>
+                      <Link to={`/categories/update/${val.slug}`}>
                         <button className="bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 py-1 px-3 rounded shadow-xl">
                           Edit
                         </button>

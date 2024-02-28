@@ -30,8 +30,8 @@ import Comment from "../comment/Comment";
 import moment from "moment";
 
 const SinglePost = () => {
-  const { id } = useParams();
-  const { data, isLoading } = useGetSinglePostQuery(id);
+  const { slug } = useParams();
+  const { data, isLoading } = useGetSinglePostQuery(slug);
   const [deletePost] = useDeletePostMutation();
   const [likePost] = useLikePostMutation();
   const [viewPost] = useViewPostMutation();
@@ -63,12 +63,7 @@ const SinglePost = () => {
       }
     };
     handleView();
-  }, [id, isLoading, viewPost]);
-
-  // FORMATING DATE
-  const date = new Date(post?.createdAt);
-  const options = { day: "numeric", month: "long", year: "numeric" };
-  const formattedDate = date.toLocaleDateString("en-US", options);
+  }, [slug, isLoading, viewPost]);
 
   if (isLoading)
     return (
@@ -276,7 +271,7 @@ const SinglePost = () => {
           {userId === post?.author._id && (
             <FaEdit
               onClick={() => {
-                navigate(`/posts/update/${post?._id}`);
+                navigate(`/posts/update/${post?.slug}`);
                 window.scrollTo(0, 0);
               }}
               size={25}
@@ -295,7 +290,7 @@ const SinglePost = () => {
         </div>
 
         {/* CATEGORIES */}
-        <div className="flex justify-center items-center gap-2 mt-3 md:mt-0">
+        <div className="flex justify-center items-center flex-wrap gap-2 mt-3 md:mt-0">
           {post?.categories.map((cat) => (
             <span
               className="cursor-pointer hover:scale-110 transition-all duration-300 px-2 py-1 rounded-full bg-slate-200 text-sm"

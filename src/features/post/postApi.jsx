@@ -16,7 +16,7 @@ export const postApi = apiSlice.injectEndpoints({
 
     // GET SINGLE POST
     getSinglePost: builder.query({
-      query: (id) => `/posts/${id}`,
+      query: (slug) => `/posts/${slug}`,
       providesTags: (result, error, arg) => [{type: "Post", id: arg.id}]
     }),
 
@@ -32,8 +32,8 @@ export const postApi = apiSlice.injectEndpoints({
 
     // UPDATE POST
     updatePost: builder.mutation({
-      query: ({ id, ...updatedPost }) => ({
-        url: `/posts/${id}`,
+      query: ({ slug, ...updatedPost }) => ({
+        url: `/posts/${slug}`,
         method: "PATCH",
         body: updatedPost,
       }),

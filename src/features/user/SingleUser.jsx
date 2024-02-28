@@ -31,7 +31,7 @@ const SingleUser = () => {
       </div>
     );
 
-  const {user, totalPosts} = data ?? null
+  const {user} = data ?? null
 
   return (
     <div className="flex justify-center items-center mt-16 md:mt-8">
@@ -60,7 +60,7 @@ const SingleUser = () => {
           </span>
           {user.roles.includes("Publisher") && (
             <span className="bg-white py-1 w-[75%] text-center rounded shadow-md">
-              Total Posts : {data?.totalPosts}
+              Total Posts : {user.noOfPosts}
             </span>
           )}
         </div>
@@ -77,7 +77,7 @@ const SingleUser = () => {
             </span>
           </div>
         )}
-        {totalPosts > 0 && (
+        {user.noOfPosts > 0 && (
           <div className="flex justify-center items-center mt-4 w-full">
             <button
               onClick={handleViewPosts}

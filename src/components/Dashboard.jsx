@@ -19,18 +19,6 @@ import { FaLongArrowAltUp, FaRegComment, FaRegEye } from "react-icons/fa";
 import { Bar, Pie } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
 
-// import {
-//   Bar,
-//   BarChart,
-//   CartesianGrid,
-//   Legend,
-//   Rectangle,
-//   ResponsiveContainer,
-//   Tooltip,
-//   XAxis,
-//   YAxis,
-// } from "recharts";
-
 const Dashboard = () => {
   const [limit, setLimit] = useState(3);
   const [sort, setSort] = useState("");
@@ -41,14 +29,15 @@ const Dashboard = () => {
   const { data: Comments, isLoading: comLoading } =
     useGetAllCommentsQuery("/comments");
   const { data: Categories, isLoading: catLoading } = useTotalCategoriesQuery();
-  const { data, isLoading: totalLoading } =
-    useGetTotalLikesAndViewsQuery("/posts/likes-views");
+
+  // const { data, isLoading: totalLoading } =
+  //   useGetTotalLikesAndViewsQuery("/posts/billo/likes-views");
 
   const [lastWeek, setLastWeek] = useState(true);
   const [lastMonth, setLastMonth] = useState(false);
   const navigate = useNavigate();
 
-  if (isLoading || postLoading || comLoading || catLoading || totalLoading)
+  if (isLoading || postLoading || comLoading || catLoading )
     return (
       <div className="flex justify-center items-center min-h-screen mt-[-60px] bg-slate-200">
         <BeatLoader color="#000000" size={15} />
@@ -89,14 +78,14 @@ const Dashboard = () => {
       </div>
       {/* STATS */}
       <div
-        className={`w-[95%] md:max-w-3xl mx-auto grid grid-cols-12 gap-3 md:gap-4 mt-7`}
+        className={`w-[95%] md:max-w-5xl mx-auto grid grid-cols-12 gap-3 md:gap-4 mt-7`}
       >
         {/* USERS */}
         <div
           onClick={() => navigate("/users")}
-          className={`px-3 bg-gray-800 text-gray-100 hover:scale-110 hover:bg-gray-900 transition-all duration-300 col-span-6 md:col-span-4 py-3 shadow-xl rounded  `}
+          className={`px-3 bg-gray-800 text-gray-100 hover:scale-110 hover:bg-gray-900 transition-all duration-300 col-span-6 md:col-span-3 py-3 shadow-xl rounded  `}
         >
-          <div className="flex justify-between items-start">
+          <div className="flex justify-between  items-start">
             <div className="flex justify-center items-start flex-col">
               <p>Users</p>
               <p className="text-xl font-bold">{Users?.total}</p>
@@ -121,7 +110,7 @@ const Dashboard = () => {
         {/* POSTS */}
         <div
           onClick={() => navigate("/")}
-          className="text-sm px-3 bg-gray-800 text-gray-100 hover:scale-110 hover:bg-gray-900 transition-all duration-300 col-span-6 md:col-span-4 py-3 shadow-xl rounded"
+          className="text-sm px-3 bg-gray-800 text-gray-100 hover:scale-110 hover:bg-gray-900 transition-all duration-300 col-span-6 md:col-span-3 py-3 shadow-xl rounded"
         >
           <div className="flex justify-between items-start">
             <div className="flex justify-center items-start flex-col">
@@ -148,7 +137,7 @@ const Dashboard = () => {
         {/* COMMENTS */}
         <div
           onClick={() => navigate("/all-comments")}
-          className="text-sm px-3 bg-gray-800 text-gray-100 hover:scale-110 hover:bg-gray-900 transition-all duration-300 col-span-6 md:col-span-4 py-3 shadow-xl rounded"
+          className="text-sm px-3 bg-gray-800 text-gray-100 hover:scale-110 hover:bg-gray-900 transition-all duration-300 col-span-6 md:col-span-3 py-3 shadow-xl rounded"
         >
           <div className="flex justify-between items-start">
             <div className="flex justify-center items-start flex-col">
@@ -175,7 +164,7 @@ const Dashboard = () => {
         {/* CATEGORIES */}
         <div
           onClick={() => navigate("/categories")}
-          className="text-sm px-3 bg-gray-800 text-gray-100 hover:scale-110 hover:bg-gray-900 transition-all duration-300 col-span-6 md:col-span-4 py-3 shadow-xl rounded"
+          className="text-sm px-3 bg-gray-800 text-gray-100 hover:scale-110 hover:bg-gray-900 transition-all duration-300 col-span-6 md:col-span-3 py-3 shadow-xl rounded"
         >
           <div className="flex justify-between items-start">
             <div className="flex justify-center items-start flex-col">
@@ -200,7 +189,7 @@ const Dashboard = () => {
           </div>
         </div>
         {/* VIEWS */}
-        <div className="text-sm px-3 bg-gray-800 text-gray-100 hover:scale-110 hover:bg-gray-900 transition-all duration-300 col-span-6 md:col-span-4 py-3 shadow-xl rounded">
+        {/* <div className="text-sm px-3 bg-gray-800 text-gray-100 hover:scale-110 hover:bg-gray-900 transition-all duration-300 col-span-6 md:col-span-4 py-3 shadow-xl rounded">
           <div className="flex justify-between items-start">
             <div className="flex justify-center items-start flex-col">
               <p>Views</p>
@@ -222,9 +211,9 @@ const Dashboard = () => {
               </>
             )}
           </div>
-        </div>
+        </div> */}
         {/* LIKES */}
-        <div className="text-sm px-3 bg-gray-800 text-gray-100 hover:scale-110 hover:bg-gray-900 transition-all duration-300 col-span-6 md:col-span-4 py-3 shadow-xl rounded">
+        {/* <div className="text-sm px-3 bg-gray-800 text-gray-100 hover:scale-110 hover:bg-gray-900 transition-all duration-300 col-span-6 md:col-span-4 py-3 shadow-xl rounded">
           <div className="flex justify-between items-start">
             <div className="flex justify-center items-start flex-col">
               <p>Likes</p>
@@ -246,7 +235,7 @@ const Dashboard = () => {
               </>
             )}
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* BAR CHART */}

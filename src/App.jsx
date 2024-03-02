@@ -59,11 +59,11 @@ const App = () => {
 
           {/* USERS ROUTES */}
           <Route path="/users" element={<Users />} />
-          <Route path="/users/update/:id" element={<UpdateUser />} />
-          <Route path="/users/single/:id" element={<SingleUser />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/profile/edit" element={<UpdateProfile />} />
-          <Route path="/profile/change-password" element={<ChangePassword />} />
+          <Route path="/users/:slug" element={<SingleUser />} />
+          <Route path="/users/update/:slug" element={<UpdateUser />} />
+          <Route path="/profile/:slug" element={<Profile />} />
+          <Route path="/profile/:slug/edit" element={<UpdateProfile />} />
+          <Route path="/profile/:slug/change-password" element={<ChangePassword />} />
 
           {/* POST ROUTES */}
           <Route path="/posts/new" element={<CreatePost />} />

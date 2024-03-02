@@ -11,8 +11,9 @@ import axios from "axios";
 import { HiDotsVertical } from "react-icons/hi";
 
 const Navbar = ({ showSidebar, setShowSidebar }) => {
-  const { status, username, profile } = useAuth();
+  const { status, username, profile, slug } = useAuth();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -24,12 +25,12 @@ const Navbar = ({ showSidebar, setShowSidebar }) => {
 
   const viewProfile = () => {
     setDropdownOpen(false);
-    navigate("/profile");
+    navigate(`/profile/${slug}`);
   };
 
   const changePassword = () => {
     setDropdownOpen(false);
-    navigate("/profile/change-password");
+    navigate(`/profile/${slug}/change-password`);
   };
 
   const handleLogout = async () => {

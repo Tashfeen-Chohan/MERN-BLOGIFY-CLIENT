@@ -117,7 +117,7 @@ const CreatePost = () => {
           });
         } else {
           toast.success(res.data.message);
-          navigate(`/posts/single/${res.data.post._id}`);
+          navigate(`/posts/${res.data.post.slug}`);
           window.scrollTo(0,0)
         }
       } catch (error) {

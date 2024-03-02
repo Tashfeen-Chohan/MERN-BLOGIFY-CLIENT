@@ -23,11 +23,12 @@ const Posts = () => {
   const publisher = useSelector(selectPublisher);
   const category = useSelector(selectCategory);
   const postUrl = `/posts?searchBy=${search}&sortBy=${sort}&filterBy=${filter}&authorId=${publisher.id}&categoryId=${category.id}&limit=${limit}`;
-  const { data, isLoading, error } = useGetPostsQuery(postUrl);
+  const { data, isLoading } = useGetPostsQuery(postUrl);
   const { id: userId } = useAuth();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
 
   if (isLoading)
     return (
@@ -45,7 +46,6 @@ const Posts = () => {
   };
 
   const { posts, totalPosts } = data ?? {};
-  console.log(posts)
 
   const Posts = posts?.map((val) => {
   
@@ -120,7 +120,7 @@ const Posts = () => {
             <span
               className="cursor-pointer hover:scale-110 transition-all duration-300 px-2 py-1 rounded-full bg-slate-200 text-xs"
               key={cat._id}
-              onClick={() => navigate(`categories/single/${cat._id}`)}
+              onClick={() => navigate(`categories/${cat.slug}`)}
             >
               {cat.name}
             </span>
@@ -184,7 +184,7 @@ const Posts = () => {
               onChange={(e) => setFilter(e.target.value)}
               className="bg-slate-200 shadow-md font-semibold text-sm  rounded text-black outline-none px-2 py-1"
             >
-              <option value="">All Posts</option>
+              <option value="">All Posts {!filter && `(${totalPosts})`}</option>
               <option value="popular">Popular</option>
               <option value="">Favourite</option>
             </select>

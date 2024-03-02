@@ -31,17 +31,15 @@ const MyPosts = () => {
 
 
   const Posts = posts?.map((val) => {
-    const date = new Date(val.createdAt);
-    const option = { day: "numeric", month: "short", year: "numeric" };
-    const formattedDate = date.toLocaleDateString("en-US", option);
 
     const viewPost = () => {
-      navigate(`/posts/single/${val._id}`)
+      navigate(`/posts/${val.slug}`)
       window.scrollTo(0,0)
     }
 
     return (
       <div
+        key={val._id}
         className=" col-span-12 md:col-span-4 shadow-lg rounded hover:scale-105 transition-transform duration-300"
       >
         {/* BLOG COVER IMG */}
@@ -73,7 +71,6 @@ const MyPosts = () => {
             <span className="text-sm italic">{val.author.username}</span>
           </div>
           <div className="flex justify-center items-start flex-col">
-            {/* <span className="text-sm italic">{formattedDate}</span> */}
             <span className="text-sm italic">{moment(val.createdAt).fromNow()}</span>
           </div>
         </div>
@@ -91,9 +88,9 @@ const MyPosts = () => {
         <div className="mt-3 flex justify-center items-center gap-2 flex-wrap px-2">
           {val.categories.map((cat) => (
             <span
-              className="px-2 py-1 rounded-full bg-slate-200 text-xs"
+            className="cursor-pointer hover:scale-110 transition-all duration-300 px-2 py-1 rounded-full bg-slate-200 text-xs"
               key={cat._id}
-              onClick={() => navigate(`/categories/single/${cat._id}`)}
+              onClick={() => navigate(`/categories/${cat.slug}`)}
             >
               {cat.name}
             </span>

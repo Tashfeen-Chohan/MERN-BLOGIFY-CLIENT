@@ -16,8 +16,8 @@ const SingleCategory = () => {
   const handleViewPosts = () => {
     dispatch(
       setCategory({
-        id: data?.category._id,
-        name: data?.category.name,
+        id: category._id,
+        name: category.name,
       })
     );
     navigate("/");

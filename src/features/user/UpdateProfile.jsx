@@ -5,12 +5,17 @@ import { useGetSingleUserQuery, useUpdateUserMutation } from "../user/userApi";
 import Swal from "sweetalert2";
 import useAuth from "../../hooks/useAuth";
 import { BeatLoader } from "react-spinners";
+import axios from "axios";
+import { logout } from "../auth/authSlice";
+import { useDispatch } from "react-redux";
 
 const UpdateProfile = () => {
-  const { id } = useAuth();  
-  const { data, isLoading } = useGetSingleUserQuery(id);
+  const { slug } = useAuth();  
+  const { data, isLoading } = useGetSingleUserQuery(slug);
   const [updateUser] = useUpdateUserMutation()
   const navigate = useNavigate();
+  const dispatch = useDispatch()
+
   const [user, setUser] = useState({
     username: data?.user.username,
     email: data?.user.email,
@@ -29,6 +34,29 @@ const UpdateProfile = () => {
       ...user,
       [name]: value,
     });
+  };
+
+  const handleLogout = async () => {
+    try {
+      const res = await axios.post("http://localhost:3000/auth/logout");
+      // toast.success(res.data.message);
+      dispatch(logout());
+      navigate("/login");
+      // Clear the "jwt" cookie on the client side
+      document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    } catch (error) {
+      console.log(error.message);
+      Swal.fire({
+        title: "Error!",
+        text: "An unexpected error occured on the server!",
+        width: "27rem",
+        customClass: {
+          title: "!text-red-500 !font-bold",
+          confirmButton:
+            "!py-2 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
+        },
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -53,7 +81,7 @@ const UpdateProfile = () => {
 
       if (result.isConfirmed) {
         const {username, email} = user;
-        const res = await updateUser({ id, username, email});
+        const res = await updateUser({ slug, username, email});
         if (res.error) {
           Swal.fire({
             title: "Error!",
@@ -67,7 +95,7 @@ const UpdateProfile = () => {
           });
         } else {
           toast.success(res.data.message);
-          navigate("/profile");
+          handleLogout()
           setUser({
             username: "",
             email: "",
@@ -101,14 +129,14 @@ const UpdateProfile = () => {
 
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900 flex justify-center items-center min-h-screen mt-[-60px]">
+    <section className="bg-gray-50 dark:bg-gray-900 flex justify-center items-center min-h-screen mt-[-20px]">
       <div className="w-[90%] flex flex-col items-center justify-center  py-6 mx-auto">
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Profile Update
             </h1>
-            <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {/* NAME */}
               <div>
                 <label
@@ -145,6 +173,8 @@ const UpdateProfile = () => {
                   placeholder="name@company.com"
                 />
               </div>
+
+              <p className="text-yellow-300 text-sm">* You would have to Login again with new credentials!</p>
 
               <button
                 type="submit"

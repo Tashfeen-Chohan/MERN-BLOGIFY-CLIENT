@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
 
 const Profile = () => {
-  const {id} = useAuth();
-  const {data, isLoading} = useGetSingleUserQuery(id)
+  const {slug} = useAuth();
+  const {data, isLoading} = useGetSingleUserQuery(slug)
 
   if (isLoading)
     return (
@@ -49,7 +49,7 @@ const Profile = () => {
             </span>
           )}
         </div>
-        <Link to={"/profile/edit"} className=" flex self-center w-full">
+        <Link to={`/profile/${slug}/edit`} className=" flex self-center w-full">
           <button className="bg-cyan-600 hover:bg-cyan-700 transition-colors duration-300 text-white mt-7 py-1 w-[70%] mx-auto text-center rounded shadow-md">
             Update
           </button>

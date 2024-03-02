@@ -5,7 +5,11 @@ export const postApi = apiSlice.injectEndpoints({
     // GET ALL POSTS
     getPosts: builder.query({
       query: (url) => url,
-      providesTags: (result, error, arg) => [{type: "Post", id: arg.id}]
+      providesTags: (result, error, arg) => [
+        { type: "Post", id: arg.id }, // Tag for Post type
+        { type: "Category"}, // Tag for Category type
+        {type: "User"}
+      ]
     }),
 
     // GET TOTAL LIKES AND VIEWS
@@ -17,7 +21,11 @@ export const postApi = apiSlice.injectEndpoints({
     // GET SINGLE POST
     getSinglePost: builder.query({
       query: (slug) => `/posts/${slug}`,
-      providesTags: (result, error, arg) => [{type: "Post", id: arg.id}]
+      providesTags: (result, error, arg) => [
+        {type: "Post", id: arg.id},
+        {type: "Category"},
+        {type: "User"},
+      ]
     }),
 
     // CREATE NEW POST
@@ -27,7 +35,7 @@ export const postApi = apiSlice.injectEndpoints({
         method: "POST",
         body: newPost,
       }),
-      invalidatesTags: ["Post"]
+      invalidatesTags: ["Post", "Category", "User"]
     }),
 
     // UPDATE POST
@@ -37,7 +45,11 @@ export const postApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: updatedPost,
       }),
-      invalidatesTags: (result, error, arg) => [{ type: "Post", id: arg.id }],
+      invalidatesTags: (result, error, arg) => [
+        { type: "Post", id: arg.id },
+        {type: "Category"},
+        {type: "User"},
+      ],
     }),
 
     // DELETE POST
@@ -46,7 +58,11 @@ export const postApi = apiSlice.injectEndpoints({
         url: `/posts/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result, error, arg) => [{ type: "Post", id: arg.id }],
+      invalidatesTags: (result, error, arg) => [
+        { type: "Post", id: arg.id },
+        {type: "Category"},
+        {type: "User"}
+      ],
     }),
 
     // LIKE POST

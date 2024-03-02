@@ -8,8 +8,8 @@ import { setPublisher } from "../../app/dataSlice";
 import { BeatLoader } from "react-spinners";
 
 const SingleUser = () => {
-  const { id } = useParams();
-  const { data, isLoading } = useGetSingleUserQuery(id);
+  const { slug } = useParams();
+  const { data, isLoading } = useGetSingleUserQuery(slug);
   const { status } = useAuth();
   const dispatch = useDispatch();
   const navigate = useNavigate();

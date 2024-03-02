@@ -10,7 +10,7 @@ const useAuth = () => {
 
   if (token) {
     const decoded = jwtDecode(token);
-    const { id, username, email, profile, roles } = decoded.UserInfo;
+    const { id, username, slug, email, profile, roles } = decoded.UserInfo;
 
     let firstName = username.split(" ");
     firstName = firstName[0];
@@ -26,13 +26,14 @@ const useAuth = () => {
       status = "User";
     }
 
-    return { id, firstName, username, email, profile, roles, status, isPublisher, isAdmin };
+    return { id, firstName, username, slug, email, profile, roles, status, isPublisher, isAdmin };
   }
 
   return {
     id: null,
     firstName: "",
     username: "",
+    slug: "",
     email: "",
     profile: null,
     roles: [],

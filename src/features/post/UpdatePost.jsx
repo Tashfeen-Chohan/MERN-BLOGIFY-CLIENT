@@ -165,7 +165,7 @@ const UpdatePost = () => {
               "!py-2 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
           },
         });
-        console.log(error);
+        console.log(error.message);
       }
     } else {
       toast.error("Please provide neccessary details!");

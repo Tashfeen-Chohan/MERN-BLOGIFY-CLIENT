@@ -7,8 +7,8 @@ import { ROLES } from "../../config/roles";
 import { BeatLoader } from "react-spinners";
 
 const UpdateUser = () => {
-  const { id } = useParams();
-  const { data, isLoading } = useGetSingleUserQuery(id);
+  const { slug } = useParams();
+  const { data, isLoading } = useGetSingleUserQuery(slug);
   const [updateUser] = useUpdateUserMutation();
   const navigate = useNavigate();
 
@@ -86,7 +86,7 @@ const UpdateUser = () => {
 
       if (result.isConfirmed) {
         const { username, email, roles } = user;
-        const res = await updateUser({ id, username, email, roles });
+        const res = await updateUser({ slug, username, email, roles });
         if (res.error) {
           Swal.fire({
             title: "Error!",

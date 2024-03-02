@@ -81,7 +81,6 @@ const Users = () => {
 
   // OBJECT DESTRUCTURING
   const { users, totalUsers, totalPages, page, limit } = data;
-  console.log(users)
 
   return (
     <div>
@@ -247,14 +246,14 @@ const Users = () => {
                   <span className="inline-block w-1/3 md:hidden font-bold">
                     Actions
                   </span>
-                  <Link to={`/users/single/${val._id}`}>
+                  <Link to={`/users/${val.slug}`}>
                     <button className="mr-2 bg-indigo-500 hover:bg-indigo-600 text-white transition-colors duration-500 py-1 px-3 rounded shadow-xl">
                       View
                     </button>
                   </Link>
                   {status === "Admin" && (
                     <>
-                      <Link to={`/users/update/${val._id}`}>
+                      <Link to={`/users/update/${val.slug}`}>
                         <button className="mr-2 bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 text-black py-1 px-3 shadow-xl rounded">
                           Edit
                         </button>

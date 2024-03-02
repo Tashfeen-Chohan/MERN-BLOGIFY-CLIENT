@@ -15,7 +15,7 @@ export const userApi = apiSlice.injectEndpoints({
     }),
     // GET SINGLE USER
     getSingleUser: builder.query({
-      query: (id) => `/users/${id}`,
+      query: (slug) => `/users/${slug}`,
       providesTags: ["User"]
     }),
     // NEW USER
@@ -29,8 +29,8 @@ export const userApi = apiSlice.injectEndpoints({
     }),
     // UPDATE USER
     updateUser: builder.mutation({
-      query: ({id, ...updatedUser}) => ({
-        url: `/users/${id}`,
+      query: ({slug, ...updatedUser}) => ({
+        url: `/users/${slug}`,
         method: "PATCH",
         body: updatedUser
       }),

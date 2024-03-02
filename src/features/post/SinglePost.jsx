@@ -6,7 +6,7 @@ import {
   useLikePostMutation,
   useViewPostMutation,
 } from "./postApi";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { FaEdit, FaRegComment, FaRegEye } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import useAuth from "../../hooks/useAuth";
@@ -139,13 +139,10 @@ const SinglePost = () => {
 
   // const {posts} = recentPosts;
   const RecentPosts = recentPosts?.posts?.map((val) => {
-    const date = new Date(val.createdAt);
-    const option = { day: "numeric", month: "short", year: "numeric" };
-    const formattedDate = date.toLocaleDateString("en-US", option);
-
+   
     const viewPost = () => {
-      navigate(`/posts/single/${val._id}`);
-      window.scrollTo(0, 10);
+      navigate(`/posts/${val.slug}`);
+      window.scrollTo(0,0);
     };
 
     return (
@@ -172,7 +169,7 @@ const SinglePost = () => {
         <div className="flex justify-between items-center mt-2 px-2">
           <div
             onClick={() => {
-              navigate(`/users/single/${val.author._id}`);
+              navigate(`/users/${val.author.slug}`);
             }}
             className="cursor-pointer flex justify-center items-center gap-2"
           >
@@ -211,7 +208,7 @@ const SinglePost = () => {
             <span
               className="cursor-pointer hover:scale-110 transition-all duration-300 px-2 py-1 rounded-full bg-slate-200 text-xs"
               key={cat._id}
-              onClick={() => navigate(`/categories/single/${cat._id}`)}
+              onClick={() => navigate(`/categories/${cat.slug}`)}
             >
               {cat.name}
             </span>
@@ -295,7 +292,7 @@ const SinglePost = () => {
             <span
               className="cursor-pointer hover:scale-110 transition-all duration-300 px-2 py-1 rounded-full bg-slate-200 text-sm"
               key={cat._id}
-              onClick={() => navigate(`/categories/single/${cat._id}`)}
+              onClick={() => navigate(`/categories/${cat.slug}`)}
             >
               {cat.name}
             </span>
@@ -366,7 +363,7 @@ const SinglePost = () => {
         <h2 className="md:text-lg my-5 text-center">
           More from
           <span
-            onClick={() => navigate(`/users/single/${post?.author._id}`)}
+            onClick={() => navigate(`/users/${post?.author.slug}`)}
             className="font-bold italic ml-2"
           >
             {post?.author.username}

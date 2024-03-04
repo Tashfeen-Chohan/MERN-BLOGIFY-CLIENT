@@ -71,6 +71,7 @@ const AllComments = () => {
   };
 
   const { comments, totalComments, totalPages, page, limit } = data ?? {};
+  console.log(comments)
 
   return (
     <div>
@@ -172,7 +173,7 @@ const AllComments = () => {
                     Actions
                   </span>
                   <button
-                    onClick={() => navigate(`/posts/single/${val.postId._id}`)}
+                    onClick={() => navigate(`/posts/${val.postId.slug}`)}
                     className="mr-1"
                   >
                     <MdOutlinePreview className="hover:scale-125 transition-all duration-300" size={25} color="blue" />

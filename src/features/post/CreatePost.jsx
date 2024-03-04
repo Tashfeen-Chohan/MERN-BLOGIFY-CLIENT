@@ -5,12 +5,7 @@ import { toast } from "react-toastify";
 import { useCreatePostMutation } from "./postApi";
 import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
-import {
-  getStorage,
-  ref,
-  getDownloadURL,
-  uploadBytes,
-} from "firebase/storage";
+import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 import app from "../../firebase";
 import { useNavigate } from "react-router-dom";
@@ -43,7 +38,7 @@ const CreatePost = () => {
   const [categories, setCategories] = useState([]);
   const [img, setImg] = useState(undefined);
   const [uploadedImg, setUploadedImg] = useState(undefined);
-  const [isDisabled, setIsDisabled] = useState(false)
+  const [isDisabled, setIsDisabled] = useState(false);
   const { id } = useAuth();
   const navigate = useNavigate();
 
@@ -59,30 +54,29 @@ const CreatePost = () => {
     );
   };
 
-
   const uploadFile = async (file) => {
-    setIsDisabled(true)
+    setIsDisabled(true);
     try {
-    const storage = getStorage(app);
-    const storageRef = ref(storage, `BlogImages/${file.name + v4()}`);
-    const snapshot = await uploadBytes(storageRef, file);
-    toast.success("Blog Cover uploaded successfully!");
-    try {
-      const downloadURL = await getDownloadURL(snapshot.ref);
-      // console.log("DownloadURL - ", downloadURL);
-      setUploadedImg(downloadURL);
-      setIsDisabled(false)
+      const storage = getStorage(app);
+      const storageRef = ref(storage, `BlogImages/${file.name + v4()}`);
+      const snapshot = await uploadBytes(storageRef, file);
+      toast.success("Blog Cover uploaded successfully!");
+      try {
+        const downloadURL = await getDownloadURL(snapshot.ref);
+        // console.log("DownloadURL - ", downloadURL);
+        setUploadedImg(downloadURL);
+        setIsDisabled(false);
+      } catch (error) {
+        toast.error("Error getting download URL : ", error.code);
+      }
     } catch (error) {
-      toast.error("Error getting download URL : ", error.code);
+      toast.error("Error uploading file : ", error);
+      console.log(error.message);
     }
-  } catch (error) {
-    toast.error("Error uploading file : ", error);
-    console.log(error.message)
-  }
-};
+  };
 
   useEffect(() => {
-    if (img  && !uploadedImg) {
+    if (img && !uploadedImg) {
       uploadFile(img);
     }
   }, [img, uploadedImg]);
@@ -95,7 +89,7 @@ const CreatePost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (title && content && categories.length > 0 && img ) {
+    if (title && content && categories.length > 0 && img) {
       try {
         const res = await createPost({
           author: id,
@@ -118,7 +112,7 @@ const CreatePost = () => {
         } else {
           toast.success(res.data.message);
           navigate(`/posts/${res.data.post.slug}`);
-          window.scrollTo(0,0)
+          window.scrollTo(0, 0);
         }
       } catch (error) {
         Swal.fire({
@@ -139,9 +133,9 @@ const CreatePost = () => {
   };
 
   const cancelCoverImg = () => {
-    setUploadedImg(undefined)
-    setImg(undefined)
-  }
+    setUploadedImg(undefined);
+    setImg(undefined);
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -150,14 +144,21 @@ const CreatePost = () => {
           Create Post
         </h1>
         {/* IMAGE CONTAINER */}
-        {img && <div className="w-full mb-5 relative">
+        {img && (
+          <div className="w-full mb-5 relative">
             <img
               className="rounded shadow-lg w-full h-auto"
               src={img}
               alt="Uploaded Image"
             />
-          <FaDeleteLeft onClick={cancelCoverImg} className="absolute top-3 right-3 md:right-7 md:top-5" color="red" size={30}/>
-        </div>}
+            <FaDeleteLeft
+              onClick={cancelCoverImg}
+              className="absolute top-3 right-3 md:right-7 md:top-5"
+              color="red"
+              size={30}
+            />
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           {/* TITLE */}
           <div className="mb-3">

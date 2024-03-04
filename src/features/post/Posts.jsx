@@ -185,7 +185,7 @@ const Posts = () => {
               className="bg-slate-200 shadow-md font-semibold text-sm  rounded text-black outline-none px-2 py-1"
             >
               <option value="">All Posts {!filter && `(${totalPosts})`}</option>
-              <option value="popular">Popular</option>
+              <option value="popular">Popular {filter && `(${totalPosts})`}</option>
               <option value="">Favourite</option>
             </select>
             <select

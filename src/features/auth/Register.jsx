@@ -3,11 +3,18 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAddUserMutation } from "../user/userApi";
 import Swal from "sweetalert2";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import app from "../../firebase";
 import { v4 } from "uuid";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 import { MdCancel } from "react-icons/md";
+import { BeatLoader } from "react-spinners";
 
 const Register = () => {
   const [addUser] = useAddUserMutation();
@@ -19,6 +26,7 @@ const Register = () => {
   const [uploadedImg, setUploadedImg] = useState(undefined);
   const [showPassword, setShowPassword] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
+  const [imgDelLoading, setImgDelLoading] = useState(false);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -41,6 +49,21 @@ const Register = () => {
       }
     } catch (error) {
       toast.error("Error uploading file : ", error);
+    }
+  };
+
+  const deleteFile = async (fileRef) => {
+    setImgDelLoading(true);
+    try {
+      const storage = getStorage(app);
+      const fileStorageRef = ref(storage, fileRef);
+      await deleteObject(fileStorageRef);
+      toast.success("File deleted successfully!");
+      setImgDelLoading(false);
+    } catch (error) {
+      toast.error("Error deleting file: ", error);
+      console.error("Error deleting file: ", error);
+      setImgDelLoading(false);
     }
   };
 
@@ -100,9 +123,10 @@ const Register = () => {
   };
 
   const profileCancel = () => {
-    setUploadedImg(undefined)
-    setProfile(undefined)
-  }
+    deleteFile(profile);
+    setUploadedImg(undefined);
+    setProfile(undefined);
+  };
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900 flex justify-center items-center min-h-screen">
@@ -121,11 +145,14 @@ const Register = () => {
                     className="w-full h-full object-cover text-white text-center"
                   />
                 </div>
-                <div className="absolute top-0 right-20 md:right-28" >
-                  <MdCancel onClick={profileCancel} color="gray" size={25}/>
+                <div className="absolute top-0 right-20 md:right-28">
+                  <MdCancel onClick={profileCancel} color="gray" size={25} />
                 </div>
               </div>
             )}
+            {imgDelLoading &&  <div className="py-5 flex justify-center items-center">
+              <BeatLoader color="white" size={15} />
+            </div>}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* USERNAME */}

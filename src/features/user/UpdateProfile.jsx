@@ -132,10 +132,17 @@ const UpdateProfile = () => {
     <section className="bg-gray-50 dark:bg-gray-900 flex justify-center items-center min-h-screen mt-[-20px]">
       <div className="w-[90%] flex flex-col items-center justify-center  py-6 mx-auto">
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+          <div className="p-6 space-y-4 md:space-y-4 sm:p-8">
             <h1 className="text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Profile Update
             </h1>
+            <div className="my-5 w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden mx-auto">
+              <img
+                src={data?.user.profile}
+                alt="User Profile"
+                className="w-full h-full rounded-full border-4 md:border-8 border-gray-300 object-cover text-black text-center"
+              />
+            </div>
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* NAME */}
               <div>

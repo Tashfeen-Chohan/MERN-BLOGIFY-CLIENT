@@ -15,79 +15,60 @@ import { v4 } from "uuid";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 import { MdCancel } from "react-icons/md";
 import { BeatLoader } from "react-spinners";
+import { FaRegEdit } from "react-icons/fa";
 
 const Register = () => {
-  const [addUser] = useAddUserMutation();
+  const [addUser, {isLoading}] = useAddUserMutation();
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [profile, setProfile] = useState(undefined);
-  const [uploadedImg, setUploadedImg] = useState(undefined);
   const [showPassword, setShowPassword] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
-  const [imgDelLoading, setImgDelLoading] = useState(false);
+  const [showProfile, setShowProfile] = useState(undefined);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
+  const handleProfileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfile(file)
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setShowProfile(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const uploadFile = async (file) => {
-    setIsDisabled(true);
     try {
       const storage = getStorage(app);
       const storageRef = ref(storage, `UserProfiles/${file.name + v4()}`);
       const snapshot = await uploadBytes(storageRef, file);
-      toast.success("Profile uploaded successfully!");
-      try {
-        const downloadURL = await getDownloadURL(snapshot.ref);
-        console.log("DownloadURL - ", downloadURL);
-        setUploadedImg(downloadURL);
-        setIsDisabled(false);
-      } catch (error) {
-        toast.error("Error getting download URL : ", error.code);
-      }
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      console.log("DownloadURL - ", downloadURL);
+      return downloadURL;
     } catch (error) {
       toast.error("Error uploading file : ", error);
+      throw error;
     }
   };
-
-  const deleteFile = async (fileRef) => {
-    setImgDelLoading(true);
-    try {
-      const storage = getStorage(app);
-      const fileStorageRef = ref(storage, fileRef);
-      await deleteObject(fileStorageRef);
-      toast.success("File deleted successfully!");
-      setImgDelLoading(false);
-    } catch (error) {
-      toast.error("Error deleting file: ", error);
-      console.error("Error deleting file: ", error);
-      setImgDelLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (profile && !uploadedImg) {
-      uploadFile(profile);
-    }
-  }, [profile, uploadedImg]);
-
-  useEffect(() => {
-    if (uploadedImg) {
-      setProfile(uploadedImg);
-    }
-  }, [uploadedImg]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (username && email && password) {
+      if (profile) {
+        var downloadURL = await uploadFile(profile);
+      }
       try {
         const res = await addUser({
           username,
           email,
           password,
-          profile,
+          profile: downloadURL,
         });
         if (res.error) {
           Swal.fire({
@@ -123,9 +104,8 @@ const Register = () => {
   };
 
   const profileCancel = () => {
-    deleteFile(profile);
-    setUploadedImg(undefined);
-    setProfile(undefined);
+    setProfile(null);
+    setShowProfile(null)
   };
 
   return (
@@ -136,24 +116,40 @@ const Register = () => {
             <h1 className="text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               New Registration
             </h1>
-            {profile && (
+            {showProfile && (
               <div className="relative">
                 <div className="w-20 h-20 md:w-28 md:h-28 rounded-full overflow-hidden mx-auto">
                   <img
-                    src={profile}
+                    src={showProfile}
                     alt="User Profile"
                     className="w-full h-full object-cover text-white text-center"
                   />
                 </div>
-                <div className="absolute top-0 right-20 md:right-28">
-                  <MdCancel onClick={profileCancel} color="gray" size={25} />
+                <div className="absolute top-0 right-10 md:right-20 flex gap-2">
+                  <div>
+                    <label htmlFor="profileEdit">
+                      <FaRegEdit
+                        className="hover:scale-110 transition-all duration-300"
+                        color="gray"
+                        size={22}
+                      />
+                    </label>
+                    <input
+                      onChange={handleProfileChange}
+                      id="profileEdit"
+                      type="file"
+                      className="hidden"
+                    />
+                  </div>
+                  <MdCancel
+                    className="hover:scale-110 transition-all duration-300"
+                    onClick={profileCancel}
+                    color="gray"
+                    size={25}
+                  />
                 </div>
               </div>
             )}
-            {imgDelLoading &&  <div className="py-5 flex justify-center items-center">
-              <BeatLoader color="white" size={15} />
-            </div>}
-
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* USERNAME */}
               <div>
@@ -235,12 +231,11 @@ const Register = () => {
                 <input
                   className="text-gray-900 dark:text-white"
                   type="file"
-                  onChange={(e) => setProfile(e.target.files[0])}
+                  onChange={handleProfileChange}
                 />
               </div>
               <button
                 type="submit"
-                disabled={isDisabled}
                 className="w-full text-white disabled:bg-blue-400 bg-blue-600 hover:bg-blue-700 transition-colors duration-300 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
                 Create an account

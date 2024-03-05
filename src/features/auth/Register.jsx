@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import { useAddUserMutation } from "../user/userApi";
 import Swal from "sweetalert2";
 import {
-  deleteObject,
   getDownloadURL,
   getStorage,
   ref,
@@ -14,11 +13,11 @@ import app from "../../firebase";
 import { v4 } from "uuid";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 import { MdCancel } from "react-icons/md";
-import { BeatLoader } from "react-spinners";
+import { BarLoader } from "react-spinners";
 import { FaRegEdit } from "react-icons/fa";
 
 const Register = () => {
-  const [addUser, {isLoading}] = useAddUserMutation();
+  const [addUser] = useAddUserMutation();
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -26,6 +25,7 @@ const Register = () => {
   const [profile, setProfile] = useState(undefined);
   const [showPassword, setShowPassword] = useState(false);
   const [showProfile, setShowProfile] = useState(undefined);
+  const [loading, setLoading] = useState(false);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -34,7 +34,7 @@ const Register = () => {
   const handleProfileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setProfile(file)
+      setProfile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setShowProfile(reader.result);
@@ -60,6 +60,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (username && email && password) {
+      setLoading(true);
       if (profile) {
         var downloadURL = await uploadFile(profile);
       }
@@ -97,6 +98,8 @@ const Register = () => {
           },
         });
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     } else {
       toast.error("Please fill up all fields!");
@@ -105,7 +108,7 @@ const Register = () => {
 
   const profileCancel = () => {
     setProfile(null);
-    setShowProfile(null)
+    setShowProfile(null);
   };
 
   return (
@@ -238,7 +241,7 @@ const Register = () => {
                 type="submit"
                 className="w-full text-white disabled:bg-blue-400 bg-blue-600 hover:bg-blue-700 transition-colors duration-300 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
-                Create an account
+                {loading ? <BarLoader color="white"/> : "Create an account"}
               </button>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Already have an account?

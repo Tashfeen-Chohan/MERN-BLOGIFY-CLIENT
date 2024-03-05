@@ -3,15 +3,17 @@ import { useDeleteUserMutation, useGetUsersQuery } from "./userApi";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-import { BeatLoader } from "react-spinners";
+import { BarLoader, BeatLoader } from "react-spinners";
 import useAuth from "../../hooks/useAuth";
+import { deleteObject, getStorage, ref } from "firebase/storage";
+import app from "../../firebase";
 
 const Users = () => {
   const [searchBy, setSearchBy] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [filterBy, setFilterBy] = useState("");
   const [pageNo, setPageNo] = useState(1);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState({});
   const { status } = useAuth();
 
   if (status === "Admin") {
@@ -23,7 +25,18 @@ const Users = () => {
   const { data, isLoading, isError, error } = useGetUsersQuery(url);
   const [deleteUser] = useDeleteUserMutation();
 
-  const handleDelete = async (id) => {
+  const deleteProfile = async (fileRef) => {
+    try {
+      const storage = getStorage(app);
+      const fileStorageRef = ref(storage, fileRef);
+      await deleteObject(fileStorageRef);
+    } catch (error) {
+      toast.error("Error deleting file: ", error);
+      console.error("Error deleting file: ", error);
+    }
+  }
+
+  const handleDelete = async (id, profile) => {
     try {
       const result = await Swal.fire({
         title: "Are you sure?",
@@ -41,6 +54,11 @@ const Users = () => {
       });
 
       if (result.isConfirmed) {
+        setLoading((prevLoadingRows) => ({
+          ...prevLoadingRows,
+          [id]: true,
+        }));
+        await deleteProfile(profile)
         const response = await deleteUser(id);
         if (response.error) {
           Swal.fire({
@@ -68,6 +86,11 @@ const Users = () => {
             "!py-1 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
         },
       });
+    } finally {
+      setLoading((prevLoadingRows) => ({
+        ...prevLoadingRows,
+        [id]: false,
+      }));
     }
   };
 
@@ -78,6 +101,8 @@ const Users = () => {
       </div>
     )
   if (isError) return <p>{error}</p>;
+
+  
 
   // OBJECT DESTRUCTURING
   const { users, totalUsers, totalPages, page, limit } = data;
@@ -259,10 +284,10 @@ const Users = () => {
                         </button>
                       </Link>
                       <button
-                        onClick={() => handleDelete(val._id)}
+                        onClick={() => handleDelete(val._id, val.profile)}
                         className="bg-[#FE0000] hover:bg-red-600 transition-colors duration-500 text-white py-1 px-3 rounded shadow-xl"
                       >
-                        Delete
+                        {loading[val._id] ? 'Deleting...' : 'Delete'}
                       </button>
                     </>
                   )}

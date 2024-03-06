@@ -54,8 +54,8 @@ const Users = () => {
       });
 
       if (result.isConfirmed) {
-        setLoading((prevLoadingRows) => ({
-          ...prevLoadingRows,
+        setLoading((prevLoading) => ({
+          ...prevLoading,
           [id]: true,
         }));
         await deleteProfile(profile)
@@ -87,8 +87,8 @@ const Users = () => {
         },
       });
     } finally {
-      setLoading((prevLoadingRows) => ({
-        ...prevLoadingRows,
+      setLoading((prevLoading) => ({
+        ...prevLoading,
         [id]: false,
       }));
     }
@@ -287,7 +287,7 @@ const Users = () => {
                         onClick={() => handleDelete(val._id, val.profile)}
                         className="bg-[#FE0000] hover:bg-red-600 transition-colors duration-500 text-white py-1 px-3 rounded shadow-xl"
                       >
-                        {loading[val._id] ? 'Deleting...' : 'Delete'}
+                        {loading[val._id] ? 'Deleting' : 'Delete'}
                       </button>
                     </>
                   )}

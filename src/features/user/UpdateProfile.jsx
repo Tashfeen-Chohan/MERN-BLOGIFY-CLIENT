@@ -8,17 +8,20 @@ import { BeatLoader } from "react-spinners";
 import axios from "axios";
 import { logout } from "../auth/authSlice";
 import { useDispatch } from "react-redux";
+import { FaRegEdit } from "react-icons/fa";
+import { MdCancel } from "react-icons/md";
 
 const UpdateProfile = () => {
-  const { slug } = useAuth();  
+  const { slug } = useAuth();
   const { data, isLoading } = useGetSingleUserQuery(slug);
-  const [updateUser] = useUpdateUserMutation()
+  const [updateUser] = useUpdateUserMutation();
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const [user, setUser] = useState({
     username: data?.user.username,
     email: data?.user.email,
+    profile: data?.user.profile,
   });
 
   if (isLoading)
@@ -80,8 +83,11 @@ const UpdateProfile = () => {
       });
 
       if (result.isConfirmed) {
-        const {username, email} = user;
-        const res = await updateUser({ slug, username, email});
+        if (!user.profile){
+          user.profile = "https://firebasestorage.googleapis.com/v0/b/mern-blogify.appspot.com/o/UserProfiles%2Fcowboy.png?alt=media&token=75c80891-40de-464b-a2da-0bb0af3fa08a"
+        }
+        const { username, email, profile } = user;
+        const res = await updateUser({ slug, username, email, profile });
         if (res.error) {
           Swal.fire({
             title: "Error!",
@@ -95,11 +101,12 @@ const UpdateProfile = () => {
           });
         } else {
           toast.success(res.data.message);
-          handleLogout()
+          handleLogout();
           setUser({
             username: "",
             email: "",
-          })
+            profile: "",
+          });
         }
       } else if (result.isDenied) {
         Swal.fire({
@@ -127,6 +134,13 @@ const UpdateProfile = () => {
     }
   };
 
+  const profileCancel = () => {
+    setUser((prevState) => ({
+      ...prevState,
+      profile: null,
+    }));
+    toast.success("Profile removed! Update to save changes.")
+  };
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900 flex justify-center items-center min-h-screen mt-[-20px]">
@@ -136,13 +150,40 @@ const UpdateProfile = () => {
             <h1 className="text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Profile Update
             </h1>
-            <div className="my-5 w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden mx-auto">
-              <img
-                src={data?.user.profile}
-                alt="User Profile"
-                className="w-full h-full rounded-full border-4 md:border-8 border-gray-300 object-cover text-black text-center"
-              />
-            </div>
+            {user.profile && (
+              <div className="relative">
+                <div className="w-20 h-20 md:w-28 md:h-28 rounded-full overflow-hidden mx-auto">
+                  <img
+                    src={data?.user.profile}
+                    alt="Profile"
+                    className="w-full h-full object-cover text-white text-center"
+                  />
+                </div>
+                <div className="absolute top-0 right-10 md:right-20 flex gap-2">
+                  <div>
+                    <label htmlFor="profileEdit">
+                      <FaRegEdit
+                        className="hover:scale-110 transition-all duration-300"
+                        color="gray"
+                        size={22}
+                      />
+                    </label>
+                    <input
+                      // onChange={handleProfileChange}
+                      id="profileEdit"
+                      type="file"
+                      className="hidden"
+                    />
+                  </div>
+                  <MdCancel
+                    className="hover:scale-110 transition-all duration-300"
+                    onClick={profileCancel}
+                    color="gray"
+                    size={25}
+                  />
+                </div>
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* NAME */}
               <div>
@@ -180,8 +221,26 @@ const UpdateProfile = () => {
                   placeholder="name@company.com"
                 />
               </div>
+              {/* PROFILE */}
+              {!user.profile && (
+                <div>
+                  <label
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    htmlFor="profile"
+                  >
+                    Profile
+                  </label>
+                  <input
+                    className="text-gray-900 dark:text-white"
+                    type="file"
+                    // onChange={handleProfileChange}
+                  />
+                </div>
+              )}
 
-              <p className="text-yellow-300 text-sm">* You would have to Login again with new credentials!</p>
+              <p className="text-yellow-300 text-sm">
+                * You would have to Login again with new credentials!
+              </p>
 
               <button
                 type="submit"

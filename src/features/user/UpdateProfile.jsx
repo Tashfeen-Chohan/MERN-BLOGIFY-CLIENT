@@ -10,7 +10,13 @@ import { logout } from "../auth/authSlice";
 import { useDispatch } from "react-redux";
 import { FaRegEdit } from "react-icons/fa";
 import { MdCancel } from "react-icons/md";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import app from "../../firebase";
 import { v4 } from "uuid";
 
@@ -22,12 +28,15 @@ const UpdateProfile = () => {
   const dispatch = useDispatch();
 
   const [showProfile, setShowProfile] = useState(undefined);
-  const [editLoading, setEditLoading] = useState(false)
+  const [editLoading, setEditLoading] = useState(false);
+  const defaultProfile =
+    "https://firebasestorage.googleapis.com/v0/b/mern-blogify.appspot.com/o/UserProfiles%2Fcowboy.png?alt=media&token=75c80891-40de-464b-a2da-0bb0af3fa08a";
 
   const [user, setUser] = useState({
     username: data?.user.username,
     email: data?.user.email,
     profile: data?.user.profile,
+    prevProfile: data?.user.profile,
   });
 
   if (isLoading)
@@ -93,6 +102,17 @@ const UpdateProfile = () => {
     }
   };
 
+  const deleteProfile = async (fileRef) => {
+    try {
+      const storage = getStorage(app);
+      const fileStorageRef = ref(storage, fileRef);
+      await deleteObject(fileStorageRef);
+    } catch (error) {
+      toast.error("Error deleting file: ", error);
+      console.error("Error deleting file: ", error);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -114,15 +134,17 @@ const UpdateProfile = () => {
       });
 
       if (result.isConfirmed) {
-        setEditLoading(true)
+        setEditLoading(true);
         if (!user.profile) {
-          user.profile =
-            "https://firebasestorage.googleapis.com/v0/b/mern-blogify.appspot.com/o/UserProfiles%2Fcowboy.png?alt=media&token=75c80891-40de-464b-a2da-0bb0af3fa08a";
+          user.profile = defaultProfile;
+          await deleteProfile(user.prevProfile)
         }
-        if (showProfile){
-          const downloadURL = await uploadFile(user.profile)
-          user.profile = downloadURL
+        if (showProfile) {
+          const downloadURL = await uploadFile(user.profile);
+          user.profile = downloadURL;
+          await deleteProfile(user.prevProfile)
         }
+       
         const { username, email, profile } = user;
         const res = await updateUser({ slug, username, email, profile });
         if (res.error) {
@@ -169,7 +191,7 @@ const UpdateProfile = () => {
         },
       });
     } finally {
-      setEditLoading(false)
+      setEditLoading(false);
     }
   };
 
@@ -221,12 +243,7 @@ const UpdateProfile = () => {
                       className="hidden"
                     />
                   </div>
-                  <button
-                    disabled={
-                      user.profile ===
-                      "https://firebasestorage.googleapis.com/v0/b/mern-blogify.appspot.com/o/UserProfiles%2Fcowboy.png?alt=media&token=75c80891-40de-464b-a2da-0bb0af3fa08a"
-                    }
-                  >
+                  <button disabled={user.profile === defaultProfile}>
                     <MdCancel
                       className="hover:scale-110 transition-all duration-300"
                       onClick={profileCancel}
@@ -300,7 +317,11 @@ const UpdateProfile = () => {
                 disabled={editLoading}
                 className="disabled:bg-blue-800 transition-colors duration-300 w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
-                {editLoading ? <BarLoader color="white"/> : "Update your profile"}
+                {editLoading ? (
+                  <BarLoader color="white" />
+                ) : (
+                  "Update your profile"
+                )}
               </button>
 
               <Link to={-1}>

@@ -239,7 +239,8 @@ const Register = () => {
               </div>
               <button
                 type="submit"
-                className="w-full text-white disabled:bg-blue-400 bg-blue-600 hover:bg-blue-700 transition-colors duration-300 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                disabled={loading}
+                className=" w-full text-white disabled:bg-blue-800 bg-blue-600 hover:bg-blue-700 transition-colors duration-300 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
                 {loading ? <BarLoader color="white"/> : "Create an account"}
               </button>

@@ -4,12 +4,15 @@ import { toast } from "react-toastify";
 import { useGetSingleUserQuery, useUpdateUserMutation } from "../user/userApi";
 import Swal from "sweetalert2";
 import useAuth from "../../hooks/useAuth";
-import { BeatLoader } from "react-spinners";
+import { BarLoader, BeatLoader } from "react-spinners";
 import axios from "axios";
 import { logout } from "../auth/authSlice";
 import { useDispatch } from "react-redux";
 import { FaRegEdit } from "react-icons/fa";
 import { MdCancel } from "react-icons/md";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import app from "../../firebase";
+import { v4 } from "uuid";
 
 const UpdateProfile = () => {
   const { slug } = useAuth();
@@ -17,6 +20,9 @@ const UpdateProfile = () => {
   const [updateUser] = useUpdateUserMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [showProfile, setShowProfile] = useState(undefined);
+  const [editLoading, setEditLoading] = useState(false)
 
   const [user, setUser] = useState({
     username: data?.user.username,
@@ -37,6 +43,18 @@ const UpdateProfile = () => {
       ...user,
       [name]: value,
     });
+  };
+
+  const handleProfileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      user.profile = file;
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setShowProfile(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleLogout = async () => {
@@ -62,6 +80,19 @@ const UpdateProfile = () => {
     }
   };
 
+  const uploadFile = async (file) => {
+    try {
+      const storage = getStorage(app);
+      const storageRef = ref(storage, `UserProfiles/${file.name + v4()}`);
+      const snapshot = await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      return downloadURL;
+    } catch (error) {
+      toast.error("Error uploading file : ", error);
+      throw error;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -83,8 +114,14 @@ const UpdateProfile = () => {
       });
 
       if (result.isConfirmed) {
-        if (!user.profile){
-          user.profile = "https://firebasestorage.googleapis.com/v0/b/mern-blogify.appspot.com/o/UserProfiles%2Fcowboy.png?alt=media&token=75c80891-40de-464b-a2da-0bb0af3fa08a"
+        setEditLoading(true)
+        if (!user.profile) {
+          user.profile =
+            "https://firebasestorage.googleapis.com/v0/b/mern-blogify.appspot.com/o/UserProfiles%2Fcowboy.png?alt=media&token=75c80891-40de-464b-a2da-0bb0af3fa08a";
+        }
+        if (showProfile){
+          const downloadURL = await uploadFile(user.profile)
+          user.profile = downloadURL
         }
         const { username, email, profile } = user;
         const res = await updateUser({ slug, username, email, profile });
@@ -131,6 +168,8 @@ const UpdateProfile = () => {
             "!py-1 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
         },
       });
+    } finally {
+      setEditLoading(false)
     }
   };
 
@@ -139,7 +178,6 @@ const UpdateProfile = () => {
       ...prevState,
       profile: null,
     }));
-    toast.success("Profile removed! Update to save changes.")
   };
 
   return (
@@ -153,11 +191,19 @@ const UpdateProfile = () => {
             {user.profile && (
               <div className="relative">
                 <div className="w-20 h-20 md:w-28 md:h-28 rounded-full overflow-hidden mx-auto">
-                  <img
-                    src={data?.user.profile}
-                    alt="Profile"
-                    className="w-full h-full object-cover text-white text-center"
-                  />
+                  {showProfile ? (
+                    <img
+                      src={showProfile}
+                      alt="Profile"
+                      className="w-full h-full object-cover text-white text-center"
+                    />
+                  ) : (
+                    <img
+                      src={data?.user.profile}
+                      alt="Profile"
+                      className="w-full h-full object-cover text-white text-center"
+                    />
+                  )}
                 </div>
                 <div className="absolute top-0 right-10 md:right-20 flex gap-2">
                   <div>
@@ -169,18 +215,25 @@ const UpdateProfile = () => {
                       />
                     </label>
                     <input
-                      // onChange={handleProfileChange}
+                      onChange={handleProfileChange}
                       id="profileEdit"
                       type="file"
                       className="hidden"
                     />
                   </div>
-                  <MdCancel
-                    className="hover:scale-110 transition-all duration-300"
-                    onClick={profileCancel}
-                    color="gray"
-                    size={25}
-                  />
+                  <button
+                    disabled={
+                      user.profile ===
+                      "https://firebasestorage.googleapis.com/v0/b/mern-blogify.appspot.com/o/UserProfiles%2Fcowboy.png?alt=media&token=75c80891-40de-464b-a2da-0bb0af3fa08a"
+                    }
+                  >
+                    <MdCancel
+                      className="hover:scale-110 transition-all duration-300"
+                      onClick={profileCancel}
+                      color="gray"
+                      size={25}
+                    />
+                  </button>
                 </div>
               </div>
             )}
@@ -233,7 +286,7 @@ const UpdateProfile = () => {
                   <input
                     className="text-gray-900 dark:text-white"
                     type="file"
-                    // onChange={handleProfileChange}
+                    onChange={handleProfileChange}
                   />
                 </div>
               )}
@@ -244,12 +297,13 @@ const UpdateProfile = () => {
 
               <button
                 type="submit"
-                className="transition-colors duration-300 w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                disabled={editLoading}
+                className="disabled:bg-blue-800 transition-colors duration-300 w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
-                Update your profile
+                {editLoading ? <BarLoader color="white"/> : "Update your profile"}
               </button>
 
-              <Link to={"/profile"}>
+              <Link to={-1}>
                 <button className="mt-3 w-full transition-colors duration-300 text-white bg-rose-600 hover:bg-rose-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                   Cancel
                 </button>

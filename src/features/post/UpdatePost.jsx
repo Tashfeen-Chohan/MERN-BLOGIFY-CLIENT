@@ -8,14 +8,17 @@ import Swal from "sweetalert2";
 import {
   getStorage,
   ref,
-  uploadBytesResumable,
   getDownloadURL,
+  deleteObject,
+  uploadBytes,
 } from "firebase/storage";
 import { v4 } from "uuid";
 import app from "../../firebase";
 import { useNavigate, useParams } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { FcEditImage } from "react-icons/fc";
+import { PulseLoader } from "react-spinners";
 
 const toolbarOptions = {
   toolbar: [
@@ -33,37 +36,40 @@ const toolbarOptions = {
 };
 
 const UpdatePost = () => {
-  const {slug} = useParams()
+  const { slug } = useParams();
   const catUrl = `categories?sortBy=name&limit=1000`;
   const { data } = useGetCategoriesQuery(catUrl);
-  const {data: singlePost} = useGetSinglePostQuery(slug)
-  const [updatePost] = useUpdatePostMutation()
+  const { data: singlePost } = useGetSinglePostQuery(slug);
+  const [updatePost] = useUpdatePostMutation();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [categories, setCategories] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState([])
-  const [img, setImg] = useState(undefined);
-  const [imgPercentage, setImgPercentage] = useState(0);
-  const [uploadedImg, setUploadedImg] = useState(null);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [blogImg, setBLogImg] = useState(undefined);
+  const [prevBlogImg, setPrevBlogImg] = useState(undefined);
+  const [showBlogImg, setShowBlogImg] = useState(undefined);
+  const [loading, setLoading] = useState(false);
+
   const { id } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (singlePost){
-      setTitle(singlePost.post.title)
-      setContent(singlePost.post.content)
-      setImg(singlePost.post.blogImg)
-      const selectedCategories = singlePost.post.categories.map(category => ({
+    if (singlePost) {
+      setTitle(singlePost.post.title);
+      setContent(singlePost.post.content);
+      setBLogImg(singlePost.post.blogImg);
+      setPrevBlogImg(singlePost.post.blogImg);
+      const selectedCategories = singlePost.post.categories.map((category) => ({
         value: category._id,
-        label: category.name
+        label: category.name,
       }));
-      setSelectedCategories(selectedCategories)
-      setCategories(selectedCategories.map((category) => category.value))
+      setSelectedCategories(selectedCategories);
+      setCategories(selectedCategories.map((category) => category.value));
     }
-  }, [singlePost])
+  }, [singlePost]);
 
-   const options = data?.categories.map((val) => ({
+  const options = data?.categories.map((val) => ({
     value: val._id,
     label: val.name,
   }));
@@ -76,67 +82,58 @@ const UpdatePost = () => {
     );
   };
 
-  const uploadFile = (file) => {
-    const storage = getStorage(app);
-    const storageRef = ref(storage, `blogImages/${file.name + v4()}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
+  const handleBlogCoverChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setBLogImg(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setShowBlogImg(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
-    // Listen for state changes, errors, and completion of the upload.
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setImgPercentage(Math.round(progress));
-        switch (snapshot.state) {
-          case "paused":
-            console.log("Upload is paused");
-            break;
-          case "running":
-            console.log("Upload is running");
-            break;
-          default:
-            break;
-        }
-      },
-      (error) => {
-        console.log(error);
-        switch (error.code) {
-          case "storage/unauthorized":
-            // User doesn't have permission to access the object
-            console.log(error);
-            break;
-          case "storage/canceled":
-            // User canceled the upload
-            break;
-          case "storage/unknown":
-            // Unknown error occurred, inspect error.serverResponse
-            break;
-          default:
-            break;
-        }
-      },
-      () => {
-        // Upload completed successfully, now we can get the download URL
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("DownloadURL - ", downloadURL);
-          setUploadedImg(downloadURL);
-        });
-      }
-    );
+  const uploadFile = async (file) => {
+    try {
+      const storage = getStorage(app);
+      const storageRef = ref(storage, `BlogImages/${file.name + v4()}`);
+      const snapshot = await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      return downloadURL;
+    } catch (error) {
+      toast.error("Error uploading file : ", error.message);
+      console.log(error.message);
+    }
+  };
+
+  const deleteBlogCover = async (fileRef) => {
+    try {
+      const storage = getStorage(app);
+      const fileStorageRef = ref(storage, fileRef);
+      await deleteObject(fileStorageRef);
+    } catch (error) {
+      toast.error("Error deleting file!");
+      console.log(error.message);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if ((title, content, categories.length > 0)) {
+    if (title && content && categories.length > 0 && blogImg) {
+      setLoading(true);
       try {
+        if (showBlogImg) {
+          var downloadURL = await uploadFile(blogImg);
+          await deleteBlogCover(prevBlogImg);
+        }
         const res = await updatePost({
           slug,
           author: id,
           title,
           content,
           categories,
-          blogImg: img,
+          blogImg : showBlogImg ? downloadURL : blogImg,
         });
         if (res.error) {
           Swal.fire({
@@ -150,8 +147,8 @@ const UpdatePost = () => {
             },
           });
         } else {
-          navigate(`/posts/${singlePost.post.slug}`);
-          window.scrollTo(0,0)
+          navigate(`/posts/${res.data.post.slug}`);
+          window.scrollTo(0, 0);
           toast.success(res.data.message);
         }
       } catch (error) {
@@ -166,6 +163,8 @@ const UpdatePost = () => {
           },
         });
         console.log(error.message);
+      } finally {
+        setLoading(false)
       }
     } else {
       toast.error("Please provide neccessary details!");
@@ -180,13 +179,30 @@ const UpdatePost = () => {
         </h1>
         {/* IMAGE CONTAINER */}
         <div className="w-full mb-5">
-          {img && (
+          {showBlogImg ? (
             <img
               className="rounded shadow-lg w-full h-auto"
-              src={img}
+              src={showBlogImg}
+              alt="Blog cover photo"
+            />
+          ) : (
+            <img
+              className="rounded shadow-lg w-full h-auto"
+              src={blogImg}
               alt="Blog cover photo"
             />
           )}
+          <div className="flex justify-end items-center mt-2 mr-2">
+            <label htmlFor="editBlogCover">
+              <FcEditImage size={25} />
+            </label>
+            <input
+              type="file"
+              id="editBlogCover"
+              className="hidden"
+              onChange={handleBlogCoverChange}
+            />
+          </div>
         </div>
         <form onSubmit={handleSubmit}>
           {/* TITLE */}
@@ -234,7 +250,7 @@ const UpdatePost = () => {
               type="submit"
               className="bg-indigo-600 hover:bg-indigo-700 transition-colors duration-300 px-5 py-1 text-white rounded shadow-xl"
             >
-              Update
+              {loading ? <PulseLoader color="white" size={7}/> : "Update"}
             </button>
             <button
               onClick={() => navigate(-1)}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useGetCategoriesQuery } from "../category/categoryApi";
 import Select from "react-select";
 import { toast } from "react-toastify";
@@ -11,7 +11,9 @@ import app from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { FaDeleteLeft } from "react-icons/fa6";
+import { RiChatDeleteFill } from "react-icons/ri";
+import { FcEditImage } from "react-icons/fc";
+import {  PulseLoader } from "react-spinners";
 
 const toolbarOptions = {
   toolbar: [
@@ -22,7 +24,7 @@ const toolbarOptions = {
     [{ align: [] }],
     [{ list: "ordered" }, { list: "bullet" }],
     [{ color: [] }, { background: [] }],
-    ["link", "image", "video"],
+    ["link"],
 
     ["clean"],
   ],
@@ -36,9 +38,10 @@ const CreatePost = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [categories, setCategories] = useState([]);
-  const [img, setImg] = useState(undefined);
-  const [uploadedImg, setUploadedImg] = useState(undefined);
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [blogImg, setBlogImg] = useState(undefined);
+  const [showBlogImg, setShowBlogImg] = useState(undefined);
+  const [loading, setLoading] = useState(false)
+
   const { id } = useAuth();
   const navigate = useNavigate();
 
@@ -54,49 +57,43 @@ const CreatePost = () => {
     );
   };
 
+  const handleCoverImgChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setBlogImg(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setShowBlogImg(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const uploadFile = async (file) => {
-    setIsDisabled(true);
     try {
       const storage = getStorage(app);
       const storageRef = ref(storage, `BlogImages/${file.name + v4()}`);
       const snapshot = await uploadBytes(storageRef, file);
-      toast.success("Blog Cover uploaded successfully!");
-      try {
-        const downloadURL = await getDownloadURL(snapshot.ref);
-        // console.log("DownloadURL - ", downloadURL);
-        setUploadedImg(downloadURL);
-        setIsDisabled(false);
-      } catch (error) {
-        toast.error("Error getting download URL : ", error.code);
-      }
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      return downloadURL;
     } catch (error) {
-      toast.error("Error uploading file : ", error);
+      toast.error("Error uploading file : ", error.message);
       console.log(error.message);
     }
   };
 
-  useEffect(() => {
-    if (img && !uploadedImg) {
-      uploadFile(img);
-    }
-  }, [img, uploadedImg]);
-
-  useEffect(() => {
-    if (uploadedImg) {
-      setImg(uploadedImg);
-    }
-  }, [uploadedImg]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (title && content && categories.length > 0 && img) {
+    if (title && content && categories.length > 0 && blogImg) {
+      setLoading(true)
+      const downloadURL = await uploadFile(blogImg)
       try {
         const res = await createPost({
           author: id,
           title,
           content,
           categories,
-          blogImg: img,
+          blogImg: downloadURL,
         });
         if (res.error) {
           Swal.fire({
@@ -126,6 +123,8 @@ const CreatePost = () => {
           },
         });
         console.log(error);
+      } finally {
+        setLoading(false)
       }
     } else {
       toast.error("Please provide neccessary details!");
@@ -133,8 +132,8 @@ const CreatePost = () => {
   };
 
   const cancelCoverImg = () => {
-    setUploadedImg(undefined);
-    setImg(undefined);
+    setBlogImg(undefined);
+    setShowBlogImg(undefined);
   };
 
   return (
@@ -144,19 +143,25 @@ const CreatePost = () => {
           Create Post
         </h1>
         {/* IMAGE CONTAINER */}
-        {img && (
-          <div className="w-full mb-5 relative">
+        {blogImg && (
+          <div className="w-full mb-3 relative">
             <img
               className="rounded shadow-lg w-full h-auto"
-              src={img}
+              src={showBlogImg}
               alt="Uploaded Image"
             />
-            <FaDeleteLeft
-              onClick={cancelCoverImg}
-              className="absolute top-3 right-3 md:right-7 md:top-5"
-              color="red"
-              size={30}
-            />
+            <div className="flex justify-end items-center gap-2 mt-1">
+              <label htmlFor="editBlogCover">
+                <FcEditImage className="text-orange-400" size={25} />
+              </label>
+              <input
+                id="editBlogCover"
+                type="file"
+                className="hidden"
+                onChange={handleCoverImgChange}
+              />
+              <RiChatDeleteFill onClick={cancelCoverImg} color="red" size={25} />
+            </div>
           </div>
         )}
         <form onSubmit={handleSubmit}>
@@ -179,7 +184,7 @@ const CreatePost = () => {
               onChange={setContent}
             />
           </div>
-          {/* CATEGORY */}
+          {/* CATEGORY & IMG */}
           <div className=" flex gap-2 md:gap-5 justify-start  items-center flex-col md:flex-row">
             <Select
               className="w-full md:w-[50%]"
@@ -195,17 +200,17 @@ const CreatePost = () => {
               className="w-full md:w-[50%]"
               type="file"
               accept="image/*"
-              onChange={(e) => setImg(e.target.files[0])}
+              onChange={handleCoverImgChange}
             />
           </div>
           {/* SUBMIT */}
           <div className="md:mt-3 mt-4 flex justify-end items-center gap-3">
             <button
               type="submit"
-              disabled={isDisabled}
-              className="bg-indigo-600 disabled:bg-indigo-400 hover:bg-indigo-700 transition-colors duration-300 px-5 py-1 text-white rounded shadow-xl"
+              disabled={loading}
+              className="bg-indigo-600 disabled:bg-indigo-700 hover:bg-indigo-700 transition-colors duration-300 px-5 py-1 text-white rounded shadow-xl"
             >
-              Publish
+              {loading ? <PulseLoader color="white" size={7}/> : "Publish"}
             </button>
             <button
               onClick={() => navigate(-1)}

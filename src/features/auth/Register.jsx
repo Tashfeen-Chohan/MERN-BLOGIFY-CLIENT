@@ -49,7 +49,6 @@ const Register = () => {
       const storageRef = ref(storage, `UserProfiles/${file.name + v4()}`);
       const snapshot = await uploadBytes(storageRef, file);
       const downloadURL = await getDownloadURL(snapshot.ref);
-      console.log("DownloadURL - ", downloadURL);
       return downloadURL;
     } catch (error) {
       toast.error("Error uploading file : ", error);

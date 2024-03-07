@@ -14,11 +14,11 @@ const Categories = () => {
   const [searchBy, setSearchBy] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [pageNo, setPageNo] = useState(1);
-  const [loading, setLoading] = useState(true);
-  const {status} = useAuth()
+  const { status } = useAuth();
 
   let url = `categories?sortBy=${sortBy}&searchBy=${searchBy}&page=${pageNo}`;
-  const { data, isLoading, isError, error } = useGetCategoriesQuery(url);
+  const { data, isLoading, isFetching, isError, error } =
+    useGetCategoriesQuery(url);
 
   const [deleteCategory] = useDeleteCategoryMutation();
 
@@ -76,7 +76,7 @@ const Categories = () => {
       <div className="flex justify-center items-center min-h-screen bg-slate-200">
         <BeatLoader color="#000000" size={15} />
       </div>
-    )
+    );
   if (isError) return <p>{error}</p>;
 
   // OBJECT DESTRUCTURING
@@ -129,7 +129,9 @@ const Categories = () => {
             onChange={(e) => setSortBy(e.target.value)}
             className="bg-slate-200 shadow-md  rounded text-black outline-none px-2 py-1"
           >
-            <option className="font-bold" value="">Default</option>
+            <option className="font-bold" value="">
+              Default
+            </option>
             <option value="date desc">Recent</option>
             <option value="date">Oldest</option>
             <option value="posts">Post &#8593;</option>
@@ -139,65 +141,72 @@ const Categories = () => {
         </div>
 
         {/* TABLE */}
-        <div className="relative overflow-x-auto md:w-full shadow-md sm:rounded mb-5 mt-3 w-[100%]">
-          <table className="w-full text-sm text-left rtl:text-right">
-            <thead className="text-md text-black uppercase bg-slate-300">
-              <tr>
-                <th scope="col" className="px-6 py-3">
-                  #
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Name
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Posts
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="font-semibold! text-sm">
-              {categories.map((val, index) => (
-                <tr
-                  key={val._id}
-                  className="userTable bg-white border-b hover:bg-gray-200"
-                >
-                  <td className="px-6 py-2">
-                    {(page - 1) * limit + index + 1}
-                  </td>
-                  <td className="px-6 py-2">
-                    <span>{val.name}</span>
-                  </td>
-                  <td className="px-6 py-2">
-                    <span>{val.noOfPosts}</span>
-                  </td>
-                  <td className="px-6 py-2 text-right flex justify-start items-center gap-2">
-                    <Link to={`/categories/${val.slug}`}>
-                      <button className="bg-indigo-500 hover:bg-indigo-600 text-white transition-colors duration-500 py-1 px-3 rounded shadow-xl">
-                        View
-                      </button>
-                    </Link>
-                    {status === "Admin" && (
-                      <Link to={`/categories/update/${val.slug}`}>
-                        <button className="bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 py-1 px-3 rounded shadow-xl">
-                          Edit
+        <div className="w-full relative">
+          {isFetching && (
+            <div className="absolute inset-0  z-10 flex items-center justify-center">
+              <BeatLoader size={15} color="black" />
+            </div>
+          )}
+          <div className= {`${isFetching ? "filter blur-sm" : ""} relative overflow-x-auto md:w-full shadow-md sm:rounded mb-5 mt-3 w-[100%]`}>
+            <table className="w-full text-sm text-left rtl:text-right">
+              <thead className="text-md text-black uppercase bg-slate-300">
+                <tr>
+                  <th scope="col" className="px-6 py-3">
+                    #
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Name
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Posts
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="font-semibold! text-sm">
+                {categories.map((val, index) => (
+                  <tr
+                    key={val._id}
+                    className="userTable bg-white border-b hover:bg-gray-200"
+                  >
+                    <td className="px-6 py-2">
+                      {(page - 1) * limit + index + 1}
+                    </td>
+                    <td className="px-6 py-2">
+                      <span>{val.name}</span>
+                    </td>
+                    <td className="px-6 py-2">
+                      <span>{val.noOfPosts}</span>
+                    </td>
+                    <td className="px-6 py-2 text-right flex justify-start items-center gap-2">
+                      <Link to={`/categories/${val.slug}`}>
+                        <button className="bg-indigo-500 hover:bg-indigo-600 text-white transition-colors duration-500 py-1 px-3 rounded shadow-xl">
+                          View
                         </button>
                       </Link>
-                    )}
-                    {status === "Admin" && (
-                      <button
-                        onClick={() => handleDelete(val._id)}
-                        className="bg-[#FE0000] hover:bg-red-600 transition-colors duration-500 text-white py-1 px-3 rounded shadow-xl"
-                      >
-                        Delete
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                      {status === "Admin" && (
+                        <Link to={`/categories/update/${val.slug}`}>
+                          <button className="bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 py-1 px-3 rounded shadow-xl">
+                            Edit
+                          </button>
+                        </Link>
+                      )}
+                      {status === "Admin" && (
+                        <button
+                          onClick={() => handleDelete(val._id)}
+                          className="bg-[#FE0000] hover:bg-red-600 transition-colors duration-500 text-white py-1 px-3 rounded shadow-xl"
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* NO CATEGORY FOUND */}

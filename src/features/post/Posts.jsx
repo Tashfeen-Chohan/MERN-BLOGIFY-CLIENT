@@ -29,7 +29,6 @@ const Posts = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-
   if (isLoading)
     return (
       <div className="flex justify-center items-center min-h-screen mt-[-60px] bg-slate-200">
@@ -48,7 +47,6 @@ const Posts = () => {
   const { posts, totalPosts } = data ?? {};
 
   const Posts = posts?.map((val) => {
-  
     const viewPost = () => {
       navigate(`posts/${val.slug}`);
       window.scrollTo(0, 0);
@@ -185,18 +183,26 @@ const Posts = () => {
               className="bg-slate-200 shadow-md text-sm font-semibold  rounded text-black outline-none px-2 py-1"
             >
               <option value="">All Posts {!filter && `(${totalPosts})`}</option>
-              <option value="popular">Popular {filter && `(${totalPosts})`} {isFetching && " Loading..."}</option>
+              <option value="popular">
+                Popular {filter && `(${totalPosts})`}
+              </option>
             </select>
             <select
               onChange={(e) => setSort(e.target.value)}
               className="bg-slate-200 shadow-md text-sm font-semibold   rounded text-black outline-none px-2 py-1"
             >
               <option value="">Recent</option>
-              <option value="oldest">Oldest {isFetching && " Loading..."}</option>
-              <option value="views">Views {isFetching && " Loading..."}</option>
-              <option value="likes">Likes {isFetching && " Loading..."}</option>
-              <option value="title">A to Z &#8595; {isFetching && " Loading..."}</option>
-              <option value="title desc">Z to A &#8593;{isFetching && " Loading..."}</option>
+              <option value="oldest">
+                Oldest {isFetching && " Loading..."}
+              </option>
+              <option value="views">Views </option>
+              <option value="likes">Likes </option>
+              <option value="title">
+                A to Z &#8595; 
+              </option>
+              <option value="title desc">
+                Z to A &#8593;
+              </option>
             </select>
           </div>
         </div>
@@ -207,11 +213,10 @@ const Posts = () => {
               <span className=" flex justify-start items-center gap-2">
                 <FaFilter />
                 Filters
-                
               </span>
               <span className="absolute -top-1 left-[70px] bg-blue-900 rounded-full text-white w-4 h-4 flex justify-center items-center text-xs">
-                  {category.name && publisher.name ? 2 : 1}
-                </span>
+                {category.name && publisher.name ? 2 : 1}
+              </span>
             </span>
             <div className="flex justify-center items-center gap-3 mt-3">
               {publisher.name && (
@@ -236,8 +241,15 @@ const Posts = () => {
           </div>
         )}
         {/* POSTS */}
-        <div className="grid mx-auto grid-cols-12 gap-7 md:gap-x-5 md:gap-y-7 w-[95%] md:max-w-5xl my-7">
-          {Posts}
+        <div className="relative">
+          {isFetching && (
+            <div className="absolute inset-0  z-10 flex items-center justify-center">
+              <BeatLoader size={18} />
+            </div>
+          )}
+          <div className={`${isFetching ? "filter blur-sm" : ""} grid mx-auto grid-cols-12 gap-7 md:gap-x-5 md:gap-y-7 w-[95%] md:max-w-5xl my-7`}>
+            {Posts}
+          </div>
         </div>
         {/* NO POST FOUND */}
         <div
@@ -250,14 +262,20 @@ const Posts = () => {
           <p>No post found!</p>
         </div>
         {/* PAGINATION */}
-        {totalPosts !== 0 &&  (
+        {totalPosts !== 0 && (
           <div className="my-5 flex justify-center items-center ">
             <button
               disabled={limit >= totalPosts}
               onClick={() => setLimit(limit + 6)}
               className="py-1 px-3 rounded shadow-xl bg-blue-900 text-white hover:bg-blue-700 transition-colors duration-300"
             >
-              {isFetching ? <BarLoader color="white" size={7} className="my-2 "/> : limit >= totalPosts ? "No More Posts" : "See More"}
+              {isFetching ? (
+                <BarLoader color="white" size={7} className="my-2 " />
+              ) : limit >= totalPosts ? (
+                "No More Posts"
+              ) : (
+                "See More"
+              )}
             </button>
           </div>
         )}

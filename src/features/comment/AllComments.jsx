@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDeleteCommentMutation, useGetAllCommentsQuery } from "./commentApi";
-import { BeatLoader } from "react-spinners";
+import { BarLoader, BeatLoader, PropagateLoader } from "react-spinners";
 import { MdDelete, MdOutlinePreview } from "react-icons/md";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +11,7 @@ const AllComments = () => {
   const [sort, setSort] = useState("");
   const [pageNo, setPageNo] = useState(1);
   let url = `/comments?sortBy=${sort}&page=${pageNo}`;
-  const { data, isLoading } = useGetAllCommentsQuery(url);
+  const { data, isLoading, isFetching } = useGetAllCommentsQuery(url);
   const [deleteComment] = useDeleteCommentMutation();
   const navigate = useNavigate();
 
@@ -71,7 +71,7 @@ const AllComments = () => {
   };
 
   const { comments, totalComments, totalPages, page, limit } = data ?? {};
-  console.log(comments)
+  console.log(comments);
 
   return (
     <div>
@@ -96,96 +96,112 @@ const AllComments = () => {
             <option value="likes">Likes</option>
           </select>
         </div>
-        <table
-          className={
-            "min-w-full border-collapse block md:table mt-3 mb-5 shadow-xl"
-          }
-        >
-          <thead className="block md:table-header-group bg-slate-300 text-black">
-            <tr className="border border-grey-500 md:border-none block md:table-row absolute -top-full md:top-auto -left-full md:left-auto  md:relative ">
-              <th className="p-2 text-sm font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                #
-              </th>
-              <th className="p-2 text-sm font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                Post
-              </th>
-              <th className="text-sm p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                Username
-              </th>
-              <th className="text-sm p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                Content
-              </th>
-              <th className="text-sm p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                Likes
-              </th>
-              <th className="text-sm p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                Date
-              </th>
-              <th className="text-sm p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="block md:table-row-group text-sm md:text-xs">
-            {comments?.map((val, index) => (
-              <tr
-                key={val._id}
-                className="userTable my-3 rounded shadow-md md:shadow-none border border-grey-500 md:border-none block md:table-row hover:bg-gray-200"
-              >
-                <td className="p-1 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">
-                    #
-                  </span>
-                  {(page - 1) * limit + index + 1}
-                </td>
-                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">
-                    Post
-                  </span>
-                  {val.postId.title}
-                </td>
-                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">
-                    Username
-                  </span>
-                  {val.userId.username}
-                </td>
-                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">
-                    Content
-                  </span>
-                  {val.content}
-                </td>
-                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">
-                    Likes
-                  </span>
-                  {val.likes}
-                </td>
-                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">
-                    Date
-                  </span>
-                  {moment(val.createdAt).fromNow()}
-                </td>
-                <td className="p-1 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">
-                    Actions
-                  </span>
-                  <button
-                    onClick={() => navigate(`/posts/${val.postId.slug}`)}
-                    className="mr-1"
-                  >
-                    <MdOutlinePreview className="hover:scale-125 transition-all duration-300" size={25} color="blue" />
-                  </button>
-                  <button onClick={() => handleDelete(val._id)}>
-                    <MdDelete className="hover:scale-125 transition-all duration-300" size={25} color="red" />
-                  </button>
-                </td>
+        {/* TABLE & LOADING EFFECT */}
+        <div className="relative">
+          {isFetching && (
+            <div className="absolute inset-0  z-10 flex items-center justify-center">
+              <BeatLoader size={15} color="black" />
+            </div>
+          )}
+          <table
+            className={
+              `${isFetching ? "filter blur-sm" : ""} min-w-full border-collapse block md:table mt-3 mb-5 shadow-xl`
+            }
+          >
+            <thead className="block md:table-header-group bg-slate-300 text-black">
+              <tr className="border border-grey-500 md:border-none block md:table-row absolute -top-full md:top-auto -left-full md:left-auto  md:relative ">
+                <th className="p-2 text-sm font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                  #
+                </th>
+                <th className="p-2 text-sm font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                  Post
+                </th>
+                <th className="text-sm p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                  Username
+                </th>
+                <th className="text-sm p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                  Content
+                </th>
+                <th className="text-sm p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                  Likes
+                </th>
+                <th className="text-sm p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                  Date
+                </th>
+                <th className="text-sm p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                  Actions
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="block md:table-row-group text-sm md:text-xs">
+              {comments?.map((val, index) => (
+                <tr
+                  key={val._id}
+                  className="userTable my-3 rounded shadow-md md:shadow-none border border-grey-500 md:border-none block md:table-row hover:bg-gray-200"
+                >
+                  <td className="p-1 md:border md:border-grey-500 text-left block md:table-cell">
+                    <span className="inline-block w-1/3 md:hidden font-bold">
+                      #
+                    </span>
+                    {(page - 1) * limit + index + 1}
+                  </td>
+                  <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                    <span className="inline-block w-1/3 md:hidden font-bold">
+                      Post
+                    </span>
+                    {val.postId.title}
+                  </td>
+                  <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                    <span className="inline-block w-1/3 md:hidden font-bold">
+                      Username
+                    </span>
+                    {val.userId.username}
+                  </td>
+                  <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                    <span className="inline-block w-1/3 md:hidden font-bold">
+                      Content
+                    </span>
+                    {val.content}
+                  </td>
+                  <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                    <span className="inline-block w-1/3 md:hidden font-bold">
+                      Likes
+                    </span>
+                    {val.likes}
+                  </td>
+                  <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                    <span className="inline-block w-1/3 md:hidden font-bold">
+                      Date
+                    </span>
+                    {moment(val.createdAt).fromNow()}
+                  </td>
+                  <td className="p-1 md:border md:border-grey-500 text-left block md:table-cell">
+                    <span className="inline-block w-1/3 md:hidden font-bold">
+                      Actions
+                    </span>
+                    <button
+                      onClick={() => navigate(`/posts/${val.postId.slug}`)}
+                      className="mr-1"
+                    >
+                      <MdOutlinePreview
+                        className="hover:scale-125 transition-all duration-300"
+                        size={25}
+                        color="blue"
+                      />
+                    </button>
+                    <button onClick={() => handleDelete(val._id)}>
+                      <MdDelete
+                        className="hover:scale-125 transition-all duration-300"
+                        size={25}
+                        color="red"
+                      />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         {/* PAGINATION */}
         <div className="flex flex-col items-center mb-8">
           <span className="text-sm text-gray-700 ">

@@ -154,40 +154,37 @@ const MyPosts = () => {
         </div>
         {/* FILTER && SORT */}
         <div className="w-[95%] mx-auto">
-          {/* <span className="bg-slate-700 text-white px-3 py-1 rounded shadow-xl text-sm">{totalPosts} Posts</span> */}
           <div className="flex justify-between items-center mt-3">
             <select
               onChange={(e) => setFilter(e.target.value)}
               className="bg-slate-200 shadow-md font-semibold text-sm  rounded text-black outline-none px-2 py-1"
             >
               <option value="">All Posts {!filter && `(${totalPosts})`}</option>
-              <option value="popular">
-                Popular {filter && `(${totalPosts})`}{" "}
-                {isFetching && " Loading..."}
-              </option>
+              <option value="popular">Popular</option>
             </select>
             <select
               onChange={(e) => setSort(e.target.value)}
               className="bg-slate-200 shadow-md  font-semibold text-sm  rounded text-black outline-none px-2 py-1"
             >
               <option value="">Sort: Recent</option>
-              <option value="oldest">
-                Oldest {isFetching && " Loading..."}
-              </option>
-              <option value="views">Views {isFetching && " Loading..."}</option>
-              <option value="likes">Likes {isFetching && " Loading..."}</option>
-              <option value="title">
-                A to Z &#8595; {isFetching && " Loading..."}
-              </option>
-              <option value="title desc">
-                Z to A &#8593; {isFetching && " Loading..."}
-              </option>
+              <option value="oldest">Oldest</option>
+              <option value="views">Views</option>
+              <option value="likes">Likes</option>
+              <option value="title">A to Z &#8595;</option>
+              <option value="title desc">Z to A &#8593;</option>
             </select>
           </div>
         </div>
         {/* POSTS */}
-        <div className="grid mx-auto grid-cols-12 gap-7 md:gap-x-5 md:gap-y-7 w-[95%] md:max-w-5xl my-7">
-          {Posts}
+        <div className="relative">
+          {isFetching && (
+            <div className="absolute inset-0  z-10 flex items-center justify-center">
+              <BeatLoader size={18} />
+            </div>
+          )}
+          <div className={`${isFetching ? "filter blur-sm" : ""} grid mx-auto grid-cols-12 gap-7 md:gap-x-5 md:gap-y-7 w-[95%] md:max-w-5xl my-7`}>
+            {Posts}
+          </div>
         </div>
         {/* NO POST FOUND */}
         <div
@@ -207,7 +204,13 @@ const MyPosts = () => {
               onClick={() => setLimit(limit + 6)}
               className="py-1 px-3 rounded shadow-xl bg-blue-900 text-white hover:bg-blue-700 transition-colors duration-300"
             >
-              {isFetching ? <BarLoader color="white" size={7} className="my-2 "/> : limit >= totalPosts ? "No More Posts" : "See More"}
+              {isFetching ? (
+                <BarLoader color="white" size={7} className="my-2 " />
+              ) : limit >= totalPosts ? (
+                "No More Posts"
+              ) : (
+                "See More"
+              )}
             </button>
           </div>
         )}

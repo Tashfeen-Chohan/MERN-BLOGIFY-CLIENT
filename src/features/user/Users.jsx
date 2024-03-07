@@ -3,7 +3,17 @@ import { useDeleteUserMutation, useGetUsersQuery } from "./userApi";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-import { BarLoader, BeatLoader, PulseLoader } from "react-spinners";
+import {
+  BarLoader,
+  BeatLoader,
+  CircleLoader,
+  ClipLoader,
+  ClockLoader,
+  FadeLoader,
+  MoonLoader,
+  PropagateLoader,
+  PulseLoader,
+} from "react-spinners";
 import useAuth from "../../hooks/useAuth";
 import { deleteObject, getStorage, ref } from "firebase/storage";
 import app from "../../firebase";
@@ -34,7 +44,7 @@ const Users = () => {
       toast.error("Error deleting file: ", error);
       console.error("Error deleting file: ", error);
     }
-  }
+  };
 
   const handleDelete = async (id, profile) => {
     try {
@@ -58,7 +68,7 @@ const Users = () => {
           ...prevLoading,
           [id]: true,
         }));
-        await deleteProfile(profile)
+        await deleteProfile(profile);
         const response = await deleteUser(id);
         if (response.error) {
           Swal.fire({
@@ -99,10 +109,8 @@ const Users = () => {
       <div className="flex justify-center items-center min-h-screen mt-[-60px] bg-slate-200">
         <BeatLoader color="#000000" size={15} />
       </div>
-    )
+    );
   if (isError) return <p>{error}</p>;
-
-  
 
   // OBJECT DESTRUCTURING
   const { users, totalUsers, totalPages, page, limit } = data;
@@ -160,8 +168,12 @@ const Users = () => {
               className="bg-slate-200 shadow-md  rounded text-black outline-none px-2 py-1"
             >
               <option value="">All Users</option>
-              <option value="Publisher">Publisers {isFetching && " Loading..."}</option>
-              <option value="Admin">Admins {isFetching && " Loading..."}</option>
+              <option value="Publisher">
+                Publisers {isFetching && " Loading..."}
+              </option>
+              <option value="Admin">
+                Admins {isFetching && " Loading..."}
+              </option>
             </select>
           )}
 
@@ -170,136 +182,141 @@ const Users = () => {
             onChange={(e) => setSortBy(e.target.value)}
             className="bg-slate-200 shadow-md  rounded text-black outline-none px-2 py-1 flex"
           >
-            <option className="font-bold" value="">Default</option>
+            <option className="font-bold" value="">
+              Default
+            </option>
             <option value="posts">Posts &#8593;</option>
             <option value="date desc">Recent</option>
             <option value="date">Oldest</option>
           </select>
         </div>
 
-        <div>
-          {!isFetching && <BarLoader size={5}/>}
-        </div>
-
         {/* MAIN TABLE */}
-        <table
-          className={
-            "min-w-full border-collapse block md:table mt-3 mb-5 shadow-xl"
-          }
-        >
-          <thead className="block md:table-header-group bg-slate-300 text-black">
-            <tr className="border border-grey-500 md:border-none block md:table-row absolute -top-full md:top-auto -left-full md:left-auto  md:relative ">
-              <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                #
-              </th>
-              <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                Profile
-              </th>
-              <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                Username
-              </th>
-              <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                Email
-              </th>
-              {status === "Admin" && (
+        <div className="w-full relative">
+          {isFetching && (
+            <div className="absolute inset-0  z-10 flex items-center justify-center">
+              <BeatLoader size={15} color="black" />
+            </div>
+          )}
+          <table
+            className={
+              `${isFetching ? "filter blur-sm" : ""} min-w-full border-collapse block md:table mt-3 mb-5 shadow-xl`
+            }
+          >
+            <thead className="block md:table-header-group bg-slate-300 text-black">
+              <tr className="border border-grey-500 md:border-none block md:table-row absolute -top-full md:top-auto -left-full md:left-auto  md:relative ">
                 <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                  Roles
+                  #
                 </th>
-              )}
-              <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                Posts
-              </th>
-              <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="block md:table-row-group font-semibold! text-sm">
-            {users?.map((val, index) => (
-              <tr
-                key={val._id}
-                className="userTable my-3 rounded shadow-md md:shadow-none border border-grey-500 md:border-none block md:table-row hover:bg-gray-200"
-              >
-                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">
-                    #
-                  </span>
-                  {(page - 1) * limit + index + 1}
-                </td>
-                <td className="p-2 md:border md:border-grey-500 text-left  flex items-center md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">
-                    Profile
-                  </span>
-                  <div className="w-9 h-9 overflow-hidden inline-block md:block rounded-full">
-                    {val.profile && (
-                      <img
-                        src={val.profile}
-                        alt="Profile"
-                        className="object-cover w-full h-full"
-                      />
-                    )}
-                  </div>
-                </td>
-                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">
-                    Username
-                  </span>
-                  {val.username}
-                </td>
-                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">
-                    Email
-                  </span>
-                  {val.email}
-                </td>
+                <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                  Profile
+                </th>
+                <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                  Username
+                </th>
+                <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                  Email
+                </th>
                 {status === "Admin" && (
+                  <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                    Roles
+                  </th>
+                )}
+                <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                  Posts
+                </th>
+                <th className="p-2 font-bold md:border md:border-grey-500 text-left block md:table-cell">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="block md:table-row-group font-semibold! text-sm">
+              {users?.map((val, index) => (
+                <tr
+                  key={val._id}
+                  className="userTable my-3 rounded shadow-md md:shadow-none border border-grey-500 md:border-none block md:table-row hover:bg-gray-200"
+                >
                   <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
                     <span className="inline-block w-1/3 md:hidden font-bold">
-                      Roles
+                      #
                     </span>
-                    {val.roles?.map((role, index) => (
-                      <span key={index}>
-                        {role}
-                        {index < val.roles?.length - 1 && ", "}
-                      </span>
-                    ))}
+                    {(page - 1) * limit + index + 1}
                   </td>
-                )}
-                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">
-                    Posts
-                  </span>
-                  {val.noOfPosts}
-                </td>
-                <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                  <span className="inline-block w-1/3 md:hidden font-bold">
-                    Actions
-                  </span>
-                  <Link to={`/users/${val.slug}`}>
-                    <button className="mr-2 bg-indigo-500 hover:bg-indigo-600 text-white transition-colors duration-500 py-1 px-3 rounded shadow-xl">
-                      View
-                    </button>
-                  </Link>
+                  <td className="p-2 md:border md:border-grey-500 text-left  flex items-center md:table-cell">
+                    <span className="inline-block w-1/3 md:hidden font-bold">
+                      Profile
+                    </span>
+                    <div className="w-9 h-9 overflow-hidden inline-block md:block rounded-full">
+                      {val.profile && (
+                        <img
+                          src={val.profile}
+                          alt="Profile"
+                          className="object-cover w-full h-full"
+                        />
+                      )}
+                    </div>
+                  </td>
+                  <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                    <span className="inline-block w-1/3 md:hidden font-bold">
+                      Username
+                    </span>
+                    {val.username}
+                  </td>
+                  <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                    <span className="inline-block w-1/3 md:hidden font-bold">
+                      Email
+                    </span>
+                    {val.email}
+                  </td>
                   {status === "Admin" && (
-                    <>
-                      <Link to={`/users/update/${val.slug}`}>
-                        <button className="mr-2 bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 text-black py-1 px-3 shadow-xl rounded">
-                          Edit
-                        </button>
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(val._id, val.profile)}
-                        className="bg-[#FE0000] hover:bg-red-600 transition-colors duration-500 text-white py-1 px-3 rounded shadow-xl"
-                      >
-                        {loading[val._id] ? 'Deleting' : 'Delete'}
-                      </button>
-                    </>
+                    <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                      <span className="inline-block w-1/3 md:hidden font-bold">
+                        Roles
+                      </span>
+                      {val.roles?.map((role, index) => (
+                        <span key={index}>
+                          {role}
+                          {index < val.roles?.length - 1 && ", "}
+                        </span>
+                      ))}
+                    </td>
                   )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                    <span className="inline-block w-1/3 md:hidden font-bold">
+                      Posts
+                    </span>
+                    {val.noOfPosts}
+                  </td>
+                  <td className="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                    <span className="inline-block w-1/3 md:hidden font-bold">
+                      Actions
+                    </span>
+                    <Link to={`/users/${val.slug}`}>
+                      <button className="mr-2 bg-indigo-500 hover:bg-indigo-600 text-white transition-colors duration-500 py-1 px-3 rounded shadow-xl">
+                        View
+                      </button>
+                    </Link>
+                    {status === "Admin" && (
+                      <>
+                        <Link to={`/users/update/${val.slug}`}>
+                          <button className="mr-2 bg-[#FFC436] hover:bg-[#FFA732] transition-colors duration-500 text-black py-1 px-3 shadow-xl rounded">
+                            Edit
+                          </button>
+                        </Link>
+                        <button
+                          onClick={() => handleDelete(val._id, val.profile)}
+                          className="bg-[#FE0000] hover:bg-red-600 transition-colors duration-500 text-white py-1 px-3 rounded shadow-xl"
+                        >
+                          {loading[val._id] ? "Deleting" : "Delete"}
+                        </button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
         {/* NO USER FOUND */}
         <div

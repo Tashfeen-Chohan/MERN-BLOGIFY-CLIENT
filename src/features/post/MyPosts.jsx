@@ -1,24 +1,23 @@
-import React, { useState } from 'react'
-import { useGetPostsQuery } from './postApi'
-import useAuth from '../../hooks/useAuth'
-import { BeatLoader } from 'react-spinners'
-import { PiHandsClappingFill, PiHandsClappingLight } from 'react-icons/pi'
-import { FaRegComment, FaRegEye } from 'react-icons/fa'
-import { Link, useNavigate } from 'react-router-dom'
-import { MdSearch } from 'react-icons/md'
-import moment from 'moment'
+import React, { useState } from "react";
+import { useGetPostsQuery } from "./postApi";
+import useAuth from "../../hooks/useAuth";
+import { BarLoader, BeatLoader, PulseLoader } from "react-spinners";
+import { PiHandsClappingFill, PiHandsClappingLight } from "react-icons/pi";
+import { FaRegComment, FaRegEye } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { MdSearch } from "react-icons/md";
+import moment from "moment";
 
 const MyPosts = () => {
-
-  const {id: authorId} = useAuth()
+  const { id: authorId } = useAuth();
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(6);
   const [sort, setSort] = useState("");
   const [filter, setFilter] = useState("");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const postUrl = `/posts?authorId=${authorId}&searchBy=${search}&sortBy=${sort}&filterBy=${filter}&limit=${limit}`;
-  const {data, isLoading} = useGetPostsQuery(postUrl)
+  const { data, isLoading, isFetching } = useGetPostsQuery(postUrl);
 
   if (isLoading)
     return (
@@ -29,13 +28,11 @@ const MyPosts = () => {
 
   const { posts, totalPosts } = data ?? {};
 
-
   const Posts = posts?.map((val) => {
-
     const viewPost = () => {
-      navigate(`/posts/${val.slug}`)
-      window.scrollTo(0,0)
-    }
+      navigate(`/posts/${val.slug}`);
+      window.scrollTo(0, 0);
+    };
 
     return (
       <div
@@ -60,7 +57,10 @@ const MyPosts = () => {
 
         {/* AUTHOR INFO */}
         <div className="flex justify-between items-center mt-2 px-2">
-          <div onClick={() => navigate(`/users/single/${val.author._id}`)} className="flex justify-center items-center gap-2">
+          <div
+            onClick={() => navigate(`/users/single/${val.author._id}`)}
+            className="flex justify-center items-center gap-2"
+          >
             <div className="h-8 w-8 rounded-full overflow-hidden">
               <img
                 className="h-full w-full object-cover text-xs"
@@ -71,11 +71,16 @@ const MyPosts = () => {
             <span className="text-sm italic">{val.author.username}</span>
           </div>
           <div className="flex justify-center items-start flex-col">
-            <span className="text-sm italic">{moment(val.createdAt).fromNow()}</span>
+            <span className="text-sm italic">
+              {moment(val.createdAt).fromNow()}
+            </span>
           </div>
         </div>
-        
-        <h2 onClick={viewPost} className="font-bold text-2xl text-center my-3 line-clamp-2 px-2">
+
+        <h2
+          onClick={viewPost}
+          className="font-bold text-2xl text-center my-3 line-clamp-2 px-2"
+        >
           {val.title}
         </h2>
         <p
@@ -88,7 +93,7 @@ const MyPosts = () => {
         <div className="mt-3 flex justify-center items-center gap-2 flex-wrap px-2">
           {val.categories.map((cat) => (
             <span
-            className="cursor-pointer hover:scale-110 transition-all duration-300 px-2 py-1 rounded-full bg-slate-200 text-xs"
+              className="cursor-pointer hover:scale-110 transition-all duration-300 px-2 py-1 rounded-full bg-slate-200 text-xs"
               key={cat._id}
               onClick={() => navigate(`/categories/${cat.slug}`)}
             >
@@ -98,15 +103,16 @@ const MyPosts = () => {
         </div>
 
         {/* LIKES, COMMENTS, VIEWS */}
-        <div onClick={viewPost} className="my-4 flex justify-start items-center gap-4 px-2">
-          <span className="flex justify-center items-center gap-1 text-sm"> 
+        <div
+          onClick={viewPost}
+          className="my-4 flex justify-start items-center gap-4 px-2"
+        >
+          <span className="flex justify-center items-center gap-1 text-sm">
             {authorId && val?.likedBy.includes(authorId) ? (
-              <PiHandsClappingFill
-                size={21}
-              />
-            ) : <PiHandsClappingLight
-            size={21}
-          />}
+              <PiHandsClappingFill size={21} />
+            ) : (
+              <PiHandsClappingLight size={21} />
+            )}
             {val?.likes}
           </span>
           <span className="flex justify-center items-center gap-1 text-sm">
@@ -148,25 +154,34 @@ const MyPosts = () => {
         </div>
         {/* FILTER && SORT */}
         <div className="w-[95%] mx-auto">
-          <span className="bg-slate-700 text-white px-3 py-1 rounded shadow-xl text-sm">{totalPosts} Posts</span>
+          {/* <span className="bg-slate-700 text-white px-3 py-1 rounded shadow-xl text-sm">{totalPosts} Posts</span> */}
           <div className="flex justify-between items-center mt-3">
             <select
               onChange={(e) => setFilter(e.target.value)}
               className="bg-slate-200 shadow-md font-semibold text-sm  rounded text-black outline-none px-2 py-1"
             >
-              <option value="">All Posts</option>
-              <option value="popular">Popular</option>
+              <option value="">All Posts {!filter && `(${totalPosts})`}</option>
+              <option value="popular">
+                Popular {filter && `(${totalPosts})`}{" "}
+                {isFetching && " Loading..."}
+              </option>
             </select>
             <select
               onChange={(e) => setSort(e.target.value)}
               className="bg-slate-200 shadow-md  font-semibold text-sm  rounded text-black outline-none px-2 py-1"
             >
               <option value="">Sort: Recent</option>
-              <option value="oldest">Oldest</option>
-              <option value="views">Views</option>
-              <option value="likes">Likes</option>
-              <option value="title">A to Z &#8595;</option>
-              <option value="title desc">Z to A &#8593;</option>
+              <option value="oldest">
+                Oldest {isFetching && " Loading..."}
+              </option>
+              <option value="views">Views {isFetching && " Loading..."}</option>
+              <option value="likes">Likes {isFetching && " Loading..."}</option>
+              <option value="title">
+                A to Z &#8595; {isFetching && " Loading..."}
+              </option>
+              <option value="title desc">
+                Z to A &#8593; {isFetching && " Loading..."}
+              </option>
             </select>
           </div>
         </div>
@@ -185,19 +200,20 @@ const MyPosts = () => {
           <p>No post found!</p>
         </div>
         {/* PAGINATION */}
-        {totalPosts !== 0 && limit < totalPosts && (
+        {totalPosts !== 0 && (
           <div className="my-5 flex justify-center items-center ">
             <button
+              disabled={limit >= totalPosts}
               onClick={() => setLimit(limit + 6)}
-              className="py-1 px-3 rounded shadow-xl bg-slate-700 text-white hover:bg-slate-800 transition-colors duration-300"
+              className="py-1 px-3 rounded shadow-xl bg-blue-900 text-white hover:bg-blue-700 transition-colors duration-300"
             >
-              See More
+              {isFetching ? <BarLoader color="white" size={7} className="my-2 "/> : limit >= totalPosts ? "No More Posts" : "See More"}
             </button>
           </div>
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default MyPosts
+export default MyPosts;

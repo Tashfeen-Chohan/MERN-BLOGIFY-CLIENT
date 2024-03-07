@@ -3,7 +3,7 @@ import { useDeleteUserMutation, useGetUsersQuery } from "./userApi";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-import { BarLoader, BeatLoader } from "react-spinners";
+import { BarLoader, BeatLoader, PulseLoader } from "react-spinners";
 import useAuth from "../../hooks/useAuth";
 import { deleteObject, getStorage, ref } from "firebase/storage";
 import app from "../../firebase";
@@ -22,7 +22,7 @@ const Users = () => {
     url = `users?sortBy=${sortBy}&searchBy=${searchBy}&filterBy=Publisher&page=${pageNo}`;
   }
 
-  const { data, isLoading, isError, error } = useGetUsersQuery(url);
+  const { data, isLoading, isFetching, isError, error } = useGetUsersQuery(url);
   const [deleteUser] = useDeleteUserMutation();
 
   const deleteProfile = async (fileRef) => {
@@ -160,8 +160,8 @@ const Users = () => {
               className="bg-slate-200 shadow-md  rounded text-black outline-none px-2 py-1"
             >
               <option value="">All Users</option>
-              <option value="Publisher">Publisers</option>
-              <option value="Admin">Admins</option>
+              <option value="Publisher">Publisers {isFetching && " Loading..."}</option>
+              <option value="Admin">Admins {isFetching && " Loading..."}</option>
             </select>
           )}
 
@@ -175,6 +175,10 @@ const Users = () => {
             <option value="date desc">Recent</option>
             <option value="date">Oldest</option>
           </select>
+        </div>
+
+        <div>
+          {!isFetching && <BarLoader size={5}/>}
         </div>
 
         {/* MAIN TABLE */}

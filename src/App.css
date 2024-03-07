@@ -39,6 +39,14 @@
   text-decoration: underline;
 }
 
+.post-content ul {
+  list-style-type: disc; /* for unordered lists (ul) */
+}
+
+.post-content ol {
+  list-style-type: decimal; /* for unordered lists (ul) */
+}
+
 ::-webkit-scrollbar{
   display: none;
 }

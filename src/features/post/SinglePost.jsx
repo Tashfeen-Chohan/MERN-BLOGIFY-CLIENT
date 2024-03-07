@@ -28,6 +28,8 @@ import {
 } from "react-share";
 import Comment from "../comment/Comment";
 import moment from "moment";
+import { deleteObject, getStorage, ref } from "firebase/storage";
+import app from "../../firebase";
 
 const SinglePost = () => {
   const { slug } = useParams();
@@ -72,7 +74,18 @@ const SinglePost = () => {
       </div>
     );
 
-  const handleDelete = async (id) => {
+  const deleteBlogCover = async (fileRef) => {
+    try {
+      const storage = getStorage(app)
+      const fileStorageRef = ref(storage, fileRef)
+      await deleteObject(fileStorageRef)
+    } catch (error) {
+      toast.error("Error deleting file!")
+      console.log(error.message)
+    }
+  }
+
+  const handleDelete = async (id, blogImg) => {
     try {
       const result = await Swal.fire({
         title: "Are you sure?",
@@ -90,6 +103,7 @@ const SinglePost = () => {
       });
 
       if (result.isConfirmed) {
+        await deleteBlogCover(blogImg)
         const response = await deletePost(id);
         if (response.error) {
           Swal.fire({
@@ -183,7 +197,6 @@ const SinglePost = () => {
             <span className="text-sm italic">{val.author.username}</span>
           </div>
           <div className="flex justify-center items-start flex-col">
-            {/* <span className="text-sm italic">{formattedDate}</span> */}
             <span className="text-sm italic">
               {moment(val.createdAt).fromNow()}
             </span>
@@ -278,7 +291,7 @@ const SinglePost = () => {
           )}
           {(userId === post?.author._id || isAdmin) && (
             <MdDelete
-              onClick={() => handleDelete(post?._id)}
+              onClick={() => handleDelete(post?._id, post?.blogImg)}
               size={30}
               color="red"
               className="hover:scale-125 transition-all duration-300"

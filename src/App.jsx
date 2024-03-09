@@ -23,6 +23,7 @@ import Dashboard from "./components/Dashboard";
 import AllComments from "./features/comment/AllComments";
 import Layout from "./components/Layout";
 import useAuth from "./hooks/useAuth";
+import PageNotFound from "./components/PageNotFound";
 
 const App = () => {
   const {isAdmin, isPublisher, status} = useAuth()
@@ -73,6 +74,9 @@ const App = () => {
           <Route path="/posts/my-posts/:username" element={isPublisher ? <MyPosts /> : <Login/>} />
           <Route path="/posts/:slug" element={<SinglePost />} />
           <Route path="/posts/update/:slug" element={isPublisher ? <UpdatePost /> : <Login/>} />
+
+          {/* 404 */}
+          <Route path="*" element={<PageNotFound/>}/>
         </Routes>
       </Layout>
     </div>

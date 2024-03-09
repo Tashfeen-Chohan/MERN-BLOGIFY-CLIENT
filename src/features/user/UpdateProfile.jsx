@@ -68,7 +68,7 @@ const UpdateProfile = () => {
 
   const handleLogout = async () => {
     try {
-      const res = await axios.post("http://localhost:3000/auth/logout");
+      const res = await axios.post("https://mern-blogify-server.vercel.app/auth/logout");
       // toast.success(res.data.message);
       dispatch(logout());
       navigate("/login");

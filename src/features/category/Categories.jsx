@@ -14,7 +14,7 @@ const Categories = () => {
   const [searchBy, setSearchBy] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [pageNo, setPageNo] = useState(1);
-  const { status } = useAuth();
+  const { status, isAdmin } = useAuth();
 
   let url = `categories?sortBy=${sortBy}&searchBy=${searchBy}&page=${pageNo}`;
   const { data, isLoading, isFetching, isError, error } =
@@ -86,7 +86,7 @@ const Categories = () => {
     <div className="">
       {/* SEARCH SECTION */}
       <div className="py-5 flex justify-center items-center flex-col max-w-[90%] mx-auto rounded shadow-lg my-7 bg-slate-100 md:max-w-lg">
-        <h1 className="text-3xl font-bold pb-4 text-center md:pb-7">
+        <h1 className="text-2xl md:text-3xl font-bold pb-4 text-center md:pb-7">
           BLOGIFY APP
         </h1>
         <div className="flex justify-center items-center gap-4 w-full px-4 md:pb-2">
@@ -132,8 +132,8 @@ const Categories = () => {
             <option className="font-bold" value="">
               Default
             </option>
-            <option value="date desc">Recent</option>
-            <option value="date">Oldest</option>
+            {isAdmin && <option value="date desc">Recent</option>}
+            {isAdmin && <option value="date">Oldest</option>}
             <option value="posts">Post &#8593;</option>
             <option value="name">A to Z &#8595;</option>
             <option value="name desc">Z to A &#8593;</option>

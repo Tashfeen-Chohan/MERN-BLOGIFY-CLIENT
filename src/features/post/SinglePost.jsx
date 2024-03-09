@@ -55,7 +55,7 @@ const SinglePost = () => {
   const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState(false);
 
-  const postURL = `https://tashfeen-blogify.vercel.app/posts/${data?.slug}`;
+  const postURL = `https://tashfeen-blogify.vercel.app/posts/${post?.slug}`;
   
   // HANDLE VIEW POST
   useEffect(() => {

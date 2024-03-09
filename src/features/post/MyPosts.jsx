@@ -176,13 +176,13 @@ const MyPosts = () => {
           </div>
         </div>
         {/* POSTS */}
-        <div className="relative w-[95%]">
+        <div className="relative w-[90%] mx-auto md:max-w-6xl">
           {isFetching && (
             <div className="absolute inset-0  z-10 flex items-center justify-center">
               <BeatLoader size={18} />
             </div>
           )}
-          <div className={`${isFetching ? "filter blur-sm" : ""} grid mx-auto grid-cols-12 gap-7 md:gap-x-5 md:gap-y-7 w-[95%] md:max-w-5xl my-7`}>
+          <div className={`${isFetching ? "filter blur-sm" : ""} grid mx-auto grid-cols-12 gap-7 md:gap-x-5 md:gap-y-7 my-7`}>
             {Posts}
           </div>
         </div>

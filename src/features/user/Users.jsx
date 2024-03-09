@@ -24,7 +24,7 @@ const Users = () => {
   const [filterBy, setFilterBy] = useState("");
   const [pageNo, setPageNo] = useState(1);
   const [loading, setLoading] = useState({});
-  const { status } = useAuth();
+  const { status, isAdmin } = useAuth();
 
   if (status === "Admin") {
     var url = `users?sortBy=${sortBy}&searchBy=${searchBy}&filterBy=${filterBy}&page=${pageNo}`;
@@ -119,7 +119,7 @@ const Users = () => {
     <div>
       {/* SEARCH SECTION */}
       <div className="py-5 flex justify-center items-center flex-col max-w-[90%] mx-auto rounded shadow-lg my-7 bg-slate-100 md:max-w-lg">
-        <h1 className="text-3xl font-bold pb-4 text-center md:pb-7">
+        <h1 className="text-2xl md:text-3xl font-bold pb-4 text-center md:pb-7">
           BLOGIFY APP
         </h1>
         <div className="flex justify-center items-center gap-4 w-full px-4 md:pb-2">
@@ -169,10 +169,10 @@ const Users = () => {
             >
               <option value="">All Users</option>
               <option value="Publisher">
-                Publisers {isFetching && " Loading..."}
+                Publisers
               </option>
               <option value="Admin">
-                Admins {isFetching && " Loading..."}
+                Admins
               </option>
             </select>
           )}
@@ -182,12 +182,12 @@ const Users = () => {
             onChange={(e) => setSortBy(e.target.value)}
             className="bg-slate-200 shadow-md  rounded text-black outline-none px-2 py-1 flex"
           >
-            <option className="font-bold" value="">
-              Default
-            </option>
+            <option className="font-bold" value="">Default</option>
             <option value="posts">Posts &#8593;</option>
-            <option value="date desc">Recent</option>
-            <option value="date">Oldest</option>
+            {/* <option value="name">A to Z &#8595;</option> */}
+            {/* <option value="name desc">Z to A &#8593;</option> */}
+            {!isAdmin && <option value="date desc">Recent</option>}
+            {!isAdmin && <option value="date">Oldest</option>}
           </select>
         </div>
 

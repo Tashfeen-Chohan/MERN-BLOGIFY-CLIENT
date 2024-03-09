@@ -26,10 +26,31 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showProfile, setShowProfile] = useState(undefined);
   const [loading, setLoading] = useState(false);
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
+  const handlePassword = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+  
+    // Check if password meets the specified criteria
+    const lowerCaseRegex = /[a-z]/;
+    const upperCaseRegex = /[A-Z]/;
+    const numberRegex = /[0-9]/;
+    const minLength = 5;
+  
+    const isLowerCasePresent = lowerCaseRegex.test(newPassword);
+    const isUpperCasePresent = upperCaseRegex.test(newPassword);
+    const isNumberPresent = numberRegex.test(newPassword);
+    const isLengthValid = newPassword.length >= minLength;
+  
+    setIsPasswordValid(
+      isLowerCasePresent && isUpperCasePresent && isNumberPresent && isLengthValid
+    );
+  }
 
   const handleProfileChange = (e) => {
     const file = e.target.files[0];
@@ -203,8 +224,9 @@ const Register = () => {
                   id="password"
                   placeholder="••••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  onChange={handlePassword}
+                  className={`${isPasswordValid ? 'border-2 focus:border-green-500 dark:focus:border-green-500' : 'border-2 focus:border-red-500 dark:focus:border-red-500'} outline-none bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white`}
+                  
                 />
                 <button type="button" className="absolute right-5 top-10">
                   {!showPassword ? (
@@ -253,6 +275,12 @@ const Register = () => {
                 </Link>
               </p>
             </form>
+            <p className="text-slate-50 text-sm">
+              Password must : <br />
+              - include lower and upper case characters <br />
+              - include atleast 1 number <br />
+              - be atleast 5 characters long <br />
+            </p>
           </div>
         </div>
       </div>

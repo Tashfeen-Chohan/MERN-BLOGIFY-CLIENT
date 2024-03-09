@@ -162,10 +162,10 @@ const Posts = () => {
           <h2 className="text-2xl md:text-3xl font-bold">
             What are you looking up-to?
           </h2>
-          <div className="flex md:w-full justify-center items-center gap-3 mt-2 rounded-lg py-2 px-3">
+          <div className="flex md:w-full justify-center items-center gap-2 mt-2 rounded-lg py-2 px-5">
             <MdSearch color="gray" size={22} />
             <input
-              className="md:w-[60%] py-1 px-2 outline-none border-b border-black focus-within:border-b-2"
+              className="md:w-[60%] w-[80%] py-1 px-2 outline-none border-b border-black focus-within:border-b-2"
               type="text"
               placeholder="Search any blog..."
               onChange={(e) => setSearch(e.target.value)}
@@ -244,7 +244,7 @@ const Posts = () => {
           <div
             className={`${
               isFetching ? "filter blur-sm" : ""
-            } grid mx-auto grid-cols-12 gap-7 md:gap-x-5 md:gap-y-7   my-7`}
+            } grid mx-auto grid-cols-12 gap-7 md:gap-x-5 md:gap-y-7 my-7`}
           >
             {Posts}
           </div>

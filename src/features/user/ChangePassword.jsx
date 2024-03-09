@@ -17,6 +17,8 @@ const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isPasswordValid, setIsPasswordValid] = useState(false)
+
   const [changePassword] = useChangePasswordMutation();
   const { id } = useAuth();
   const navigate = useNavigate();
@@ -33,6 +35,26 @@ const ChangePassword = () => {
   const toggleConfirmPassword = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
+
+  const handleNewPassword = (e) => {
+    const newPassword = e.target.value;
+    setNewPassword(newPassword);
+  
+    // Check if password meets the specified criteria
+    const lowerCaseRegex = /[a-z]/;
+    const upperCaseRegex = /[A-Z]/;
+    const numberRegex = /[0-9]/;
+    const minLength = 5;
+  
+    const isLowerCasePresent = lowerCaseRegex.test(newPassword);
+    const isUpperCasePresent = upperCaseRegex.test(newPassword);
+    const isNumberPresent = numberRegex.test(newPassword);
+    const isLengthValid = newPassword.length >= minLength;
+  
+    setIsPasswordValid(
+      isLowerCasePresent && isUpperCasePresent && isNumberPresent && isLengthValid
+    );
+  }
 
   const handleLogout = async () => {
     try {
@@ -147,8 +169,8 @@ const ChangePassword = () => {
                   name="newPassword"
                   id="newPassword"
                   value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  onChange={handleNewPassword}
+                  className={`${isPasswordValid ? 'border-2 focus:border-green-500 dark:focus:border-green-500' : 'border-2 focus:border-red-500 dark:focus:border-red-500'} outline-none bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white`}
                 />
                 <button type="button" className="absolute right-5 top-9">
                   {!showNewPassword ? (
@@ -180,7 +202,7 @@ const ChangePassword = () => {
                   id="confirmPassword"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="mb-3 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-600"
+                  className={`${newPassword === confirmPassword ? 'border-2 focus:border-green-500 dark:focus:border-green-500' : 'border-2 focus:border-red-500 dark:focus:border-red-500'} outline-none bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white`}
                 />
                 <button type="button" className="absolute right-5 top-9">
                   {!showConfirmPassword ? (

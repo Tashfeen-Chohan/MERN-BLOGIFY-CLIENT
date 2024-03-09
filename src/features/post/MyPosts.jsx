@@ -58,7 +58,7 @@ const MyPosts = () => {
         {/* AUTHOR INFO */}
         <div className="flex justify-between items-center mt-2 px-2">
           <div
-            onClick={() => navigate(`/users/single/${val.author._id}`)}
+            onClick={() => navigate(`/users/${val.author.slug}`)}
             className="flex justify-center items-center gap-2"
           >
             <div className="h-8 w-8 rounded-full overflow-hidden">

@@ -77,7 +77,7 @@ const Posts = () => {
         {/* AUTHOR INFO */}
         <div className="flex justify-between items-center mt-2 px-2">
           <div
-            onClick={() => navigate(`users/single/${val.author._id}`)}
+            onClick={() => navigate(`users/${val.author.slug}`)}
             className="cursor-pointer flex justify-center items-center gap-2"
           >
             <div className="h-8 w-8 rounded-full overflow-hidden">
@@ -192,17 +192,11 @@ const Posts = () => {
               className="bg-slate-200 shadow-md text-sm font-semibold   rounded text-black outline-none px-2 py-1"
             >
               <option value="">Recent</option>
-              <option value="oldest">
-                Oldest {isFetching && " Loading..."}
-              </option>
+              <option value="oldest">Oldest</option>
               <option value="views">Views </option>
               <option value="likes">Likes </option>
-              <option value="title">
-                A to Z &#8595; 
-              </option>
-              <option value="title desc">
-                Z to A &#8593;
-              </option>
+              <option value="title">A to Z &#8595;</option>
+              <option value="title desc">Z to A &#8593;</option>
             </select>
           </div>
         </div>
@@ -247,7 +241,11 @@ const Posts = () => {
               <BeatLoader size={18} />
             </div>
           )}
-          <div className={`${isFetching ? "filter blur-sm" : ""} grid mx-auto grid-cols-12 gap-7 md:gap-x-5 md:gap-y-7 w-[95%] md:max-w-5xl my-7`}>
+          <div
+            className={`${
+              isFetching ? "filter blur-sm" : ""
+            } grid mx-auto grid-cols-12 gap-7 md:gap-x-5 md:gap-y-7 w-[95%] md:max-w-5xl my-7`}
+          >
             {Posts}
           </div>
         </div>

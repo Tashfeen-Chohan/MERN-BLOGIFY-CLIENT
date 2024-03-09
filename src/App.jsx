@@ -22,8 +22,10 @@ import MyPosts from "./features/post/MyPosts";
 import Dashboard from "./components/Dashboard";
 import AllComments from "./features/comment/AllComments";
 import Layout from "./components/Layout";
+import useAuth from "./hooks/useAuth";
 
 const App = () => {
+  const {isAdmin, isPublisher, status} = useAuth()
   return (
     <div>
       <ToastContainer
@@ -41,6 +43,7 @@ const App = () => {
 
       <Layout>
         <Routes>
+          {/* HOME */}
           <Route path="/" element={<Posts />} />
 
           {/* AUTH ROURES */}
@@ -48,28 +51,28 @@ const App = () => {
           <Route path="/register" element={<Register />} />
 
           {/* DASHBOARD */}
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/all-comments" element={<AllComments />} />
+          <Route path="/dashboard" element={isAdmin ? <Dashboard /> : <Login/>} />
+          <Route path="/all-comments" element={isAdmin ? <AllComments /> : <Login/>} />
 
           {/* CATEGORIES ROUTES */}
           <Route path="/categories" element={<Categories />} />
-          <Route path="/categories/new" element={<AddCategory />} />
+          <Route path="/categories/new" element={isPublisher ? <AddCategory /> : <Login/>} />
           <Route path="/categories/:slug" element={<SingleCategory />} />
-          <Route path="/categories/update/:slug" element={<UpdateCategory />} />
+          <Route path="/categories/update/:slug" element={isAdmin ? <UpdateCategory /> : <Login/>} />
 
           {/* USERS ROUTES */}
           <Route path="/users" element={<Users />} />
           <Route path="/users/:slug" element={<SingleUser />} />
-          <Route path="/users/update/:slug" element={<UpdateUser />} />
-          <Route path="/profile/:slug" element={<Profile />} />
-          <Route path="/profile/:slug/edit" element={<UpdateProfile />} />
-          <Route path="/profile/:slug/change-password" element={<ChangePassword />} />
+          <Route path="/users/update/:slug" element={isAdmin ? <UpdateUser /> : <Login/>} />
+          <Route path="/profile/:slug" element={status !== "" ? <Profile /> : <Login/>} />
+          <Route path="/profile/:slug/edit" element={status !== "" ? <UpdateProfile /> : <Login/>} />
+          <Route path="/profile/:slug/change-password" element={status !== "" ? <ChangePassword /> : <Login/>} />
 
           {/* POST ROUTES */}
-          <Route path="/posts/new" element={<CreatePost />} />
-          <Route path="/posts/my-posts/:username" element={<MyPosts />} />
+          <Route path="/posts/new" element={isPublisher ? <CreatePost /> : <Login/>} />
+          <Route path="/posts/my-posts/:username" element={isPublisher ? <MyPosts /> : <Login/>} />
           <Route path="/posts/:slug" element={<SinglePost />} />
-          <Route path="/posts/update/:slug" element={<UpdatePost />} />
+          <Route path="/posts/update/:slug" element={isPublisher ? <UpdatePost /> : <Login/>} />
         </Routes>
       </Layout>
     </div>

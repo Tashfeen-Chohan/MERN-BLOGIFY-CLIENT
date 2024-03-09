@@ -292,7 +292,7 @@ const SinglePost = () => {
           {(userId === post?.author._id || isAdmin) && (
             <MdDelete
               onClick={() => handleDelete(post?._id, post?.blogImg)}
-              size={30}
+              size={25}
               color="red"
               className="hover:scale-125 transition-all duration-300"
             />

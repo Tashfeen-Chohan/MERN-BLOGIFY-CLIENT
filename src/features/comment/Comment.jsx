@@ -11,14 +11,14 @@ import {
 import { toast } from "react-toastify";
 import moment from "moment";
 import { FaThumbsUp } from "react-icons/fa";
-import { BeatLoader } from "react-spinners";
+import { BarLoader, BeatLoader } from "react-spinners";
 import Swal from "sweetalert2";
 
 const Comment = ({ postId }) => {
   const [sort, setSort] = useState("");
   const [limit, setLimit] = useState(3);
   const url = `/comments/getPostComments/${postId}?sortBy=${sort}&limit=${limit}`;
-  const { data, isLoading, refetch } = useGetPostCommentsQuery(url);
+  const { data, isLoading, isFetching, refetch } = useGetPostCommentsQuery(url);
   const [createComment] = useCreateCommentMutation();
   const [likeComment] = useLikeCommentMutation();
   const [editComment] = useEditCommentMutation();
@@ -305,13 +305,13 @@ const Comment = ({ postId }) => {
                 </div>
               </div>
             ))}
-            {totalComments > 3 && limit < totalComments && (
+            {totalComments > 3 && (
               <div className="flex justify-center items-center mt-7">
                 <button
                   onClick={() => setLimit(limit + 3)}
                   className="bg-cyan-500 hover:bg-cyan-400 transition-colors duration-300 text-white py-1 px-3 rounded shadow-xl"
                 >
-                  See More
+                  {isFetching ? <BarLoader color="white" className="my-2"/> : limit >= totalComments ? "No more comments" : "See More"}
                 </button>
               </div>
             )}

@@ -10,7 +10,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { FaEdit, FaRegComment, FaRegEye } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import useAuth from "../../hooks/useAuth";
-import { BeatLoader } from "react-spinners";
+import { BarLoader, BeatLoader } from "react-spinners";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { PiHandsClappingFill, PiHandsClappingLight } from "react-icons/pi";
@@ -41,8 +41,14 @@ const SinglePost = () => {
 
   const { post, commentsCount } = data ?? {};
 
-  const { data: recentPosts } = useGetPostsQuery(
-    `/posts?authorId=${post?.author._id}&sortBy=views&limit=${limit}`
+  const {
+    data: recentPosts,
+    isLoading: recentLoading,
+    isFetching: recentFetching,
+  } = useGetPostsQuery(
+    post
+      ? `/posts?authorId=${post?.author._id}&sortBy=views&limit=${limit}`
+      : null
   );
 
   const { id: userId, isAdmin } = useAuth();
@@ -76,14 +82,14 @@ const SinglePost = () => {
 
   const deleteBlogCover = async (fileRef) => {
     try {
-      const storage = getStorage(app)
-      const fileStorageRef = ref(storage, fileRef)
-      await deleteObject(fileStorageRef)
+      const storage = getStorage(app);
+      const fileStorageRef = ref(storage, fileRef);
+      await deleteObject(fileStorageRef);
     } catch (error) {
-      toast.error("Error deleting file!")
-      console.log(error.message)
+      toast.error("Error deleting file!");
+      console.log(error.message);
     }
-  }
+  };
 
   const handleDelete = async (id, blogImg) => {
     try {
@@ -103,7 +109,7 @@ const SinglePost = () => {
       });
 
       if (result.isConfirmed) {
-        await deleteBlogCover(blogImg)
+        await deleteBlogCover(blogImg);
         const response = await deletePost(id);
         if (response.error) {
           Swal.fire({
@@ -153,10 +159,9 @@ const SinglePost = () => {
 
   // const {posts} = recentPosts;
   const RecentPosts = recentPosts?.posts?.map((val) => {
-   
     const viewPost = () => {
       navigate(`/posts/${val.slug}`);
-      window.scrollTo(0,0);
+      window.scrollTo(0, 0);
     };
 
     return (
@@ -377,7 +382,7 @@ const SinglePost = () => {
           More from
           <span
             onClick={() => navigate(`/users/${post?.author.slug}`)}
-            className="font-bold italic ml-2"
+            className="font-bold italic ml-2 cursor-pointer"
           >
             {post?.author.username}
           </span>
@@ -386,16 +391,20 @@ const SinglePost = () => {
         <div className="grid mx-auto grid-cols-12 gap-7 md:gap-x-5 md:gap-y-7 my-7">
           {RecentPosts}
         </div>
-        {showButton && recentPosts?.totalPosts > 3 && (
+        {recentPosts?.totalPosts > 3 && (
           <div className="flex justify-center items-center mb-10">
             <button
-              onClick={() => {
-                setLimit(recentPosts?.totalPosts);
-                setShowButton(false);
-              }}
-              className="bg-cyan-500  hover:bg-cyan-400 transition-colors duration-300 px-3 py-1 text-white rounded shadow-xl mx-auto"
+              disabled={limit >= recentPosts?.totalPosts}
+              onClick={() => setLimit(limit + 3)}
+              className="disabled:bg-cyan-700 bg-cyan-500  hover:bg-cyan-400 transition-colors duration-300 px-3 py-1 text-white rounded shadow-xl mx-auto"
             >
-              View All
+              {recentFetching ? (
+                <BarLoader color="white" size={7} className="my-2 " />
+              ) : limit >= recentPosts?.totalPosts ? (
+                "No More Posts"
+              ) : (
+                "See More"
+              )}
             </button>
           </div>
         )}

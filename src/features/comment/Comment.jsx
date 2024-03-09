@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import useAuth from "../../hooks/useAuth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   useCreateCommentMutation,
   useDeleteCommentMutation,
@@ -29,6 +29,7 @@ const Comment = ({ postId }) => {
   const [editMode, setEditMode] = useState(false);
   const [editCommentId, setEditCommentId] = useState("");
   const [editedComment, setEditedComment] = useState("");
+  const navigate = useNavigate()
 
   const { comments, totalComments } = data ?? {};
 
@@ -53,6 +54,10 @@ const Comment = ({ postId }) => {
   };
 
   const handleLike = async (id) => {
+    if (!userId){
+      navigate("/login")
+      return ;
+    }
     try {
       const res = await likeComment(id);
       if (res.error) {

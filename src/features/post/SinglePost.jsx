@@ -54,10 +54,10 @@ const SinglePost = () => {
   const { id: userId, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState(false);
-  const [showButton, setShowButton] = useState(true);
 
-  const postURL = `http://localhost:3000/posts/${data?._id}`;
-
+  // const postURL = `https://tashfeen-blogify.vercel.app/posts/${data?.slug}`;
+    const postURL = ""
+  
   // HANDLE VIEW POST
   useEffect(() => {
     const handleView = async () => {
@@ -266,7 +266,7 @@ const SinglePost = () => {
         {/* AUTHOR INFO */}
         <div className="flex justify-between items-center px-2">
           <div
-            onClick={() => navigate(`/users/single/${post?.author._id}`)}
+            onClick={() => navigate(`/users/${post?.author.slug}`)}
             className="flex justify-center items-center gap-3 cursor-pointer"
           >
             <img

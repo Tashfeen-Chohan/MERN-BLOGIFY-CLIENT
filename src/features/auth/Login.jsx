@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { setCredentials } from "./authSlice";
 import axios from "axios";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
+import { BarLoader } from "react-spinners";
 
 const Login = () => {
 
@@ -16,6 +17,7 @@ const Login = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -25,6 +27,7 @@ const Login = () => {
     e.preventDefault()
     if (email && password){
       try {
+        setLoading(true)
         // const res = await login({email, password})
         const data = {
           email,
@@ -48,6 +51,8 @@ const Login = () => {
               "!py-2 !px-8 !bg-blue-600 !hover:bg-blue-700 !transition-colors !duration-500 !text-white !rounded !shadow-xl",
           },
         });
+      } finally {
+        setLoading(false)
       }
     } else {
       toast.error("Plaase enter your email & password to Login")
@@ -119,7 +124,7 @@ const Login = () => {
                 type="submit"
                 className="w-full text-white bg-blue-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
-                Login
+                {loading ? <BarLoader color="white"/> : "Login"}
               </button>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Don't have an account?

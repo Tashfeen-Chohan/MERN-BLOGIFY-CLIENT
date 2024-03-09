@@ -37,7 +37,7 @@ const MyPosts = () => {
     return (
       <div
         key={val._id}
-        className=" col-span-12 md:col-span-4 shadow-lg rounded hover:scale-105 transition-transform duration-300"
+        className="col-span-12 md:col-span-4 shadow-lg rounded hover:scale-105 transition-transform duration-300"
       >
         {/* BLOG COVER IMG */}
         <div onClick={viewPost} className="relative">
@@ -132,7 +132,7 @@ const MyPosts = () => {
     <div className="flex justify-center items-center">
       <div>
         {/* HEADER */}
-        <div className="my-10 p-3 flex justify-center items-center flex-col mx-auto rounded-lg w-[95%] md:max-w-xl shadow-xl">
+        <div className="my-10 p-3 flex justify-center items-center flex-col mx-auto rounded-lg w-[90%] md:max-w-xl shadow-xl">
           <Link className="text-sm" to={"/register"}>
             Get started with <span className="font-bold italic">Blogify</span>
           </Link>
@@ -153,7 +153,7 @@ const MyPosts = () => {
           </div>
         </div>
         {/* FILTER && SORT */}
-        <div className="w-[95%] mx-auto">
+        <div className="w-[90%] mx-auto">
           <div className="flex justify-between items-center mt-3">
             <select
               onChange={(e) => setFilter(e.target.value)}
@@ -176,7 +176,7 @@ const MyPosts = () => {
           </div>
         </div>
         {/* POSTS */}
-        <div className="relative">
+        <div className="relative w-[95%]">
           {isFetching && (
             <div className="absolute inset-0  z-10 flex items-center justify-center">
               <BeatLoader size={18} />

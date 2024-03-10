@@ -10,12 +10,11 @@ import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 import { BarLoader } from "react-spinners";
 
 const Login = () => {
-
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [login, {isLoading}] =  useLoginMutation()
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [login, { isLoading }] = useLoginMutation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -24,22 +23,22 @@ const Login = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (email && password){
+    e.preventDefault();
+    if (email && password) {
       try {
-        setLoading(true)
-        // const res = await login({email, password})
+        setLoading(true);
         const data = {
           email,
-          password
-        }
+          password,
+        };
         const res = await axios.post("https://mern-blogify-server.vercel.app/auth/login", data, {withCredentials: true})
-        // const res = await axios.post("http://localhost:3000/auth/login", data, {withCredentials: true})
-        // console.log(res)
+        // const res = await axios.post("http://localhost:3000/auth/login", data, {
+        //   withCredentials: true,
+        // });
         toast.success(res.data.message);
-        dispatch(setCredentials(res.data.accessToken))
-        setEmail("")
-        setPassword("")
+        dispatch(setCredentials(res.data.accessToken));
+        setEmail("");
+        setPassword("");
         navigate("/");
       } catch (error) {
         Swal.fire({
@@ -53,13 +52,12 @@ const Login = () => {
           },
         });
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     } else {
-      toast.error("Plaase enter your email & password to Login")
+      toast.error("Plaase enter your email & password to Login");
     }
-  }
-
+  };
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900 flex justify-center items-center h-screen -mt-14">
@@ -125,7 +123,7 @@ const Login = () => {
                 type="submit"
                 className="w-full text-white bg-blue-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
-                {loading ? <BarLoader color="white"/> : "Login"}
+                {loading ? <BarLoader color="white" /> : "Login"}
               </button>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Don't have an account?

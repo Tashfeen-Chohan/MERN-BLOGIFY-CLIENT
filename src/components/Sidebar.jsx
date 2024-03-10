@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import { RiArticleFill } from "react-icons/ri";
 import { FaFilePen } from "react-icons/fa6";
+import { BsFillInfoCircleFill } from "react-icons/bs";
 
 const Sidebar = ({ showSidebar, setShowSidebar }) => {
   const { isAdmin, isPublisher, slug, } = useAuth();
@@ -25,6 +26,7 @@ const Sidebar = ({ showSidebar, setShowSidebar }) => {
   }
 
   const handleLogout = async () => {
+    closeSidebar()
     try {
       const res = await axios.post("https://mern-blogify-server.vercel.app/auth/logout");
       toast.success(res.data.message);
@@ -101,6 +103,10 @@ const Sidebar = ({ showSidebar, setShowSidebar }) => {
         <Link to={`/profile/${slug}`} onClick={closeSidebar} className={`${location.pathname.includes("/profile") && "bg-blue-900"} transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3`}>
           <AiFillSetting size={20} />
           <span>Settings</span>
+        </Link>
+        <Link to={"/about-me"} onClick={closeSidebar} className={`${location.pathname.includes("/about-me") && "bg-blue-900"} transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3`}>
+          <BsFillInfoCircleFill size={17} />
+          <span>About</span>
         </Link>
         <span onClick={handleLogout} className="transition-colors duration-500 ease-in-out mb-1 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
           <LuLogOut size={20} />

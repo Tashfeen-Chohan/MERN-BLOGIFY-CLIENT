@@ -155,7 +155,7 @@ const Posts = () => {
     <div className="flex justify-center items-center">
       <div>
         {/* HEADER */}
-        <div className="bg-slate-50 shadow-md my-10 py-2 md:py-4 flex justify-center items-center flex-col mx-auto rounded-lg w-[90%] md:max-w-xl ">
+        <div className="bg-slate-50 shadow-md my-10 py-2 md:py-4 flex justify-center items-center flex-col mx-auto rounded-lg w-[94%] md:max-w-xl ">
           <Link className="text-sm" to={"/register"}>
             Get started with <span className="font-bold italic">Blogify</span>
           </Link>
@@ -176,7 +176,7 @@ const Posts = () => {
           </div>
         </div>
         {/* FILTER && SORT */}
-        <div className="w-[90%] mx-auto">
+        <div className="w-[94%] mx-auto">
           <div className="flex justify-between items-center mt-3">
             <select
               onChange={(e) => setFilter(e.target.value)}
@@ -235,7 +235,7 @@ const Posts = () => {
           </div>
         )}
         {/* POSTS */}
-        <div className="relative w-[90%] mx-auto md:max-w-6xl">
+        <div className="relative w-[94%] mx-auto md:max-w-6xl">
           {isFetching && (
             <div className="absolute inset-0  z-10 flex items-center justify-center">
               <BeatLoader size={18} />
@@ -253,7 +253,7 @@ const Posts = () => {
         <div
           className={
             totalPosts === 0
-              ? "block w-[90%] md:w-[64rem] text-red-500 text-center font-bold mb-4 text-lg"
+              ? "block w-[94%] md:w-[64rem] text-red-500 text-center font-bold mb-4 text-lg"
               : "hidden"
           }
         >

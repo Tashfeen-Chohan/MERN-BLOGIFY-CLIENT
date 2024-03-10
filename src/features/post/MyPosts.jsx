@@ -132,7 +132,7 @@ const MyPosts = () => {
     <div className="flex justify-center items-center">
       <div>
         {/* HEADER */}
-        <div className="my-10 p-3 flex justify-center items-center flex-col mx-auto rounded-lg w-[90%] md:max-w-xl shadow-xl">
+        <div className="bg-slate-50 shadow-md my-10 py-2 md:py-4 flex justify-center items-center flex-col mx-auto rounded-lg w-[94%] md:max-w-xl ">
           <Link className="text-sm" to={"/register"}>
             Get started with <span className="font-bold italic">Blogify</span>
           </Link>
@@ -190,7 +190,7 @@ const MyPosts = () => {
         <div
           className={
             totalPosts === 0
-              ? "block w-[95%] md:w-[64rem] text-red-500 text-center font-bold mb-4 text-lg"
+              ? "block w-[90%] md:w-[64rem] text-red-500 text-center font-bold mb-4 text-lg"
               : "hidden"
           }
         >

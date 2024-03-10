@@ -198,6 +198,14 @@ const Navbar = ({ showSidebar, setShowSidebar }) => {
           >
             Categories
           </Link>
+          <Link
+            to="/about-me"
+            className={`${
+              location.pathname === "/about-me" ? "text-cyan-300" : ""
+            }`}
+          >
+            About
+          </Link>
 
           <div className="flex  items-center mt-5 md:mt-0 gap-3 md:ml-5 ">
             <Link to={"/register"}>

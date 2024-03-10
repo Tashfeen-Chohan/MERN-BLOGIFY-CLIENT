@@ -24,6 +24,7 @@ import AllComments from "./features/comment/AllComments";
 import Layout from "./components/Layout";
 import useAuth from "./hooks/useAuth";
 import PageNotFound from "./components/PageNotFound";
+import About from "./components/About";
 
 const App = () => {
   const {isAdmin, isPublisher, status} = useAuth()
@@ -44,10 +45,10 @@ const App = () => {
 
       <Layout>
         <Routes>
-          {/* HOME */}
-          <Route path="/" element={<Posts />} />
 
-          {/* AUTH ROURES */}
+          {/* PUBLIC ROURES */}
+          <Route path="/" element={<Posts />} />
+          <Route path="/about-me" element={<About/>}/>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 

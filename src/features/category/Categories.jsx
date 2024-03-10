@@ -129,12 +129,9 @@ const Categories = () => {
             onChange={(e) => setSortBy(e.target.value)}
             className="bg-slate-200 shadow-md  rounded text-black outline-none px-2 py-1"
           >
-            <option className="font-bold" value="">
-              Default
-            </option>
+            <option className="font-bold" value="">Post &#8593;</option>
             {isAdmin && <option value="date desc">Recent</option>}
             {isAdmin && <option value="date">Oldest</option>}
-            <option value="posts">Post &#8593;</option>
             <option value="name">A to Z &#8595;</option>
             <option value="name desc">Z to A &#8593;</option>
           </select>

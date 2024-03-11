@@ -10,7 +10,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { FaEdit, FaRegComment, FaRegEye } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import useAuth from "../../hooks/useAuth";
-import { BarLoader, BeatLoader } from "react-spinners";
+import { BarLoader, BeatLoader, ClipLoader } from "react-spinners";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { PiHandsClappingFill, PiHandsClappingLight } from "react-icons/pi";
@@ -38,6 +38,7 @@ const SinglePost = () => {
   const [likePost] = useLikePostMutation();
   const [viewPost] = useViewPostMutation();
   const [limit, setLimit] = useState(3);
+  const [likeLoading, setLikeLoading] = useState(false);
 
   const { post, commentsCount } = data ?? {};
 
@@ -54,9 +55,8 @@ const SinglePost = () => {
   const { id: userId, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState(false);
+  const postURL = slug;
 
-  const postURL = `https://tashfeen-blogify.vercel.app/posts/${post?.slug}`;
-  
   // HANDLE VIEW POST
   useEffect(() => {
     const handleView = async () => {
@@ -147,12 +147,15 @@ const SinglePost = () => {
       return;
     }
     try {
+      setLikeLoading(true);
       const res = await likePost(id);
       toast.success(res.data.message);
       setIsLiked(true);
     } catch (error) {
       toast.error(error.message);
       console.log(error.message);
+    } finally {
+      setLikeLoading(false);
     }
   };
 
@@ -328,7 +331,9 @@ const SinglePost = () => {
         {/* LIKES, COMMENTS & VIEWS */}
         <div className="cursor-pointer my-4 flex justify-start items-center gap-4 px-2 md:px-20">
           <span className="flex justify-center items-center gap-1 text-sm">
-            {userId && post?.likedBy.includes(userId) ? (
+            {likeLoading ? (
+              <ClipLoader size={15} />
+            ) : userId && post?.likedBy.includes(userId) ? (
               <PiHandsClappingFill
                 size={21}
                 onClick={() => handleLike(post._id)}

@@ -163,7 +163,7 @@ const Posts = () => {
             What are you looking up-to?
           </h2>
           <div className="flex md:w-full justify-center items-center gap-2 mt-2 rounded-lg py-2 px-5">
-            <MdSearch color="gray" size={22} />
+            <MdSearch color="gray" size={26} />
             <input
               className="md:w-[60%] w-[80%] py-1 px-2 outline-none border-b border-black focus-within:border-b-2"
               type="text"

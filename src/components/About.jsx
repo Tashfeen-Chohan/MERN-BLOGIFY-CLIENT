@@ -9,15 +9,17 @@ const About = () => {
   const navigate = useNavigate();
   return (
     <div className="flex justify-center items-start min-h-screen">
-      <div className="relative my-10 w-[90%] md:max-w-4xl md:gap-5 bg-slate-100 shadow-xl rounded-lg py-5 pb-10 md:px-10">
+      <div className="relative my-10 w-[85%] md:max-w-4xl md:gap-5 bg-slate-100 shadow-xl rounded-lg py-5 pb-10 md:px-10">
         <TiArrowBack
           onClick={() => navigate(-1)}
-          className="right-1 md:right-5 absolute transition-all ease-in-out duration-500 hover:scale-125 flex self-end md:justify-end md:text-4xl text-3xl"
+          size={40}
+          className="right-1 md:right-5 absolute transition-all ease-in-out duration-500 hover:scale-125 flex self-end md:justify-end"
         />
         <div className="mt-5 md:mt-7 flex justify-center items-center flex-col md:flex-row md:items-start ">
+          {/* PROFILE */}
           <div className="md:w-[40%] flex justify-center items-center flex-col">
             <img
-              className="w-32 h-32 md:w-56 md:h-56 border-8 border-slate-100 shadow-xl object-cover rounded-full"
+              className="w-32 h-32 md:w-56 md:h-56 border-8 border-slate-50 shadow-xl object-cover rounded-full"
               src={Profile}
               alt="Profile Picture"
             />

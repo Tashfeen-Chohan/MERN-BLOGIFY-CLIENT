@@ -145,7 +145,7 @@ const UpdateUser = () => {
               <img
                 src={user.profile}
                 alt="User Profile"
-                className="w-full h-full rounded-full border-4 md:border-8 border-gray-300 object-cover text-black text-center"
+                className="w-full h-full rounded-full object-cover text-black text-center"
               />
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">

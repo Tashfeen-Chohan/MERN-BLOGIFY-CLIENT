@@ -139,21 +139,21 @@ const MyPosts = () => {
           <h2 className="text-2xl md:text-3xl font-bold">
             What are you looking up-to?
           </h2>
-          <div className="flex md:w-full justify-center items-center gap-3 mt-2 rounded-lg py-2 px-3">
-            <MdSearch color="gray" size={22} />
+          <div className="flex md:w-full justify-center items-center gap-2 mt-2 rounded-lg py-2 px-5">
+            <MdSearch color="gray" size={26} />
             <input
-              className="md:w-[60%] py-1 px-2 outline-none border-b border-black focus-within:border-b-2"
+              className="md:w-[60%] w-[80%] py-1 px-2 outline-none border-b border-black focus-within:border-b-2"
               type="text"
               placeholder="Search any blog..."
               onChange={(e) => setSearch(e.target.value)}
             />
-            <button className="bg-blue-900 hover:bg-blue-800 transition-colors duration-300 text-white rounded py-1 px-3">
+            <button className="bg-blue-900 hover:bg-blue-700 transition-colors duration-300 text-white rounded py-1 px-3">
               Search
             </button>
           </div>
         </div>
         {/* FILTER && SORT */}
-        <div className="w-[90%] mx-auto">
+        <div className="w-[94%] mx-auto">
           <div className="flex justify-between items-center mt-3">
             <select
               onChange={(e) => setFilter(e.target.value)}
@@ -176,7 +176,7 @@ const MyPosts = () => {
           </div>
         </div>
         {/* POSTS */}
-        <div className="relative w-[90%] mx-auto md:max-w-6xl">
+        <div className="relative w-[94%] mx-auto md:max-w-6xl">
           {isFetching && (
             <div className="absolute inset-0  z-10 flex items-center justify-center">
               <BeatLoader size={18} />
@@ -190,7 +190,7 @@ const MyPosts = () => {
         <div
           className={
             totalPosts === 0
-              ? "block w-[90%] md:w-[64rem] text-red-500 text-center font-bold mb-4 text-lg"
+              ? "block w-[94%] md:w-[64rem] text-red-500 text-center font-bold mb-4 text-lg"
               : "hidden"
           }
         >

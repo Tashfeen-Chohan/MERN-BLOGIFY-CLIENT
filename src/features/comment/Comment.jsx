@@ -24,18 +24,23 @@ const Comment = ({ postId }) => {
   const [editComment] = useEditCommentMutation();
   const [deleteComment] = useDeleteCommentMutation();
 
-  const { id: userId, username, profile, isPublisher, isAdmin } = useAuth();
+  const { id: userId, username, profile, slug } = useAuth();
   const [commentContent, setCommentContent] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [editCommentId, setEditCommentId] = useState("");
   const [editedComment, setEditedComment] = useState("");
-  const navigate = useNavigate()
+  const [commentLoading, setCommentLoading] = useState(false);
+  const [commentLikeLoading, setCommentLikeLoading] = useState(false);
+  const [commentEditLoading, setCommentEditLoading] = useState(false);
+  const [commentDelLoading, setCommentDelLoading] = useState(false);
+  const navigate = useNavigate();
 
   const { comments, totalComments } = data ?? {};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setCommentLoading(true);
       const res = await createComment({
         content: commentContent,
         userId,
@@ -50,15 +55,18 @@ const Comment = ({ postId }) => {
     } catch (error) {
       toast.error(error.message);
       console.log(error.message);
+    } finally {
+      setCommentLoading(false);
     }
   };
 
   const handleLike = async (id) => {
-    if (!userId){
-      navigate("/login")
-      return ;
+    if (!userId) {
+      navigate("/login");
+      return;
     }
     try {
+      setCommentLikeLoading(true);
       const res = await likeComment(id);
       if (res.error) {
         toast.error(res.error.data.message);
@@ -67,6 +75,8 @@ const Comment = ({ postId }) => {
       }
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setCommentLikeLoading(false);
     }
   };
 
@@ -88,6 +98,7 @@ const Comment = ({ postId }) => {
       });
 
       if (result.isConfirmed) {
+        setCommentDelLoading(true);
         const response = await deleteComment(id);
         if (response.error) {
           Swal.fire({
@@ -116,11 +127,14 @@ const Comment = ({ postId }) => {
         },
       });
       console.log("Error deleting category");
+    } finally {
+      setCommentDelLoading(false);
     }
   };
 
   const handleEdit = async (id) => {
     try {
+      setCommentEditLoading(true);
       const res = await editComment({
         id,
         content: editedComment,
@@ -134,7 +148,11 @@ const Comment = ({ postId }) => {
         setEditCommentId("");
         setEditedComment("");
       }
-    } catch (error) {}
+    } catch (error) {
+      toast.error("An unexpected error occured on the server!");
+    } finally {
+      setCommentEditLoading(false);
+    }
   };
 
   return (
@@ -147,7 +165,10 @@ const Comment = ({ postId }) => {
             src={profile}
             alt=""
           />
-          <Link to={"/"} className="text-xs text-cyan-600 hover:underline">
+          <Link
+            to={`/profile/${slug}`}
+            className="text-xs text-cyan-600 hover:underline"
+          >
             @{username}
           </Link>
         </div>
@@ -180,7 +201,11 @@ const Comment = ({ postId }) => {
               type="submit"
               className="bg-cyan-500 hover:bg-cyan-400 transition-colors duration-300 text-white py-1 px-3 rounded shadow-md"
             >
-              Submit
+              {commentLoading ? (
+                <BarLoader color="white" className="my-2" />
+              ) : (
+                "Submit"
+              )}
             </button>
           </div>
         </form>
@@ -248,7 +273,7 @@ const Comment = ({ postId }) => {
                           onClick={() => handleEdit(val._id)}
                           className="bg-cyan-500 hover:bg-cyan-400 transition-colors duration-300 text-white py-1 px-4 rounded shadow-md text-sm"
                         >
-                          Save
+                          {commentEditLoading ? "Saving..." : "Save"}
                         </button>
                         <button
                           onClick={() => setEditMode(false)}
@@ -267,13 +292,12 @@ const Comment = ({ postId }) => {
                         <button
                           type="button"
                           onClick={() => handleLike(val._id)}
-                          className={`text-gray-400 hover:text-blue-500 ${
-                            userId &&
-                            val.likedBy.includes(userId) &&
-                            "!text-blue-500"
-                          }`}
                         >
-                          <FaThumbsUp className="text-sm my-2" />
+                          {val.likedBy.includes(userId) ? (
+                            <FaThumbsUp className="text-sm my-2 text-blue-500" />
+                          ) : (
+                            <FaThumbsUp className="text-sm my-2 text-gray-400" />
+                          )}
                         </button>
                         <p className="text-gray-400 text-sm">
                           {val.likes > 0 &&
@@ -281,7 +305,7 @@ const Comment = ({ postId }) => {
                               " " +
                               (val.likes === 1 ? "like" : "likes")}
                         </p>
-                        {(userId === val.userId._id) && (
+                        {userId === val.userId._id && (
                           <button
                             type="button"
                             onClick={() => {
@@ -294,13 +318,15 @@ const Comment = ({ postId }) => {
                             Edit
                           </button>
                         )}
-                        {(userId === val.userId._id || userId === val.postId.author  || isAdmin) && (
+                        {(userId === val.userId._id ||
+                          userId === val.postId.author ||
+                          isAdmin) && (
                           <button
                             type="button"
                             onClick={() => handleDelete(val._id)}
                             className="text-gray-400 hover:text-red-500 text-sm"
                           >
-                            Delete
+                            {commentDelLoading ? "Deleting..." : "Delete"}
                           </button>
                         )}
                       </div>
@@ -316,7 +342,13 @@ const Comment = ({ postId }) => {
                   onClick={() => setLimit(limit + 3)}
                   className="bg-cyan-500 hover:bg-cyan-400 transition-colors duration-300 text-white py-1 px-3 rounded shadow-xl"
                 >
-                  {isFetching ? <BarLoader color="white" className="my-2"/> : limit >= totalComments ? "No more comments" : "See More"}
+                  {isFetching ? (
+                    <BarLoader color="white" className="my-2" />
+                  ) : limit >= totalComments ? (
+                    "No more comments"
+                  ) : (
+                    "See More"
+                  )}
                 </button>
               </div>
             )}

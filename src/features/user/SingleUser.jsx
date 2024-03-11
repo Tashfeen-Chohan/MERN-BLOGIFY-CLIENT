@@ -35,7 +35,7 @@ const SingleUser = () => {
 
   return (
     <div className="flex justify-center items-center mt-16 md:mt-8">
-      <div className="flex justify-center items-center flex-col w-[85%] md:max-w-sm bg-slate-100 pb-16 pt-5 px-3 rounded-xl  shadow-lg">
+      <div className="flex justify-center items-center flex-col w-[85%] md:max-w-sm bg-slate-100 pb-7 pt-5 px-3 rounded-xl shadow-xl">
         <Link
           to={-1}
           className="flex self-end hover:scale-125 transition-all duration-300"
@@ -43,7 +43,7 @@ const SingleUser = () => {
           <TiArrowBack size={40} />
         </Link>
         <h1 className="text-2xl font-bold">User Profile</h1>
-        <div className="shadow-xl my-2 w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden mx-auto">
+        <div className="shadow-xl my-2 w-32 h-32 rounded-full overflow-hidden mx-auto">
           <img
             src={user.profile}
             alt="User Profile"

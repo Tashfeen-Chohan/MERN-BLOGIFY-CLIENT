@@ -55,8 +55,9 @@ const SinglePost = () => {
   const { id: userId, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState(false);
-  const postURL = slug;
-
+  
+  const postURL = `https://tashfeen-blogify.vercel.app/posts/${slug}`;
+  
   // HANDLE VIEW POST
   useEffect(() => {
     const handleView = async () => {

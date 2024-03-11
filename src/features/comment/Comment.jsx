@@ -11,7 +11,7 @@ import {
 import { toast } from "react-toastify";
 import moment from "moment";
 import { FaThumbsUp } from "react-icons/fa";
-import { BarLoader, BeatLoader } from "react-spinners";
+import { BarLoader, BeatLoader, ClipLoader } from "react-spinners";
 import Swal from "sweetalert2";
 
 const Comment = ({ postId }) => {
@@ -31,6 +31,7 @@ const Comment = ({ postId }) => {
   const [editedComment, setEditedComment] = useState("");
   const [commentLoading, setCommentLoading] = useState(false);
   const [commentLikeLoading, setCommentLikeLoading] = useState(false);
+  const [likeCommentId, setLikeCommentId] = useState("");
   const [commentEditLoading, setCommentEditLoading] = useState(false);
   const [commentDelLoading, setCommentDelLoading] = useState(false);
   const navigate = useNavigate();
@@ -291,9 +292,14 @@ const Comment = ({ postId }) => {
                       <div className="flex justify-start items-center gap-3 mb-1">
                         <button
                           type="button"
-                          onClick={() => handleLike(val._id)}
+                          onClick={() => {
+                            handleLike(val._id);
+                            setLikeCommentId(val._id);
+                          }}
                         >
-                          {val.likedBy.includes(userId) ? (
+                          {likeCommentId === val._id && commentLikeLoading ? (
+                            <ClipLoader size={15} />
+                          ) : val.likedBy.includes(userId) ? (
                             <FaThumbsUp className="text-sm my-2 text-blue-500" />
                           ) : (
                             <FaThumbsUp className="text-sm my-2 text-gray-400" />

@@ -29,7 +29,7 @@ const Profile = () => {
         </Link>
         <h2 className="text-2xl font-bold">Profile</h2>
         <p>You can update the details!</p>
-        <div className="shadow-xl my-5 w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden mx-auto">
+        <div className="shadow-xl my-5 w-32 h-32 rounded-full overflow-hidden mx-auto">
           <img
             src={user.profile}
             alt="User Profile"

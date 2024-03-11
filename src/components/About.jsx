@@ -9,7 +9,7 @@ const About = () => {
   const navigate = useNavigate();
   return (
     <div className="flex justify-center items-start min-h-screen">
-      <div className="relative my-10 w-[85%] md:max-w-4xl md:gap-5 bg-slate-100 shadow-xl rounded-lg py-5 pb-10 md:px-10">
+      <div className="relative my-10 w-[90%] md:max-w-4xl md:gap-5 bg-slate-100 shadow-xl rounded-lg py-5 pb-10 md:px-10">
         <TiArrowBack
           onClick={() => navigate(-1)}
           size={40}

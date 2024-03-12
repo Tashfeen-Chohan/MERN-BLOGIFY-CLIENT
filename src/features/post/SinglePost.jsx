@@ -165,6 +165,7 @@ const SinglePost = () => {
   const RecentPosts = recentPosts?.posts?.map((val) => {
     const viewPost = () => {
       navigate(`/posts/${val.slug}`);
+      window.scrollTo(0,0)
     };
 
     return (
@@ -173,7 +174,7 @@ const SinglePost = () => {
         key={val._id}
       >
         {/* BLOG COVER IMG */}
-        <div onClick={viewPost()} className="relative">
+        <div onClick={viewPost} className="relative">
           {val.popular && (
             <div className="bg-rose-500 text-gray-100 absolute top-3 text-sm right-2 px-3 py-1 rounded">
               Popular

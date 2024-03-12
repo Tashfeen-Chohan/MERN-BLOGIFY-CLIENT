@@ -2,8 +2,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({ 
-    baseUrl: "https://mern-blogify-server.vercel.app/",
-    // baseUrl: "http://localhost:3000/",
+    // baseUrl: "https://mern-blogify-server.vercel.app/",
+    baseUrl: "http://localhost:3000/",
     prepareHeaders: (headers, {getState}) => {
       // GET THE JWT FROM YOUR REDUX STORE OR WHEREVER IT IS STORED
       const token = getState().auth.token

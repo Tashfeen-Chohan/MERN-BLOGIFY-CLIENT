@@ -30,6 +30,8 @@ import Comment from "../comment/Comment";
 import moment from "moment";
 import { deleteObject, getStorage, ref } from "firebase/storage";
 import app from "../../firebase";
+import { animateScroll as scroll } from 'react-scroll';
+
 
 const SinglePost = () => {
   const { slug } = useParams();
@@ -54,11 +56,11 @@ const SinglePost = () => {
 
   const { id: userId, isAdmin } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation()
+  const {pathname} = useLocation();
   const [isLiked, setIsLiked] = useState(false);
-  
+
   const postURL = `https://tashfeen-blogify.vercel.app/posts/${slug}`;
-  
+
   // HANDLE VIEW POST
   useEffect(() => {
     const handleView = async () => {
@@ -165,8 +167,10 @@ const SinglePost = () => {
   const RecentPosts = recentPosts?.posts?.map((val) => {
     const viewPost = () => {
       navigate(`/posts/${val.slug}`);
+      window.location.reload()
+      // window.scrollTo(0,0)
     };
-
+    
     return (
       <div
         className=" col-span-12 md:col-span-4 shadow-lg rounded hover:scale-105 transition-transform duration-300"
@@ -393,10 +397,16 @@ const SinglePost = () => {
           </span>
         </h2>
         <hr className="h-[2px] bg-gray-200" />
-        <div className="grid mx-auto grid-cols-12 gap-7 md:gap-x-5 md:gap-y-7 my-7">
-          {RecentPosts}
-        </div>
-        {recentPosts?.totalPosts > 3 && (
+        {recentLoading ? (
+          <div className="my-20 flex justify-center items-center">
+            <BeatLoader/>
+          </div>
+        ) : (
+          <div className="grid mx-auto grid-cols-12 gap-7 md:gap-x-5 md:gap-y-7 my-7">
+            {RecentPosts}
+          </div>
+        )}
+        {recentPosts?.totalPosts > 3 && !recentLoading && (
           <div className="flex justify-center items-center mb-10">
             <button
               disabled={limit >= recentPosts?.totalPosts}

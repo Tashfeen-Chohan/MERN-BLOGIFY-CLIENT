@@ -232,7 +232,7 @@ const Comment = ({ postId }) => {
 
         {/* ALL COMMENTS */}
         {isLoading ? (
-          <div className="w-full">
+          <div className="w-full flex justify-center items-center my-10">
             <BeatLoader color="#000000" size={15} />
           </div>
         ) : (

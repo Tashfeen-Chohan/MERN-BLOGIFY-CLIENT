@@ -42,7 +42,7 @@ const SingleUser = () => {
         >
           <TiArrowBack size={40} />
         </Link>
-        <h1 className="text-2xl font-bold">User Profile</h1>
+        <h1 className="text-2xl font-bold">Profile</h1>
         <div className="shadow-xl my-2 w-32 h-32 rounded-full overflow-hidden mx-auto">
           <img
             src={user.profile}

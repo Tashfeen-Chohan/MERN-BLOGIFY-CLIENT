@@ -32,7 +32,7 @@ const SimpleSidebar = ({ showSidebar, setShowSidebar }) => {
         </Link>
         <Link to={"/about-me"} onClick={closeSidebar} className="transition-colors duration-500 ease-in-out mb-3 flex justify-start items-center gap-3 hover:bg-blue-900 py-2 rounded px-3">
           <BsFillInfoCircleFill size={17} />
-          <span>Categories</span>
+          <span>About</span>
         </Link>
       </ul>
     </div>

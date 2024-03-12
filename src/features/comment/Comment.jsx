@@ -24,7 +24,7 @@ const Comment = ({ postId }) => {
   const [editComment] = useEditCommentMutation();
   const [deleteComment] = useDeleteCommentMutation();
 
-  const { id: userId, username, profile, slug } = useAuth();
+  const { id: userId, username, profile, slug, isAdmin } = useAuth();
   const [commentContent, setCommentContent] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [editCommentId, setEditCommentId] = useState("");
@@ -332,7 +332,7 @@ const Comment = ({ postId }) => {
                             onClick={() => handleDelete(val._id)}
                             className="text-gray-400 hover:text-red-500 text-sm"
                           >
-                            {commentDelLoading ? "Deleting..." : "Delete"}
+                            {commentDelLoading ? <span className="text-red-500">Deleting...</span> : "Delete"}
                           </button>
                         )}
                       </div>

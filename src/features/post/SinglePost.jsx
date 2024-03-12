@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import {
   useDeletePostMutation,
   useGetPostsQuery,
@@ -6,7 +6,7 @@ import {
   useLikePostMutation,
   useViewPostMutation,
 } from "./postApi";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { FaEdit, FaRegComment, FaRegEye } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import useAuth from "../../hooks/useAuth";
@@ -54,6 +54,7 @@ const SinglePost = () => {
 
   const { id: userId, isAdmin } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation()
   const [isLiked, setIsLiked] = useState(false);
   
   const postURL = `https://tashfeen-blogify.vercel.app/posts/${slug}`;
@@ -164,7 +165,6 @@ const SinglePost = () => {
   const RecentPosts = recentPosts?.posts?.map((val) => {
     const viewPost = () => {
       navigate(`/posts/${val.slug}`);
-      window.scrollTo(0, 0);
     };
 
     return (

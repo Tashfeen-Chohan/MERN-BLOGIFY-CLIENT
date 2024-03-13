@@ -34,21 +34,21 @@ const About = () => {
               <a
                 target="_blank"
                 className="hover:scale-125 transition-all duration-300 ease-in-out w-8 h-8 rounded-full bg-white flex justify-center items-center shadow-xl"
-                href="https://www.facebook.com/?ref=homescreenpwa"
+                href="https://www.facebook.com/TashfeenChohan5676"
               >
                 <FaFacebookF className="text-[#316FF6]" />
               </a>
               <a
                 target="_blank"
                 className="hover:scale-125 transition-all duration-300 ease-in-out w-8 h-8 rounded-full bg-white flex justify-center items-center shadow-xl"
-                href="https://www.instagram.com/?hl=en"
+                href="https://www.instagram.com/tashfeen_chohan/?hl=en"
               >
                 <FaInstagram className="text-[#C13584]" />
               </a>
               <a
                 target="_blank"
                 className="hover:scale-125 transition-all duration-300 ease-in-out w-8 h-8 rounded-full bg-white flex justify-center items-center shadow-xl"
-                href="https://www.linkedin.com/feed/"
+                href="https://www.linkedin.com/in/tashfeen-chohan-88a77a22b/"
               >
                 <FaLinkedinIn className="text-[#0a66c2]" />
               </a>

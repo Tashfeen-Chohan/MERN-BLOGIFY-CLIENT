@@ -59,7 +59,7 @@ const MyPosts = () => {
         <div className="flex justify-between items-center mt-2 px-2">
           <div
             onClick={() => navigate(`/users/${val.author.slug}`)}
-            className="flex justify-center items-center gap-2"
+            className="cursor-pointer flex justify-center items-center gap-2"
           >
             <div className="h-8 w-8 rounded-full overflow-hidden">
               <img
@@ -68,15 +68,17 @@ const MyPosts = () => {
                 alt="Profile"
               />
             </div>
-            <span className="text-sm italic">{val.author.username}</span>
+
+            <span className="text-xs italic">{val.author.username}</span>
           </div>
-          <div className="flex justify-center items-start flex-col">
-            <span className="text-sm italic">
+          <div className="text-xs italic flex justify-center items-center">
+            <span>{(val.content.length / 1000).toFixed(0)} mins read</span>
+            <span className="px-1"> - </span>
+            <span className="text-xs italic">
               {moment(val.createdAt).fromNow()}
             </span>
           </div>
         </div>
-
         <h2
           onClick={viewPost}
           className="font-bold text-2xl text-center my-3 line-clamp-2 px-2"

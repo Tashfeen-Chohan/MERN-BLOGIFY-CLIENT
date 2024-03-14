@@ -51,7 +51,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      {/* LAST WEEK & MONT */}
+      {/* LAST WEEK & MONTH */}
       <div className="w-[95%] md:max-w-5xl flex justify-center items-center mt-7">
         <button
           onClick={() => {
@@ -102,7 +102,7 @@ const Dashboard = () => {
             ) : (
               <>
                 <span>{Users?.lastMonth}</span>
-                <span className="ml-1">Last Week</span>
+                <span className="ml-1">Last Month</span>
               </>
             )}
           </div>
@@ -129,7 +129,7 @@ const Dashboard = () => {
             ) : (
               <>
                 <span>{Posts?.lastMonthPosts}</span>
-                <span className="ml-1">Last Week</span>
+                <span className="ml-1">Last Month</span>
               </>
             )}
           </div>
@@ -156,7 +156,7 @@ const Dashboard = () => {
             ) : (
               <>
                 <span>{Comments?.lastMonth}</span>
-                <span className="ml-1">Last Week</span>
+                <span className="ml-1">Last Month</span>
               </>
             )}
           </div>
@@ -183,7 +183,7 @@ const Dashboard = () => {
             ) : (
               <>
                 <span>{Categories?.lastMonth}</span>
-                <span className="ml-1">Last Week</span>
+                <span className="ml-1">Last Month</span>
               </>
             )}
           </div>

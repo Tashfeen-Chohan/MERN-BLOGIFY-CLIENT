@@ -191,9 +191,7 @@ const SinglePost = () => {
         {/* AUTHOR INFO */}
         <div className="flex justify-between items-center mt-2 px-2">
           <div
-            onClick={() => {
-              navigate(`/users/${val.author.slug}`);
-            }}
+            onClick={() => navigate(`/users/${val.author.slug}`)}
             className="cursor-pointer flex justify-center items-center gap-2"
           >
             <div className="h-8 w-8 rounded-full overflow-hidden">
@@ -203,10 +201,13 @@ const SinglePost = () => {
                 alt="Profile"
               />
             </div>
-            <span className="text-sm italic">{val.author.username}</span>
+
+            <span className="text-xs italic">{val.author.username}</span>
           </div>
-          <div className="flex justify-center items-start flex-col">
-            <span className="text-sm italic">
+          <div className="text-xs italic flex justify-center items-center">
+            <span>{(val.content.length / 1000).toFixed(0)} mins read</span>
+            <span className="px-1"> - </span>
+            <span className="text-xs italic">
               {moment(val.createdAt).fromNow()}
             </span>
           </div>
@@ -278,11 +279,17 @@ const SinglePost = () => {
               src={post?.author.profile}
               alt="Profile"
             />
-            <span className="italic font-semibold">
+            <span className="italic font-semibold text-xs md:text-sm">
               {post?.author.username}
             </span>
           </div>
-          <span className="italic">{moment(post?.createdAt).fromNow()}</span>
+          <div className="text-xs italic md:text-sm flex justify-center items-center">
+            <span>{(post?.content.length / 1000).toFixed(0)} mins read</span>
+            <span className="px-1"> - </span>
+            <span className="italic">
+              {moment(post?.createdAt).fromNow()}
+            </span>
+          </div>
         </div>
 
         {/* EDIT & DELETE */}
@@ -293,7 +300,7 @@ const SinglePost = () => {
                 navigate(`/posts/update/${post?.slug}`);
                 window.scrollTo(0, 0);
               }}
-              size={25}
+              size={22}
               color="orange"
               className="hover:scale-125 transition-all duration-300"
             />

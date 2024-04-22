@@ -30,6 +30,7 @@ import Comment from "../comment/Comment";
 import moment from "moment";
 import { deleteObject, getStorage, ref } from "firebase/storage";
 import app from "../../firebase";
+import { Element, scroller } from "react-scroll";
 
 const SinglePost = () => {
   const { slug } = useParams();
@@ -57,7 +58,7 @@ const SinglePost = () => {
   const { pathname } = useLocation();
   const [isLiked, setIsLiked] = useState(false);
 
-  const postURL = `https://tashfeen-blogify.vercel.app`;
+  const postURL = `https://tashfeen-blogify.vercel.app/posts/${slug}`;
 
   // HANDLE VIEW POST
   useEffect(() => {
@@ -163,9 +164,10 @@ const SinglePost = () => {
 
   // const {posts} = recentPosts;
   const RecentPosts = recentPosts?.posts?.map((val) => {
-    const viewPost = () => {
+   
+    const viewPost = async () => {
       navigate(`/posts/${val.slug}`);
-      window.scrollTo(0,0)
+      window.location.reload();
     };
 
     return (
@@ -206,7 +208,7 @@ const SinglePost = () => {
           </div>
           <div className="text-xs italic flex justify-center items-center">
             <span>{(val.content.length / 1000).toFixed(0)} mins read</span>
-            <span className="px-1"> - </span>
+            <span className="px-1 md:px-2"> - </span>
             <span className="text-xs italic">
               {moment(val.createdAt).fromNow()}
             </span>
@@ -261,7 +263,10 @@ const SinglePost = () => {
   });
 
   return (
-    <div className="flex justify-center items-center flex-col">
+    <Element
+      name="singlePost"
+      className="flex justify-center items-center flex-col"
+    >
       <div className="w-[95%] my-5 rounded-t shadow  max-w-4xl pb-7">
         <img
           className="w-full rounded h-auto shadow-xl my-3"
@@ -286,9 +291,7 @@ const SinglePost = () => {
           <div className="text-xs italic md:text-sm flex justify-center items-center">
             <span>{(post?.content.length / 1000).toFixed(0)} mins read</span>
             <span className="px-1"> - </span>
-            <span className="italic">
-              {moment(post?.createdAt).fromNow()}
-            </span>
+            <span className="italic">{moment(post?.createdAt).fromNow()}</span>
           </div>
         </div>
 
@@ -428,7 +431,7 @@ const SinglePost = () => {
           </div>
         )}
       </div>
-    </div>
+    </Element>
   );
 };
 

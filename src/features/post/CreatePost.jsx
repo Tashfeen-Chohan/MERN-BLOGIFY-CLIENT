@@ -13,7 +13,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { RiChatDeleteFill } from "react-icons/ri";
 import { FcEditImage } from "react-icons/fc";
-import {  PulseLoader } from "react-spinners";
+import { PulseLoader } from "react-spinners";
 
 const toolbarOptions = {
   toolbar: [
@@ -40,7 +40,7 @@ const CreatePost = () => {
   const [categories, setCategories] = useState([]);
   const [blogImg, setBlogImg] = useState(undefined);
   const [showBlogImg, setShowBlogImg] = useState(undefined);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const { id } = useAuth();
   const navigate = useNavigate();
@@ -85,8 +85,8 @@ const CreatePost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (title && content && categories.length > 0 && blogImg) {
-      setLoading(true)
-      const downloadURL = await uploadFile(blogImg)
+      setLoading(true);
+      const downloadURL = await uploadFile(blogImg);
       try {
         const res = await createPost({
           author: id,
@@ -124,7 +124,7 @@ const CreatePost = () => {
         });
         console.log(error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     } else {
       toast.error("Please provide neccessary details!");
@@ -160,7 +160,11 @@ const CreatePost = () => {
                 className="hidden"
                 onChange={handleCoverImgChange}
               />
-              <RiChatDeleteFill onClick={cancelCoverImg} color="red" size={25} />
+              <RiChatDeleteFill
+                onClick={cancelCoverImg}
+                color="red"
+                size={25}
+              />
             </div>
           </div>
         )}
@@ -210,7 +214,7 @@ const CreatePost = () => {
               disabled={loading}
               className="bg-indigo-600 disabled:bg-indigo-700 hover:bg-indigo-700 transition-colors duration-300 px-5 py-1 text-white rounded shadow-xl"
             >
-              {loading ? <PulseLoader color="white" size={7}/> : "Publish"}
+              {loading ? <PulseLoader color="white" size={7} /> : "Publish"}
             </button>
             <button
               onClick={() => navigate(-1)}

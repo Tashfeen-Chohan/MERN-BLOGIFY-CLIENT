@@ -31,7 +31,7 @@ const SingleUser = () => {
       </div>
     );
 
-  const {user} = data ?? null
+  const { user } = data ?? null;
 
   return (
     <div className="flex justify-center items-center mt-16 md:mt-8">
@@ -43,7 +43,7 @@ const SingleUser = () => {
           <TiArrowBack size={40} />
         </Link>
         <h1 className="text-2xl font-bold">Profile</h1>
-        <div className="shadow-xl my-2 w-32 h-32 rounded-full overflow-hidden mx-auto">
+        <div className="shadow-xl my-4 w-32 h-32 rounded-full overflow-hidden mx-auto">
           <img
             src={user.profile}
             alt="User Profile"
@@ -51,21 +51,21 @@ const SingleUser = () => {
           />
         </div>
 
-        <div className="flex w-full justify-center items-center flex-col gap-3 mt-3">
-          <span className="bg-white w-[75%] text-center py-1 rounded shadow-md flex-auto">
+        <div className="text-sm flex w-full justify-center items-center flex-col gap-3 mt-3">
+          <span className="bg-white hover:bg-cyan-200 transition-colors duration-300 w-[90%] text-center py-1 rounded shadow-md flex-auto">
             {user.username}
           </span>
-          <span className="bg-white py-1 w-[75%] text-center rounded shadow-md">
+          <span className="bg-white hover:bg-cyan-200 transition-colors duration-300 py-1 w-[90%] text-center rounded shadow-md">
             {user.email}
           </span>
           {user.roles.includes("Publisher") && (
-            <span className="bg-white py-1 w-[75%] text-center rounded shadow-md">
+            <span className="bg-white hover:bg-cyan-200 transition-colors duration-300 py-1 w-[90%] text-center rounded shadow-md">
               Total Posts : {user.noOfPosts}
             </span>
           )}
         </div>
         {status === "Admin" && (
-          <div className="mt-3 w-[75%] bg-white px-3 py-1 rounded shadow-xl text-center">
+          <div className="mt-3 w-[90%] bg-white hover:bg-cyan-200 transition-colors duration-300 px-3 py-1 rounded shadow-xl text-center">
             <span>
               Roles :
               {user.roles.map((role, index) => (
@@ -81,7 +81,7 @@ const SingleUser = () => {
           <div className="flex justify-center items-center mt-4 w-full">
             <button
               onClick={handleViewPosts}
-              className="w-[75%] bg-cyan-600 hover:bg-cyan-700 transition-colors duration-300 text-white py-1 px-3 rounded  mt-3"
+              className="w-[90%] bg-cyan-600 hover:bg-cyan-700 transition-colors duration-300 text-white py-1 px-3 rounded  mt-3"
             >
               View Posts
             </button>

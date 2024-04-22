@@ -46,11 +46,11 @@ const SingleCategory = () => {
         </h1>
         <h2>
           Category Name :
-          <span className="font-semibold">{category.name}</span>
+          <span className="font-semibold ml-2">{category.name}</span>
         </h2>
         <p>
           No. of Posts :
-          <span className="font-semibold">{category.noOfPosts}</span>
+          <span className="font-semibold ml-2">{category.noOfPosts}</span>
         </p>
         {category.noOfPosts > 0 && (
           <div className="flex justify-center items-center mt-4 w-full">

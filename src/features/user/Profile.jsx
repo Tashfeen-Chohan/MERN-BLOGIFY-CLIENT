@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 import { BeatLoader } from "react-spinners";
 
 const Profile = () => {
-  const {slug} = useAuth();
-  const {data, isLoading} = useGetSingleUserQuery(slug)
+  const { slug } = useAuth();
+  const { data, isLoading } = useGetSingleUserQuery(slug);
 
   if (isLoading)
     return (
@@ -16,11 +16,11 @@ const Profile = () => {
       </div>
     );
 
-  const {user} = data ?? null
+  const { user } = data ?? null;
 
   return (
     <div className=" flex justify-center items-center mt-10 md:mt-6">
-      <div className="bg-slate-100 rounded-xl shadow-xl pb-10  pt-5 w-[85%] md:max-w-md flex justify-center items-center flex-col">
+      <div className="bg-slate-100 rounded-xl shadow-xl pb-10  pt-5 w-[85%] md:max-w-sm flex justify-center items-center flex-col">
         <Link
           to={-1}
           className="flex self-end px-3 hover:scale-125 transition-all duration-300"
@@ -36,21 +36,21 @@ const Profile = () => {
             className="w-full h-full rounded-full border-8 border-slate-50 object-cover text-black text-center"
           />
         </div>
-        <div className="flex w-full justify-center items-center flex-col gap-3">
-          <span className="bg-white hover:bg-cyan-200 transition-colors duration-300 w-[70%] text-center py-1 rounded shadow-md flex-auto">
+        <div className="text-sm flex w-full justify-center items-center flex-col gap-3">
+          <span className="bg-white hover:bg-cyan-200 transition-colors duration-300 w-[90%] text-center py-1 rounded shadow-md flex-auto">
             {user.username}
           </span>
-          <span className="bg-white hover:bg-cyan-200 transition-colors duration-300 py-1 w-[70%] text-center rounded shadow-md">
+          <span className="bg-white hover:bg-cyan-200 transition-colors duration-300 py-1 w-[90%] text-center rounded shadow-md">
             {user.email}
           </span>
           {user.roles.includes("Publisher") && (
-            <span className="bg-white hover:bg-cyan-200 transition-colors duration-300 py-1 w-[70%] text-center rounded shadow-md">
+            <span className="bg-white hover:bg-cyan-200 transition-colors duration-300 py-1 w-[90%] text-center rounded shadow-md">
               Total Posts : {user.noOfPosts}
             </span>
           )}
         </div>
         <Link to={`/profile/${slug}/edit`} className=" flex self-center w-full">
-          <button className="bg-cyan-600 hover:bg-cyan-700 transition-colors duration-300 text-white mt-7 py-1 w-[70%] mx-auto text-center rounded shadow-md">
+          <button className="bg-cyan-600 hover:bg-cyan-700 transition-colors duration-300 text-white mt-7 py-1 w-[90%] mx-auto text-center rounded shadow-md">
             Update
           </button>
         </Link>
